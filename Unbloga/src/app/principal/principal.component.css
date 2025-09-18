@@ -1,0 +1,12 @@
+.text-container {
+  font-size: clamp(2px, 4vw, 4px); /* se adapta entre 12 y 24px según el ancho de pantalla */
+  white-space: nowrap;               /* evita que pase a 2 líneas */
+  overflow: hidden;                  /* opcional: oculta el exceso */
+  text-overflow: ellipsis;           /* opcional: agrega "..." si se recorta */
+}
+.fecha {
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(8px, 1.2vw, 13px); /* se hace más pequeño si no cabe */
+}
+

@@ -1,0 +1,11 @@
+<div class="rating">
+  <i
+    *ngFor="let star of stars"
+    [class]="getIcon(star)"
+    (mousemove)="onMouseMove(star, $event)"
+    (mouseleave)="onMouseLeave()"
+    (click)="onClick(star, $event)"
+  ></i>
+</div>
+
+<p>Valor seleccionado: {{ selected }}</p>

@@ -1,0 +1,6 @@
+<span *ngFor="let star of getStars()">
+  <ng-container [ngSwitch]="star">
+    <span *ngSwitchCase="'full'"><i class="bi bi-star-fill" style="color:#af9cd9"></i></span>
+    <span *ngSwitchCase="'half'"><i class="bi bi-star-half" style="color:#af9cd9"></i></span>
+  </ng-container>
+</span>

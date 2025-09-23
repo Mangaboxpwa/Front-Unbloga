@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,7 +10,8 @@ import { CommonModule } from '@angular/common';
 })
 export class StarRateComponent {
   stars = [1, 2, 3, 4, 5];
-  selected = 0; // valor guardado
+  @Input() selected = 0; // valor guardado
+  @Output() selectedChange = new EventEmitter<number>(); // Para emitir cambios
   hoverValue = 0; // valor mientras paso el mouse
 
   // Detecta mitad de estrella
@@ -32,7 +33,15 @@ export class StarRateComponent {
 
   // Guardar selección
   onClick(star: number, event: MouseEvent) {
+
+    if(this.selected == this.getStarValue(star, event)){
+      this.selected = 0;
+    }
+    else{
     this.selected = this.getStarValue(star, event);
+    const value = this.getStarValue(star, event);
+    this.selectedChange.emit(value); // avisa al padre
+    }
   }
 
   // Determinar clase del ícono

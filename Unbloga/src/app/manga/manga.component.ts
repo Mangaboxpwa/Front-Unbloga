@@ -13,7 +13,8 @@ declare var bootstrap: any; // 👈 declara la variable global
 })
 export class MangaComponent {
   @ViewChild('liveToast', { static: false }) liveToast!: ElementRef;
-like = false;
+  like = false;
+  rating: number = 3.5;
 
 
 copiarEnlace() {
@@ -39,4 +40,10 @@ darLike(){
     this.like = true
   }
 }
+onRatingChanged(newValue: number) {
+    console.log('El rating cambió a:', newValue);
+    this.rating = newValue;
+    // Aquí haces la petición HTTP, por ejemplo:
+    // this.http.post('/api/rating', { value: newValue }).subscribe(...)
+  }
 }

@@ -1,0 +1,7 @@
+{
+  "name": "Unbloga",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

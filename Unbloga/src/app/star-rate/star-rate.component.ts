@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './star-rate.component.html',
-  styleUrl: './star-rate.component.css'
+  styleUrl: './star-rate.component.scss'
 })
 export class StarRateComponent {
   stars = [1, 2, 3, 4, 5];
@@ -21,21 +21,14 @@ export class StarRateComponent {
     return star - (isHalf ? 0.5 : 0);
   }
 
-  // Hover dinámico
-  onMouseMove(star: number, event: MouseEvent) {
-    this.hoverValue = this.getStarValue(star, event);
-  }
 
-  // Reset al salir
-  onMouseLeave() {
-    this.hoverValue = 0;
-  }
 
   // Guardar selección
   onClick(star: number, event: MouseEvent) {
 
     if(this.selected == this.getStarValue(star, event)){
       this.selected = 0;
+      this.getIcon(0);
     }
     else{
     this.selected = this.getStarValue(star, event);

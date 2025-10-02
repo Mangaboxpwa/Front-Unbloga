@@ -1,0 +1,57 @@
+.like-item {
+  --inner-padding-start: 0;
+  --inner-padding-end: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  justify-content: center;
+}
+
+.like-item .item-inner {
+  padding-inline-start: 0 !important;
+  padding-inline-end: 0 !important;
+}
+
+.like-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+.like-content i {
+  font-size: 24px;
+  color: #af9cd9;
+  margin-bottom: 4px;
+}
+
+.rating-content ion-label {
+  margin-bottom: 6px; /* espacio entre el texto y las estrellas */
+}
+.custom-divider {
+  --background: transparent;
+  min-height: 1px;
+  border: none;
+  border-top: 1px solid #a0a0a0; /* color de la línea */
+  margin: 4px 0; /* espacio arriba/abajo */
+}
+ion-item {
+  --padding-start: 0;
+}
+.rating-content {
+  display: flex;
+  justify-content: space-between; /* separa a izquierda y derecha */
+  align-items: center;
+  width: 100%; /* ocupa todo el ancho del ion-item */
+}
+
+.like-content {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #af9cd9;
+  cursor: pointer;
+}

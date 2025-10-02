@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Vagabond</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid style="margin-left: 10%; margin-right: 10%; margin-bottom:20%">
+    <ion-row>
+      <!-- Columna imagen -->
+      <ion-col size="12" size-lg="3">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+
+      <!-- Columna info -->
+      <ion-col size="12" size-lg="6">
+        <h1>Vagabond</h1>
+        <p>2016 - Dirigida por Damien Chazelle</p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias inventore possimus facere perferendis nulla...
+        </p>
+      </ion-col>
+
+      <!-- Columna derecha -->
+      <ion-col size="12" size-lg="3">
+        <ion-card>
+          <ion-list>
+            <ion-item button (click)="darLike()" lines="none" class="like-item">
+              <div class="like-content">
+                <i *ngIf="like" class="bi bi-heart-fill"></i>
+                <i *ngIf="!like" class="bi bi-heart"></i>
+                <span>Like</span>
+              </div>
+            </ion-item>
+            <ion-item-divider class="custom-divider"></ion-item-divider>
+            <ion-item lines="none" class="ion-text-center">
+              <div class="rating-content">
+                <ion-label>Calificación</ion-label>
+                <app-star-rate 
+                  [selected]="rating" 
+                  (selectedChange)="onRatingChanged($event)">
+                </app-star-rate>
+              </div>
+            </ion-item>
+            <ion-item-divider class="custom-divider"></ion-item-divider>
+            <ion-item button lines="none" class="ion-text-center">
+              <ion-label>Agregar comentario</ion-label>
+            </ion-item>
+            <ion-item-divider class="custom-divider"></ion-item-divider>
+            <ion-item button id="open-toast" (click)="copiarEnlace()" lines="none" class="ion-text-center">
+              <ion-label fill="clear">Compartir</ion-label>
+                <ion-toast trigger="open-toast" message="Enlace copiado" [duration]="3000"></ion-toast>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Reviews -->
+    <ion-row>
+      <ion-col size="12">
+        <h3>Reviews populares</h3>
+        <ion-item-divider class="custom-divider"></ion-item-divider>
+        <ion-item lines="none">
+          <ion-avatar slot="start">
+            <img src="assets/vagabong.webp" />
+          </ion-avatar>
+          <ion-label>
+            <h2>Reseña por Israel</h2><app-rating [rating]="3.5"></app-rating>
+            <p><b>easily one of the top 5 movies about taxes</b></p>
+            <p><i class="bi bi-heart-fill"></i> 1999 likes</p>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

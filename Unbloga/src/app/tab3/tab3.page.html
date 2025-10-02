@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Perfil
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ng-container *ngIf="!isLoggedIn; else perfilContent">
+  <div class="container"style="margin: 0;
+  padding: 0;">
+    
+    <!-- Arriba: Imagen de fondo -->
+    <div class="top-section" ></div>
+
+    <!-- Abajo: dividido en 3 partes -->
+    <div class="bottom-section">
+      
+      <!-- Sección 1: Imagen centrada -->
+      <div class="topp-section">
+        <img src="assets/Letterboxd-Logo.png" alt="Logo" />
+      </div>
+
+      <!-- Sección 2: Botones -->
+      <div class="middle-section">
+        <hr />
+        <ion-button fill="clear" expand="block" (click)="goLogin()">Iniciar sesión</ion-button>
+        <ion-button fill="clear" expand="block" (click)="goRegister()">Registrarse</ion-button>
+        <hr />
+      </div>
+
+      <!-- Sección 3: Label -->
+      <div class="bottomm-section">
+        <label>Artwork from Vagabond</label>
+      </div>
+      
+    </div>
+  </div>
+</ng-container>
+
+
+  <ng-template #perfilContent>
+    <h2>Bienvenido a tu perfil</h2>
+    <ion-button (click)="logout()">Cerrar sesión</ion-button>
+  </ng-template>
+</ion-content>

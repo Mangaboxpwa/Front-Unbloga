@@ -1,0 +1,217 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Home</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid style="margin-left: 5%; margin-right: 5%;">
+    <!-- Bienvenida -->
+    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100px;">
+      <ion-col size="12" class="ion-text-center">
+        <h3>Bienvenido de vuelta usuario. Aquí tienes lo que han visto tus seguidos...</h3>
+      </ion-col>
+    </ion-row>
+
+    <!-- NUEVO DE SEGUIDOS -->
+    <ion-row class="ion-align-items-center ion-margin-bottom">
+      <ion-col size="6">
+        <p>Nuevo de seguidos</p>
+      </ion-col>
+      <ion-col size="6" class="ion-text-end">
+        <a href=""><b><ion-icon name="flash"></ion-icon>Toda actividad</b></a>
+      </ion-col>
+    </ion-row>
+    <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
+
+    <ion-row>
+      <ion-col size="6" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+          <ion-card-content style="padding: 0;">
+            <div style="background-color: #735ba6; color: white; width: 100%; padding: 8px ; padding-left: 2px;">
+               José Durán
+            </div>
+          
+            <ion-row style="margin: 0; padding: 0;">
+              <ion-col size="6" style="padding-left: 0; display: flex; gap: 5px; align-items: center;">
+                <i class="bi bi-heart-fill"></i>
+                <i class="bi bi-file-text"></i>
+              
+              </ion-col>
+              <ion-col size="6" style=" text-align: end;">
+                <b>Abrill 07</b>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+      </ion-col>
+      <!-- Copia más ion-col para más cards -->
+    </ion-row>
+
+    <!-- ANUNCIO -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card style="background-color: #735ba6; height: 120px;"></ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- POPULAR EN UNBLOGA -->
+    <ion-row class="ion-align-items-center ion-margin-bottom ion-margin-top">
+      <ion-col size="6">
+        <p>Popular en Unbloga</p>
+      </ion-col>
+      <ion-col size="6" class="ion-text-end">
+        <a href=""><b>Más</b></a>
+      </ion-col>
+    </ion-row>
+    <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
+
+
+    <ion-row>
+      <ion-col size="6" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <!-- Copia más ion-col para más cards -->
+    </ion-row>
+
+    <!-- REVIEWS POPULARES EN UNBLOGA -->
+    <ion-row class="ion-align-items-center ion-margin-bottom ion-margin-top">
+      <ion-col size="6">
+        <p>Reviews populares en Unbloga</p>
+      </ion-col>
+      <ion-col size="6" class="ion-text-end">
+        <a href=""><b>Más</b></a>
+      </ion-col>
+    </ion-row>
+<div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
+
+    <ion-row>
+      <!-- Tarjeta 1 -->
+      <ion-col size="12" size-lg="6">
+        <ion-card>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="2">
+                  <ion-img src="assets/vagabong.webp" style="border-radius: 50%;"></ion-img>
+                </ion-col>
+                <ion-col size="10">
+                  <ion-row class="ion-align-items-center ion-margin-bottom" style="gap: 5px;">
+                    <!-- Bloque superior con foto de perfil -->
+                    <ion-col size="auto" style="padding: 0;">
+                      <div style="
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                      ">
+                        <img src="assets/vagabong.webp" 
+                             style="width: 100%; height: 100%; object-fit: cover;" />
+                      </div>
+                    </ion-col>
+                  
+                    <ion-col size="auto" style="padding: 0; display: flex; align-items: center;">
+                      <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <b>Isra</b>
+                      </span>
+                    </ion-col>
+                  </ion-row>
+                
+                  <ion-row>
+                    <ion-col size="12">
+                      <b>vagabond</b> 1992
+                    </ion-col>
+                  </ion-row>
+                
+                  <ion-row>
+                    <ion-col size="12">
+                      <app-rating [rating]="1.5"></app-rating>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+
+
+
+              </ion-row>
+              <ion-row>
+                <ion-col size="12">Hay un personaje nuevo cool</ion-col>
+                <ion-col size="12"><b>34k likes</b></ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+        <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
+
+      </ion-col>
+      
+      
+      <!-- Tarjeta 2 -->
+      <ion-col size="12" size-lg="6">
+        <ion-card>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="2">
+                  <ion-img src="assets/vagabong.webp" style="border-radius: 50%;"></ion-img>
+                </ion-col>
+                <ion-col size="10">
+                  <ion-row class="ion-align-items-center ion-margin-bottom" style="gap: 5px;">
+                    <!-- Bloque superior con foto de perfil -->
+                    <ion-col size="auto" style="padding: 0;">
+                      <div style="
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                      ">
+                        <img src="assets/vagabong.webp" 
+                             style="width: 100%; height: 100%; object-fit: cover;" />
+                      </div>
+                    </ion-col>
+                  
+                    <ion-col size="auto" style="padding: 0; display: flex; align-items: center;">
+                      <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <b>Isra</b>
+                      </span>
+                    </ion-col>
+                  </ion-row>
+                
+                  <ion-row>
+                    <ion-col size="12">
+                      <b>vagabond</b> 1992
+                    </ion-col>
+                  </ion-row>
+                
+                  <ion-row>
+                    <ion-col size="12">
+                      <app-rating [rating]="1.5"></app-rating>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+
+
+
+              </ion-row>
+              <ion-row>
+                <ion-col size="12">Hay un personaje nuevo cool</ion-col>
+                <ion-col size="12"><b>34k likes</b></ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+        <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

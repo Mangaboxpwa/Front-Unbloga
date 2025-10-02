@@ -1,1 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+ion-app, ion-content, ion-header, ion-toolbar {
+  --background: #121212;  /* fondo oscuro */
+  --color: #fff;          /* texto blanco */
+}/* You can add global styles to this file, and also import other style files */

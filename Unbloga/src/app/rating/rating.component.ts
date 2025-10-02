@@ -1,15 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-rating',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './rating.component.html',
-  styleUrl: './rating.component.css'
+    imports: [CommonModule],
+  styleUrls: ['./rating.component.scss'],
 })
-export class RatingComponent {
-  @Input() rating: number = 0;
+export class RatingComponent  implements OnInit {
+@Input() rating: number = 0;
+
+constructor() { }
+
+  ngOnInit() {}
+
 
   getStars(): ('full' | 'half')[] {
     const stars: ('full' | 'half')[] = [];
@@ -25,4 +29,5 @@ export class RatingComponent {
 
     return stars;
   }
+  
 }

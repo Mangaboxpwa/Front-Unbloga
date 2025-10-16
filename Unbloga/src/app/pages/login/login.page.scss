@@ -36,8 +36,12 @@
 
 .middle-section {
   flex-direction: column;
-  width: 100%;
+  width: 90%;               /* ocupa el 90% del ancho total */
+  margin: 0 auto;           /* centra horizontalmente */
+  padding: 0 16px;          /* añade espacio interno a los lados */
+  border-radius: 12px;      /* opcional: esquinas redondeadas */
 }
+
 
 .middle-section ion-button {
   --background: transparent;
@@ -57,4 +61,15 @@
 .bottomm-section label {
   font-size: 14px;
   color: #666;
+}
+.button-row {
+  display: flex;
+  justify-content: space-between; /* separa los botones */
+  gap: 8px; /* espacio entre ellos */
+  margin-top: 10px;
+}
+
+.button-row ion-button {
+  flex: 1; /* que se adapten al mismo tamaño */
+  --background:#67568C
 }

@@ -26,6 +26,6 @@ constructor(private router: Router, private auth: Auth) {}
 
   logout() {
     this.auth.logout();
-    this.router.navigate(['/tabs/perfil']);
+    this.router.navigate(['/tabs/tab3']);
   }
 }

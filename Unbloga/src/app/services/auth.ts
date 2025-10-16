@@ -1,21 +1,46 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+import { Responses } from '../core/interfaces/Responses';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Auth {
  
-  private loggedIn = false;
-
+  //private loggedIn = false;
+  private urlBase:string
+  constructor(private cookies:CookieService, private http: HttpClient) { 
+    this.urlBase = `${environment.apiUrlBase}auth/`
+  }
+  register(user:any): Observable<Responses>{
+    return this.http.post<Responses>(`${this.urlBase}register`, user);
+  }
+  login(user:any): Observable<Responses>{
+    return this.http.post<Responses>(`${this.urlBase}login`, user);
+  }
+  verifyCode(user:any): Observable<Responses>{
+    return this.http.post<Responses>(`${this.urlBase}verifyCode`, user);
+  }
+  sendCodeVerify(email:any): Observable<Responses>{
+    return this.http.post<Responses>(`${this.urlBase}send-code-verify`, email);
+  }
   isLoggedIn(): boolean {
-    return this.loggedIn;
+    console.log(this.cookies.get('token'))
+    return !!this.cookies.get('token');
   }
 
-  login() {
-    this.loggedIn = true;
+  isLogin(token:string) {
+    this.cookies.set('token', token, { path: '/' });
+    console.log(this.cookies.get('token'))
   }
 
   logout() {
-    this.loggedIn = false;
+    this.cookies.delete('token', '/');
+  this.cookies.delete('token');
+
+  console.log('Token después de logout:', this.cookies.get('token'));
   } 
 }

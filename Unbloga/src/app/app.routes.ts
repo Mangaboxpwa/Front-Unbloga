@@ -26,4 +26,8 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./review/review.page').then((m) => m.ReviewPage),
   },
+  {
+    path: 'two-factor',
+    loadComponent: () => import('./pages/two-factor/two-factor.page').then( m => m.TwoFactorPage)
+  },
 ];

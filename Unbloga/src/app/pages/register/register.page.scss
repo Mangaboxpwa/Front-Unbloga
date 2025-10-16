@@ -1,0 +1,74 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 95%;
+}
+
+.top-section {
+  flex: 1; /* Ocupa la mitad de la pantalla */
+  background: linear-gradient(
+      to bottom,
+      rgba(18,18,18,0) 70%,
+      rgba(18,18,18,1) 100%
+    ),
+    url('/assets/vagabong.webp') center/cover no-repeat;
+}
+
+.bottom-section {
+  flex: 1; /* La otra mitad */
+  display: flex;
+  flex-direction: column;
+}
+
+.topp-section,
+.middle-section,
+.bottomm-section {
+  flex: 1; /* Cada sección ocupa 1/3 de la mitad inferior */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.topp-section img {
+  max-width: 60%;
+  height: auto;
+}
+
+.middle-section {
+  flex-direction: column;
+  width: 100%;
+}
+
+.middle-section ion-button {
+  --background: transparent;
+  --box-shadow: none;
+  --color: #ffffff;
+  font-weight: 500;
+  margin: 8px 0;
+}
+
+.middle-section hr {
+  width: 80%;
+  margin: 10px auto;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+.bottomm-section label {
+  font-size: 14px;
+  color: #666;
+}
+.button-row {
+  display: flex;
+  justify-content: flex-start; /* los alinea a la izquierda */
+  gap: 8px; /* separación entre botones */
+  margin-top: 10px;
+}
+
+.button-row ion-button {
+  flex:1;
+  --background:#67568C
+
+}
+
+

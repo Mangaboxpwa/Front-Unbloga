@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { Auth } from '../services/auth';
+import { Auth } from '../core/services/auth';
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',

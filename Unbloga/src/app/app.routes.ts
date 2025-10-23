@@ -17,17 +17,29 @@ export const routes: Routes = [
       import('./pages/register/register.page').then((m) => m.RegisterPage),
   },
   {
-    path: 'manga',
+    path: 'manga/:id',
     loadComponent: () =>
       import('./manga/manga.page').then((m) => m.MangaPage),
   },
   {
-    path: 'review',
+    path: 'review/:id',
     loadComponent: () =>
       import('./review/review.page').then((m) => m.ReviewPage),
   },
   {
     path: 'two-factor',
     loadComponent: () => import('./pages/two-factor/two-factor.page').then( m => m.TwoFactorPage)
+  },
+  {
+    path: 'send-email',
+    loadComponent: () => import('./pages/send-email/send-email.page').then( m => m.SendEmailPage)
+  },
+  {
+    path: 'recovery-code',
+    loadComponent: () => import('./pages/recovery-code/recovery-code.page').then( m => m.RecoveryCodePage)
+  },
+  {
+    path: 'new-pass',
+    loadComponent: () => import('./pages/new-pass/new-pass.page').then( m => m.NewPassPage)
   },
 ];

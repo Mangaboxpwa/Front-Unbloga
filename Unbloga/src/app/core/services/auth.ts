@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import { Responses } from '../core/interfaces/Responses';
+import { Responses } from '../interfaces/Responses';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
@@ -27,6 +27,12 @@ export class Auth {
   sendCodeVerify(email:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}send-code-verify`, email);
   }
+  
+  //ENVIAR CORREO PARA RECUPERAAR CONTRASEÑA
+  sendRecoverPasswordCode(email:any): Observable<Responses>{
+    return this.http.post<Responses>(`${this.urlBase}send-recover-password-code`, email);
+  }
+  
   isLoggedIn(): boolean {
     console.log(this.cookies.get('token'))
     return !!this.cookies.get('token');

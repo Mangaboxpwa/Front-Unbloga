@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Recuperar Contraseña
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ng-container>
+  <div class="container"style="margin: 0;
+  padding: 0;">
+    
+    <!-- Arriba: Imagen de fondo -->
+    <div class="top-section" ></div>
+
+    <!-- Abajo: dividido en 3 partes -->
+    <div class="bottom-section">
+      
+      <!-- Sección 1: Imagen centrada -->
+      <div class="topp-section">
+        <h1>A</h1>
+      </div>
+
+      <!-- Sección 2: Botones -->
+      <div class="middle-section">
+        <form class="formulario" [formGroup]="emailForm">
+          <ion-item style="width: 100%; margin-bottom:5px">
+            <ion-input label="Correo" helperText="Ingresa el correo de tu cuenta" type="email" formControlName="email" labelPlacement="floating" placeholder=""></ion-input>
+          </ion-item>
+          <div class="button-row">
+            <ion-button shape="round" (click)="sendRecoverPasswordCode()">Ir</ion-button>
+          </div>
+        </form>
+        <hr />
+      </div>
+      <ion-alert
+          [isOpen]="isAlertOpen"
+          [header]="headerAlert"
+          [subHeader]="subHeader"
+          [message]="message"
+          [buttons]="alertButtons"
+          (didDismiss)="setOpen(false)"
+        ></ion-alert>
+      <!-- Sección 3: Label -->
+      <div class="bottomm-section">
+        <label>Artwork from Vagabond</label>
+      </div>
+      
+    </div>
+  </div>
+</ng-container>
+
+</ion-content>

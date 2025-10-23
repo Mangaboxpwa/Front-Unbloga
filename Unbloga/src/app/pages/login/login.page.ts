@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
 import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { Auth } from 'src/app/services/auth';
+import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 
 @Component({
@@ -89,6 +89,9 @@ scrollToTop() {
   }  
   goRegister() {
     this.router.navigate(['/register']);
+  }
+  recuperarContrasena(){
+   this.router.navigate(['/send-email']);
   }
 
 }

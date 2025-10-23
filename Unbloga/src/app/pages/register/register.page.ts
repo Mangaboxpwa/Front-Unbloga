@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
 import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { Auth } from 'src/app/services/auth';
+import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 
 

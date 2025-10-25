@@ -10,13 +10,13 @@
 <ng-container *ngIf="!isLoggedIn; else perfilContent">
   <div class="container"style="margin: 0;
   padding: 0;">
-    
+
     <!-- Arriba: Imagen de fondo -->
     <div class="top-section" ></div>
 
     <!-- Abajo: dividido en 3 partes -->
     <div class="bottom-section">
-      
+
       <!-- Sección 1: Imagen centrada -->
       <div class="topp-section">
         <img src="assets/Letterboxd-Logo.png" alt="Logo" />
@@ -34,14 +34,111 @@
       <div class="bottomm-section">
         <label>Artwork from Vagabond</label>
       </div>
-      
+
     </div>
   </div>
 </ng-container>
 
 
   <ng-template #perfilContent>
-    <h2>Bienvenido a tu perfil</h2>
+  <ion-list>
+  <ion-item >
+    <div class="avatar-wrapper">
+    <ion-avatar>
+      <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+    </ion-avatar>
+  </div>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">
+    <h1 class="title">Favoritos</h1>
+  </ion-label>
+    <ion-row class="tight-row">
+      <ion-col size="3" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <ion-col size="3" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <ion-col size="3" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <ion-col size="3" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <!-- Copia más ion-col para más cards -->
+    </ion-row>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">
+    <h1 class="title">Actividad reciente</h1>
+  </ion-label>
+    <ion-row class="tight-row">
+      <ion-col size="3" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <ion-col size="3" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <ion-col size="3" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <ion-col size="3" size-lg="2">
+        <ion-card>
+          <img src="assets/vagabong.webp" />
+        </ion-card>
+      </ion-col>
+      <!-- Copia más ion-col para más cards -->
+    </ion-row>
+  </ion-item>
+  <ion-item >
+  <ion-label position="stacked">
+    <h1 class="title">Ratings</h1>
+  </ion-label>
+
+  <div class="rating-row">
+    <!--  Estrella izquierda -->
+    <i name="heart-outline" class="bi bi-heart-fill heart-icon tiny"></i>
+
+    <!--  Gráfica -->
+    <div class="chart-container"
+         (mousedown)="onMouseDown()"
+         (mouseup)="onMouseUp()">
+      <canvas #barCanvas></canvas>
+    </div>
+
+    <!-- Contenedor corazones y valor -->
+    <div class="hearts-container">
+
+
+      <!-- corazones abajo -->
+      <div class="hearts-row">
+        <i name="heart" *ngFor="let h of [1,2,3,4,5]" class="bi bi-heart-fill heart-icon tiny"></i>
+      </div>
+    </div>
+  </div>
+</ion-item>
+
+
+
+</ion-list>
+
+
+
     <ion-button (click)="logout()">Cerrar sesión</ion-button>
   </ng-template>
 </ion-content>

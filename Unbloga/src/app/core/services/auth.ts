@@ -34,7 +34,7 @@ export class Auth {
   }
   
   isLoggedIn(): boolean {
-    console.log(this.cookies.get('token'))
+    //console.log(this.cookies.get('token'))
     return !!this.cookies.get('token');
   }
 

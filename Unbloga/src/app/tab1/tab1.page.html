@@ -75,14 +75,18 @@
     <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
 
+
     <ion-row>
-      <ion-col size="6" size-lg="2">
-        <ion-card>
-          <img src="assets/vagabong.webp" />
-        </ion-card>
+      <ion-col *ngFor="let manga of mangas?.slice(0,6)" size="6" size-lg="2">
+        <a [routerLink]="['/manga', manga.id]">
+          <ion-card>
+            <img [src]="manga.cover_url" />
+          </ion-card>
+        </a>
       </ion-col>
-      <!-- Copia más ion-col para más cards -->
     </ion-row>
+
+    
 
     <!-- REVIEWS POPULARES EN UNBLOGA -->
     <ion-row class="ion-align-items-center ion-margin-bottom ion-margin-top">

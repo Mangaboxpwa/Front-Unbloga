@@ -57,8 +57,8 @@ jobs:
             # Instalación de dependencias (REQUIERE SUDO para crear carpetas)
             sudo npm install --legacy-peer-deps
 
-            rm -rf www
-            
+            sudo rm -rf www
+
             echo "== Construyendo Angular para Producción =="
             # REQUIERE SUDO para escribir la carpeta 'www/'
             sudo npm run build --prod

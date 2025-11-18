@@ -23,6 +23,20 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            echo "== Configurando SSH en el servidor =="
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+
+            # Asegura que la llave SSH se use
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/Deploy-ssh
+            chmod 600 ~/.ssh/Deploy-ssh
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/Deploy-ssh
+
+            # Aceptar GitHub como host confiable
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            chmod 644 ~/.ssh/known_hosts
+
             echo "== Accediendo al directorio del proyecto =="
             cd ${{ secrets.WORK_DIR }}
 
@@ -37,14 +51,16 @@ jobs:
             echo "== Limpiando archivos no rastreados =="
             sudo git clean -fd
 
+            echo "== Instalando dependencias de Node.js =="
             sudo rm -rf node_modules
             sudo npm install --legacy-peer-deps
 
             echo "== Limpiando carpeta www existente =="
             sudo rm -rf www
+
+            echo "== Construyendo Angular para producción =="
             sudo npm run build --prod
 
-            # --- FASE 3: Permisos y reinicio de Nginx ---
             echo "== Corrigiendo permisos para Nginx =="
             sudo chown -R nginx:nginx ${{ secrets.WORK_DIR }}
             sudo chmod -R 755 ${{ secrets.WORK_DIR }}

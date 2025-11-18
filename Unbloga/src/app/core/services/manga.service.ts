@@ -21,6 +21,9 @@ export class MangaService {
   show(id:number): Observable<MangaResponse>{
     return this.http.get<MangaResponse>(`${this.urlBase}${id}`);
   }
+  mangasMasReseñadosUltimoMes(): Observable<MangasResponse>{
+    return this.http.get<MangasResponse>(`${this.urlBase}mas-recenados-mes`);
+  }
   login(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}login`, user);
   }

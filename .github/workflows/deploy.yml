@@ -30,7 +30,7 @@ jobs:
             # WORK_DIR = /var/www/mangabox/Front-Angular/Unbloga (Directorio que también sirve Nginx)
             cd ${{ secrets.WORK_DIR }}
             
-            # --- FASE 1: Limpieza de Git y Actualización de Código ---
+            # --- FASE 1: Limpieza de Git y Actualización de Código (¡CON SUDO!) ---
             
             # 1. SOLUCIÓN de propiedad: Añade el directorio como seguro para el usuario SSH
             git config --global --add safe.directory "${{ secrets.WORK_DIR }}"
@@ -38,48 +38,53 @@ jobs:
             echo "== Limpiando y Actualizando código de Git =="
             
             # 2. LIMPIEZA CLAVE: Desecha CUALQUIER cambio local (soluciona el error "local changes would be overwritten").
-            git reset --hard origin/main
+            # REQUIERE SUDO para sobreescribir archivos propiedad de 'nginx'
+            sudo git reset --hard origin/main
             
             # 3. Elimina archivos no rastreados por Git
-            git clean -f -d
+            # REQUIERE SUDO para eliminar archivos propiedad de 'nginx'
+            sudo git clean -f -d
             
             # 4. Realiza la actualización final de código
+            # Nota: git pull no necesita sudo si no intenta escribir en archivos protegidos.
             git pull
 
-            # --- FASE 2: Instalación y Construcción (Build) ---
+            # --- FASE 2: Instalación y Construcción (Build) (¡CON SUDO!) ---
 
             echo "== Instalando dependencias de Node.js =="
-            # Borramos la carpeta node_modules vieja antes de instalar, para asegurar una limpieza total.
-            rm -rf node_modules
-            npm install --legacy-peer-deps
+            # 1. Eliminamos y reinstalamos node_modules con SUDO
+            sudo rm -rf node_modules
+            # Instalación de dependencias (REQUIERE SUDO para crear carpetas)
+            sudo npm install --legacy-peer-deps
 
             echo "== Construyendo Angular para Producción =="
-            # El resultado se guarda en la carpeta temporal 'www/' (según tu log de Ionic/Capacitor)
-            npm run build --prod
+            # REQUIERE SUDO para escribir la carpeta 'www/'
+            sudo npm run build --prod
 
-            # --- FASE 3: Despliegue y Limpieza Final ---
+            # --- FASE 3: Despliegue y Limpieza Final (¡CON SUDO!) ---
 
             echo "== Desplegando la nueva versión =="
             
             # 1. CORRECCIÓN: Mueve el contenido de la carpeta 'www' a la raíz del proyecto ('.').
-            mv www/* .
+            # REQUIERE SUDO para mover archivos en una carpeta protegida
+            sudo mv www/* .
             
             # 2. Limpia la carpeta temporal 'www' que ya no es necesaria.
-            rm -rf www
+            sudo rm -rf www
             
-            # 3. Limpia node_modules, ya que solo es necesario para el build.
-            rm -rf node_modules 
+            # 3. Limpia node_modules.
+            sudo rm -rf node_modules 
 
             # --- FASE 4: CORRECCIÓN DE PERMISOS (¡FINAL!) ---
 
             echo "== Corrigiendo permisos para Nginx (Permisos Linux y SELinux) =="
+            # Mantenemos esta fase para ASEGURAR que Nginx SIEMPRE sea el dueño al final.
             
             # 1. Permisos Linux (Chown/Chmod)
             sudo chown -R nginx:nginx ${{ secrets.WORK_DIR }}
             sudo chmod -R 755 ${{ secrets.WORK_DIR }}
             
-            # 2. Permisos SELinux (¡NUEVO!)
-            # Reetiqueta el contexto de seguridad para que Nginx pueda servir los archivos estáticos.
+            # 2. Permisos SELinux 
             sudo chcon -Rt httpd_sys_content_t ${{ secrets.WORK_DIR }}
             
             echo "== Reiniciando Nginx =="

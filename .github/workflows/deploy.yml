@@ -61,20 +61,6 @@ jobs:
             # REQUIERE SUDO para escribir la carpeta 'www/'
             sudo npm run build --prod
 
-            # --- FASE 3: Despliegue y Limpieza Final (¡CON SUDO!) ---
-
-            echo "== Desplegando la nueva versión =="
-            
-            # 1. CORRECCIÓN: Mueve el contenido de la carpeta 'www' a la raíz del proyecto ('.').
-            # REQUIERE SUDO para mover archivos en una carpeta protegida
-            sudo mv www/* .
-            
-            # 2. Limpia la carpeta temporal 'www' que ya no es necesaria.
-            sudo rm -rf www
-            
-            # 3. Limpia node_modules.
-            sudo rm -rf node_modules 
-
             # --- FASE 4: CORRECCIÓN DE PERMISOS (¡FINAL!) ---
 
             echo "== Corrigiendo permisos para Nginx (Permisos Linux y SELinux) =="

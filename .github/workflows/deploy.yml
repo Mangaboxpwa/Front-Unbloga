@@ -23,20 +23,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            echo "== Configurando SSH en el servidor =="
-            mkdir -p ~/.ssh
-            chmod 700 ~/.ssh
-
-            # Cargar la llave Deploy-ssh
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/Deploy-ssh
-            chmod 600 ~/.ssh/Deploy-ssh
-            eval "$(ssh-agent -s)"
-            ssh-add ~/.ssh/Deploy-ssh
-
-            # Agregar GitHub a known_hosts
-            ssh-keyscan github.com >> ~/.ssh/known_hosts
-            chmod 644 ~/.ssh/known_hosts
-
             echo "== Accediendo al directorio del proyecto =="
             cd ${{ secrets.WORK_DIR }}
 

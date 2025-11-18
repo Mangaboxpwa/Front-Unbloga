@@ -1,0 +1,65 @@
+name: Despliegue de Angular (Build Remoto SSH)
+
+on:
+  push:
+    branches:
+      - main # Se activa al hacer push a la rama 'main'
+  
+  workflow_dispatch: # Permite ejecutar el workflow manualmente
+
+jobs:
+  deploy_angular:
+    runs-on: ubuntu-latest
+    name: Deploy Angular Project
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Execute remote ssh commands (Build & Deploy)
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+
+          # Este script se ejecuta COMPLETAMENTE en tu servidor Rocky Linux
+          script: |
+            echo "== Accediendo al directorio del proyecto =="
+            # WORK_DIR = /var/www/mangabox/Front-Angular/Unbloga
+            cd ${{ secrets.WORK_DIR }}
+            
+            # Solución para el error 'dubious ownership' de Git
+            git config --global --add safe.directory "${{ secrets.WORK_DIR }}"
+
+            echo "== Actualizando código de Git =="
+            git fetch
+            git checkout ${{ secrets.MAIN_BRANCH }}
+            git pull
+
+            echo "== Instalando dependencias de Node.js =="
+            npm install --legacy-peer-deps
+
+            echo "== Construyendo Angular para Producción =="
+            # Esto crea la carpeta 'dist/' DENTRO de ${{ secrets.WORK_DIR }}
+            npm run build --prod
+
+            echo "== Activando la nueva versión =="
+            
+            # CORRECCIÓN CLAVE: Mueve el contenido del 'build' (dist/*) un nivel arriba (al directorio actual '.')
+            # Esto sobreescribe los archivos viejos de tu aplicación.
+            mv dist/* .
+            
+            # Limpia la carpeta temporal 'dist' y otros archivos sobrantes.
+            rm -rf dist
+            
+            echo "== Limpiando Node Modules (Opcional, pero ahorra espacio) =="
+            # Puedes borrar node_modules ya que solo lo necesitas para el build. 
+            # Si planeas ejecutar comandos de desarrollo aquí, omite esta línea.
+            rm -rf node_modules
+
+            echo "== Reiniciando Nginx (si es necesario) =="
+            sudo systemctl restart nginx
+            
+            echo "== Deploy completado correctamente =="

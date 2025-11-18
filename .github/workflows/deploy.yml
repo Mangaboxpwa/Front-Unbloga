@@ -1,4 +1,4 @@
-name: Despliegue de Angular (Build Remoto SSH)
+name: Despliegue de Angular (Build Remoto SSH con git pull)
 
 on:
   push:
@@ -27,13 +27,13 @@ jobs:
             mkdir -p ~/.ssh
             chmod 700 ~/.ssh
 
-            # Asegura que la llave SSH se use
+            # Cargar la llave Deploy-ssh
             echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/Deploy-ssh
             chmod 600 ~/.ssh/Deploy-ssh
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/Deploy-ssh
 
-            # Aceptar GitHub como host confiable
+            # Agregar GitHub a known_hosts
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             chmod 644 ~/.ssh/known_hosts
 
@@ -43,13 +43,7 @@ jobs:
             git config --global --add safe.directory "${{ secrets.WORK_DIR }}"
 
             echo "== Descargando últimos cambios del repositorio =="
-            sudo git fetch origin main
-
-            echo "== Forzando reset al repositorio remoto =="
-            sudo git reset --hard origin/main
-
-            echo "== Limpiando archivos no rastreados =="
-            sudo git clean -fd
+            sudo git pull origin main
 
             echo "== Instalando dependencias de Node.js =="
             sudo rm -rf node_modules

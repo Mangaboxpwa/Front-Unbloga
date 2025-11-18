@@ -5,7 +5,7 @@ on:
     branches:
       - main # Se activa al hacer push a la rama 'main'
   
-  workflow_dispatch: # Permite ejecutar el workflow manualmente
+  workflow_dispatch: # Permite ejecutar el workflow manualmente desde GitHub
 
 jobs:
   deploy_angular:
@@ -13,6 +13,9 @@ jobs:
     name: Deploy Angular Project
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4 # Necesario para obtener el branch y metadata
+
       - name: Execute remote ssh commands (Build & Deploy)
         uses: appleboy/ssh-action@v1
         with:
@@ -24,37 +27,51 @@ jobs:
           # Este script se ejecuta COMPLETAMENTE en tu servidor Rocky Linux
           script: |
             echo "== Accediendo al directorio del proyecto =="
-            # WORK_DIR = /var/www/mangabox/Front-Angular/Unbloga
+            # WORK_DIR = /var/www/mangabox/Front-Angular/Unbloga (Directorio que también sirve Nginx)
             cd ${{ secrets.WORK_DIR }}
             
-            # Solución para el error 'dubious ownership' de Git
+            # --- FASE 1: Limpieza de Git y Actualización de Código ---
+            
+            # 1. SOLUCIÓN de propiedad: Añade el directorio como seguro para el usuario SSH
             git config --global --add safe.directory "${{ secrets.WORK_DIR }}"
 
-            echo "== Actualizando código de Git =="
-            git fetch
-            git checkout ${{ secrets.MAIN_BRANCH }}
+            echo "== Limpiando y Actualizando código de Git =="
+            
+            # 2. LIMPIEZA CLAVE: Desecha CUALQUIER cambio local (soluciona el error "local changes would be overwritten").
+            # Esto sincroniza el estado local con el último commit de la rama 'main' remota.
+            git reset --hard origin/main
+            
+            # 3. Elimina archivos no rastreados por Git (como logs, archivos temporales)
+            git clean -f -d
+            
+            # 4. Realiza la actualización final de código
             git pull
 
+            # --- FASE 2: Instalación y Construcción (Build) ---
+
             echo "== Instalando dependencias de Node.js =="
+            # Borramos la carpeta node_modules vieja antes de instalar, para asegurar una limpieza total.
+            rm -rf node_modules
+            # Usar --legacy-peer-deps para evitar problemas de resolución de dependencias
             npm install --legacy-peer-deps
 
             echo "== Construyendo Angular para Producción =="
-            # Esto crea la carpeta 'dist/' DENTRO de ${{ secrets.WORK_DIR }}
+            # El resultado se guarda en la carpeta temporal 'dist/' DENTRO de WORK_DIR
             npm run build --prod
 
-            echo "== Activando la nueva versión =="
+            # --- FASE 3: Despliegue y Limpieza Final ---
+
+            echo "== Desplegando la nueva versión =="
             
-            # CORRECCIÓN CLAVE: Mueve el contenido del 'build' (dist/*) un nivel arriba (al directorio actual '.')
-            # Esto sobreescribe los archivos viejos de tu aplicación.
+            # 1. Mueve el contenido del 'build' (dist/*) a la raíz del proyecto ('.').
+            # Esto sobrescribe la versión antigua de la aplicación con la nueva versión compilada.
             mv dist/* .
             
-            # Limpia la carpeta temporal 'dist' y otros archivos sobrantes.
+            # 2. Limpia la carpeta temporal 'dist' que ya no es necesaria.
             rm -rf dist
             
-            echo "== Limpiando Node Modules (Opcional, pero ahorra espacio) =="
-            # Puedes borrar node_modules ya que solo lo necesitas para el build. 
-            # Si planeas ejecutar comandos de desarrollo aquí, omite esta línea.
-            rm -rf node_modules
+            # 3. Limpia node_modules, ya que solo es necesario para el build, no para servir la aplicación.
+            rm -rf node_modules 
 
             echo "== Reiniciando Nginx (si es necesario) =="
             sudo systemctl restart nginx

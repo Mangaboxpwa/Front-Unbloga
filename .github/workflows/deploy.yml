@@ -26,27 +26,22 @@ jobs:
             echo "== Accediendo al directorio del proyecto =="
             cd ${{ secrets.WORK_DIR }}
 
-            # --- FASE 1: Git: Guardar cambios locales y actualizar ---
             git config --global --add safe.directory "${{ secrets.WORK_DIR }}"
 
-            echo "== Guardando cambios locales (si hay) =="
-            sudo git stash push -m "Cambios locales antes de pull"
+            echo "== Descargando últimos cambios del repositorio =="
+            sudo git fetch origin main
 
-            echo "== Actualizando código del repositorio =="
-            sudo git pull origin main --rebase
+            echo "== Forzando reset al repositorio remoto =="
+            sudo git reset --hard origin/main
 
-            echo "== Aplicando cambios locales de nuevo =="
-            sudo git stash pop || echo "No hay cambios locales para reaplicar"
+            echo "== Limpiando archivos no rastreados =="
+            sudo git clean -fd
 
-            # --- FASE 2: Instalación y Build ---
-            echo "== Instalando dependencias de Node.js =="
             sudo rm -rf node_modules
             sudo npm install --legacy-peer-deps
 
             echo "== Limpiando carpeta www existente =="
             sudo rm -rf www
-
-            echo "== Construyendo Angular para Producción =="
             sudo npm run build --prod
 
             # --- FASE 3: Permisos y reinicio de Nginx ---

@@ -13,9 +13,6 @@ jobs:
     name: Deploy Angular Project
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
       - name: Execute remote ssh commands (Build & Deploy)
         uses: appleboy/ssh-action@v1
         with:

@@ -3,9 +3,8 @@ name: Despliegue de Angular (Build Remoto SSH)
 on:
   push:
     branches:
-      - main # Se activa al hacer push a la rama 'main'
-  
-  workflow_dispatch: # Permite ejecutar el workflow manualmente desde GitHub
+      - main
+  workflow_dispatch:
 
 jobs:
   deploy_angular:
@@ -14,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4 # Necesario para obtener el branch y metadata
+        uses: actions/checkout@v4
 
       - name: Execute remote ssh commands (Build & Deploy)
         uses: appleboy/ssh-action@v1
@@ -23,59 +22,40 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-
-          # Este script se ejecuta COMPLETAMENTE en tu servidor Rocky Linux
           script: |
             echo "== Accediendo al directorio del proyecto =="
-            # WORK_DIR = /var/www/mangabox/Front-Angular/Unbloga (Directorio que también sirve Nginx)
             cd ${{ secrets.WORK_DIR }}
-            
-            # --- FASE 1: Limpieza de Git y Actualización de Código (¡CON SUDO!) ---
-            
-            # 1. SOLUCIÓN de propiedad: Añade el directorio como seguro para el usuario SSH
+
+            # --- FASE 1: Git: Guardar cambios locales y actualizar ---
             git config --global --add safe.directory "${{ secrets.WORK_DIR }}"
 
-            echo "== Limpiando y Actualizando código de Git =="
-            
-            # 2. LIMPIEZA CLAVE: Desecha CUALQUIER cambio local (soluciona el error "local changes would be overwritten").
-            # REQUIERE SUDO para sobreescribir archivos propiedad de 'nginx'
-            sudo git reset --hard origin/main
-            
-            # 3. Elimina archivos no rastreados por Git
-            # REQUIERE SUDO para eliminar archivos propiedad de 'nginx'
-            sudo git clean -f -d
-            
-            # 4. Realiza la actualización final de código
-            # Nota: git pull no necesita sudo si no intenta escribir en archivos protegidos.
-            git pull
+            echo "== Guardando cambios locales (si hay) =="
+            sudo git stash push -m "Cambios locales antes de pull"
 
-            # --- FASE 2: Instalación y Construcción (Build) (¡CON SUDO!) ---
+            echo "== Actualizando código del repositorio =="
+            sudo git pull origin main --rebase
 
+            echo "== Aplicando cambios locales de nuevo =="
+            sudo git stash pop || echo "No hay cambios locales para reaplicar"
+
+            # --- FASE 2: Instalación y Build ---
             echo "== Instalando dependencias de Node.js =="
-            # 1. Eliminamos y reinstalamos node_modules con SUDO
             sudo rm -rf node_modules
-            # Instalación de dependencias (REQUIERE SUDO para crear carpetas)
             sudo npm install --legacy-peer-deps
 
+            echo "== Limpiando carpeta www existente =="
             sudo rm -rf www
 
             echo "== Construyendo Angular para Producción =="
-            # REQUIERE SUDO para escribir la carpeta 'www/'
             sudo npm run build --prod
 
-            # --- FASE 4: CORRECCIÓN DE PERMISOS (¡FINAL!) ---
-
-            echo "== Corrigiendo permisos para Nginx (Permisos Linux y SELinux) =="
-            # Mantenemos esta fase para ASEGURAR que Nginx SIEMPRE sea el dueño al final.
-            
-            # 1. Permisos Linux (Chown/Chmod)
+            # --- FASE 3: Permisos y reinicio de Nginx ---
+            echo "== Corrigiendo permisos para Nginx =="
             sudo chown -R nginx:nginx ${{ secrets.WORK_DIR }}
             sudo chmod -R 755 ${{ secrets.WORK_DIR }}
-            
-            # 2. Permisos SELinux 
             sudo chcon -Rt httpd_sys_content_t ${{ secrets.WORK_DIR }}
-            
+
             echo "== Reiniciando Nginx =="
             sudo systemctl restart nginx
-            
+
             echo "== Deploy completado correctamente =="

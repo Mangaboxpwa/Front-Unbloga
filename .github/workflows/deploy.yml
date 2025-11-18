@@ -62,7 +62,6 @@ jobs:
             echo "== Desplegando la nueva versión =="
             
             # 1. CORRECCIÓN: Mueve el contenido de la carpeta 'www' a la raíz del proyecto ('.').
-            # 'www' es la carpeta de salida real de tu build.
             mv www/* .
             
             # 2. Limpia la carpeta temporal 'www' que ya no es necesaria.
@@ -71,7 +70,17 @@ jobs:
             # 3. Limpia node_modules, ya que solo es necesario para el build.
             rm -rf node_modules 
 
-            echo "== Reiniciando Nginx (si es necesario) =="
+            # --- FASE 4: CORRECCIÓN DE PERMISOS (¡NUEVO!) ---
+
+            echo "== Corrigiendo permisos para Nginx =="
+            # ATENCIÓN: En Rocky Linux/CentOS el usuario de Nginx suele ser 'nginx'.
+            # Cambia recursivamente la propiedad de todos los archivos al usuario y grupo 'nginx'.
+            sudo chown -R nginx:nginx ${{ secrets.WORK_DIR }}
+            
+            # Asegura que todos puedan leer los archivos (necesario para el webserver)
+            sudo chmod -R 755 ${{ secrets.WORK_DIR }}
+            
+            echo "== Reiniciando Nginx =="
             sudo systemctl restart nginx
             
             echo "== Deploy completado correctamente =="

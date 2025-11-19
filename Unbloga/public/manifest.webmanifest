@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "short_name": "app",
+  "name": "Unbloga",
+  "short_name": "UB",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

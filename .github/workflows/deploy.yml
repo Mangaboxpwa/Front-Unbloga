@@ -28,29 +28,34 @@ jobs:
 
             git config --global --add safe.directory "${{ secrets.WORK_DIR }}"
 
-            echo "== Descargando últimos cambios del repositorio =="
+            echo "== Descargando últimos cambios =="
             sudo git fetch origin main
             sudo git reset --hard origin/main
 
-            echo "== Instalando dependencias de Node.js =="
-            rm -rf node_modules
-            npm install --legacy-peer-deps
-
+            echo "== Instalando dependencias =="
+            sudo rm -rf node_modules
+            sudo npm install --legacy-peer-deps
+            
             echo "== Instalando Ionic CLI =="
-            npm install -g @ionic/cli
+            sudo npm install -g @ionic/cli
 
             echo "== Limpiando carpeta www existente =="
-            rm -rf www
+            sudo rm -rf www
 
-            echo "== Construyendo Angular para producción =="
-            ionic build --prod
+            echo "== Compilando Angular/Ionic para producción =="
+            sudo ionic build --prod
 
-            echo "== Ajustando permisos para que nginx pueda leer =="
-            # Permisos correctos: lectura para todos, escritura solo para israel
-            sudo chmod -R 755 ${{ secrets.WORK_DIR }}
+            echo "== Ajustando permisos para israel y nginx =="
 
-            # SELinux: necesario en Rocky Linux / AlmaLinux / CentOS
-            sudo chcon -Rt httpd_sys_content_t ${{ secrets.WORK_DIR }}
+            # israel dueño total
+            sudo chown -R israel:israel ${{ secrets.WORK_DIR }}
+
+            # Permisos generales de lectura/escritura/ejecución
+            sudo chmod -R 775 ${{ secrets.WORK_DIR }}
+
+            # Permisos ACL para nginx (lectura + escritura permanente)
+            sudo setfacl -R -m u:nginx:rwx ${{ secrets.WORK_DIR }}
+            sudo setfacl -dR -m u:nginx:rwx ${{ secrets.WORK_DIR }}
 
             echo "== Reiniciando Nginx =="
             sudo systemctl restart nginx

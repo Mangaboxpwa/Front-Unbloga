@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Execute remote ssh commands (Build & Deploy)
+      - name: Ejecutar comandos SSH para Build & Deploy
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -33,18 +33,23 @@ jobs:
             sudo git reset --hard origin/main
 
             echo "== Instalando dependencias de Node.js =="
-            sudo rm -rf node_modules
-            sudo npm install --legacy-peer-deps
+            rm -rf node_modules
+            npm install --legacy-peer-deps
+
+            echo "== Instalando Ionic CLI =="
+            npm install -g @ionic/cli
 
             echo "== Limpiando carpeta www existente =="
-            sudo rm -rf www
+            rm -rf www
 
             echo "== Construyendo Angular para producción =="
-            sudo npm run build --prod
+            ionic build --prod
 
-            echo "== Corrigiendo permisos para Nginx =="
-            sudo chown -R nginx:nginx ${{ secrets.WORK_DIR }}
+            echo "== Ajustando permisos para que nginx pueda leer =="
+            # Permisos correctos: lectura para todos, escritura solo para israel
             sudo chmod -R 755 ${{ secrets.WORK_DIR }}
+
+            # SELinux: necesario en Rocky Linux / AlmaLinux / CentOS
             sudo chcon -Rt httpd_sys_content_t ${{ secrets.WORK_DIR }}
 
             echo "== Reiniciando Nginx =="

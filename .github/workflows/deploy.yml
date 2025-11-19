@@ -35,11 +35,15 @@ jobs:
             echo "== Instalando dependencias de Node.js =="
             sudo rm -rf node_modules
             sudo npm install --legacy-peer-deps
-
+            
+            echo "== Instalando Ionic CLI =="
+            sudo npm install -g @ionic/cli
+            
             echo "== Limpiando carpeta www existente =="
             sudo rm -rf www
 
             echo "== Construyendo Angular para producción =="
+            
             ionic build --prod
 
 

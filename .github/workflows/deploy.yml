@@ -40,7 +40,8 @@ jobs:
             sudo rm -rf www
 
             echo "== Construyendo Angular para producción =="
-            sudo npm run build --prod
+            ionic build --prod
+
 
             echo "== Corrigiendo permisos para Nginx =="
             sudo chown -R nginx:nginx ${{ secrets.WORK_DIR }}

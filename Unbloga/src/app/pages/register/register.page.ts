@@ -48,9 +48,7 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
   enviarRegistro() {
     console.log("entra?")
     console.log(this.RegistrarForm.value)
-    this.authService.register(this.RegistrarForm.value).pipe(
-      timeout(10000)
-    ).subscribe(
+    this.authService.register(this.RegistrarForm.value).subscribe(
       (response) => {
         console.log(response)
         this.headerAlert = response.message

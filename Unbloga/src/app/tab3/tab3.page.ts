@@ -36,9 +36,13 @@ constructor(private router: Router, private auth: Auth) {}
     this.auth.logout();
     this.router.navigate(['/tabs/tab3']);
   }
-  ngAfterViewInit() {
+  
+  ngAfterViewChecked() {
+  // Si ya existe el canvas y no he creado el chart, lo creo
+  if (this.barCanvas && !this.barChart) {
     this.loadChart();
   }
+}
 
   loadChart() {
     this.barChart = new Chart(this.barCanvas.nativeElement, {

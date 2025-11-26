@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Responses } from '../interfaces/Responses';
 import { CookieService } from 'ngx-cookie-service';
+import { LoginResponse } from '../interfaces/Login';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,8 @@ export class Auth {
   register(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}register`, user);
   }
-  login(user:any): Observable<Responses>{
-    return this.http.post<Responses>(`${this.urlBase}login`, user);
+  login(user:any): Observable<LoginResponse>{
+    return this.http.post<LoginResponse>(`${this.urlBase}login`, user);
   }
   verifyCode(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}verifyCode`, user);

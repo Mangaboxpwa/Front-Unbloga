@@ -49,7 +49,7 @@ scrollToTop() {
     ).subscribe(
       (response) => {
         console.log(response)
-        sessionStorage.setItem('email',''+response.data)
+        sessionStorage.setItem('email',''+response.email)
         this.router.navigate(['two-factor']);
       }, error => {
         console.log(error)

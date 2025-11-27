@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/manga"></ion-back-button>
+      <ion-back-button [defaultHref]=" '/manga/' + id "></ion-back-button>
     </ion-buttons>
     <ion-title>Review</ion-title>
     <ion-buttons slot="end">
@@ -19,15 +19,15 @@
     <ion-list>
       <ion-item>
         <ion-thumbnail slot="start">
-          <img alt="Silhouette of mountains" src="assets/vagabong.webp" />
+          <img alt="Silhouette of mountains" [src]="this.manga?.cover_url" />
         </ion-thumbnail>
-        <ion-label>Vagabond</ion-label>
+        <ion-label>{{this.manga?.title}}</ion-label>
       </ion-item>
 
-      <ion-item>
+      <!-- <ion-item>
         
         <ion-label>Date</ion-label>
-      </ion-item>
+      </ion-item> -->
       <ion-item>
         
         <div class="rating-content">
@@ -45,10 +45,11 @@
         </div>
       </ion-item>
 
-      
       <ion-item>
-    <ion-textarea style="height: 100px;" label="Comentario" labelPlacement="floating" placeholder="Agrega una review"></ion-textarea>
-  </ion-item>
+        <form [formGroup]="ReviewForm">
+          <ion-textarea formControlName="review" style="height: 100px;" label="Comentario" labelPlacement="floating" placeholder="Agrega una review"></ion-textarea>
+        </form>
+      </ion-item>
     </ion-list>
   </ion-card-content>
 </ion-card>

@@ -103,6 +103,7 @@ alertButtons = [
                 this.rating = this.manga.user_review.rating
                 this.like = this.manga.user_review.is_favorite
                 this.reviewId = this.manga.user_review.id
+                this.ReviewForm.controls['review'].setValue(this.manga.user_review.review)
               }else{
                 this.rating = 0;
                 this.like = false;

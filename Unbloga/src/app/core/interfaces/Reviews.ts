@@ -1,3 +1,5 @@
+import { User } from "./Users";
+
 export interface ReviewsResponse {
     result: boolean,
     message: string,
@@ -11,4 +13,5 @@ export interface Reviews {
     is_favorite: boolean,
     manga_id:number,
     user_id: number,
+    users: User
 }

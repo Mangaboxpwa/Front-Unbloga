@@ -10,6 +10,7 @@ import { MangaService } from 'src/app/core/services/manga.service';
 import { timeout } from 'rxjs';
 import { Manga, MangaResponse } from '../core/interfaces/Manga';
 import { Reviews } from '../core/interfaces/Reviews';
+import { User } from '../core/interfaces/Users';
 
 @Component({
   selector: 'app-manga',
@@ -21,11 +22,13 @@ import { Reviews } from '../core/interfaces/Reviews';
 export class MangaPage implements OnInit {
   @ViewChild('liveToast', { static: false }) liveToast!: ElementRef;
   like = false;
-  rating: number = 3.5;
+  rating: number = 0;
   manga?:Manga
   id:number = -1
   authors = ''
   reviews?:Reviews[]
+  user_review?:Reviews
+  user?:User
   constructor(private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
 
   ngOnInit() {
@@ -75,8 +78,14 @@ showManga(){
             this.authors = this.manga.authors.map((a: any) => a.name).join(', ');
             
             console.log(this.manga.publication_date)
-  
             this.reviews = response.data.reviews
+
+            if (this.manga.user_review){
+              this.user_review = this.manga.user_review
+              this.like = this.user_review.is_favorite
+              this.rating = this.user_review.rating
+            }
+            
             console.log(this.reviews)
           }
           

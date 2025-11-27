@@ -69,10 +69,10 @@
 
         <ion-item lines="none" *ngFor="let review of reviews?.slice(0,3)" size="12" size-lg="12">
           <ion-avatar slot="start">
-            <img src="assets/vagabong.webp" />
+            <img [src]="review.users.avatar_url" />
           </ion-avatar>
           <ion-label>
-            <h2>Reseña por Israel</h2><app-rating [rating]="review.rating"></app-rating><i *ngIf="review.is_favorite" class="bi bi-heart-fill"></i>
+            <h2>Reseña por {{review.users.name}}</h2><app-rating [rating]="review.rating"></app-rating><i *ngIf="review.is_favorite" class="bi bi-heart-fill"></i>
             <p><b>{{review.review}}</b></p>
             <!-- <p><i class="bi bi-heart-fill"></i> 1999 likes</p> -->
           </ion-label>

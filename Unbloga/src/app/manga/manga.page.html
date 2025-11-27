@@ -12,7 +12,7 @@
     <ion-row>
       <!-- Columna imagen -->
       <ion-col size="12" size-lg="3">
-        <ion-card>
+        <ion-card style="text-align: center;">
           <img [src]="this.manga?.cover_url" alt="Portada del manga" />
         </ion-card>
       </ion-col>
@@ -30,7 +30,7 @@
       <ion-col size="12" size-lg="3">
         <ion-card>
           <ion-list>
-            <ion-item button (click)="darLike()" lines="none" class="like-item">
+            <ion-item button (click)="darLike()" lines="none" class="like-item" disabled>
               <div class="like-content">
                 <i *ngIf="like" class="bi bi-heart-fill"></i>
                 <i *ngIf="!like" class="bi bi-heart"></i>
@@ -38,7 +38,7 @@
               </div>
             </ion-item>
             <ion-item-divider class="custom-divider"></ion-item-divider>
-            <ion-item lines="none" class="ion-text-center">
+            <ion-item lines="none" class="ion-text-center" disabled>
               <div class="rating-content">
                 <ion-label>Calificación</ion-label>
                 <app-star-rate 
@@ -49,7 +49,7 @@
             </ion-item>
             <ion-item-divider class="custom-divider"></ion-item-divider>
             <ion-item (click)="irReview()" button lines="none" class="ion-text-center">
-              <ion-label>Agregar comentario</ion-label>
+              <ion-label>Agregar reseña</ion-label>
             </ion-item>
             <ion-item-divider class="custom-divider"></ion-item-divider>
             <ion-item button id="open-toast" (click)="copiarEnlace()" lines="none" class="ion-text-center">
@@ -66,17 +66,21 @@
       <ion-col size="12">
         <h3>Reviews populares</h3>
         <ion-item-divider class="custom-divider"></ion-item-divider>
-        <ion-item lines="none">
+
+        <ion-item lines="none" *ngFor="let review of reviews?.slice(0,3)" size="12" size-lg="12">
           <ion-avatar slot="start">
             <img src="assets/vagabong.webp" />
           </ion-avatar>
           <ion-label>
-            <h2>Reseña por Israel</h2><app-rating [rating]="3.5"></app-rating>
-            <p><b>easily one of the top 5 movies about taxes</b></p>
-            <p><i class="bi bi-heart-fill"></i> 1999 likes</p>
+            <h2>Reseña por Israel</h2><app-rating [rating]="review.rating"></app-rating><i *ngIf="review.is_favorite" class="bi bi-heart-fill"></i>
+            <p><b>{{review.review}}</b></p>
+            <!-- <p><i class="bi bi-heart-fill"></i> 1999 likes</p> -->
           </ion-label>
         </ion-item>
+        <ion-item-divider class="custom-divider"></ion-item-divider>
+        <h4 style="text-align: center;">Todas las reviews</h4>
       </ion-col>
+      <ion-item-divider class="custom-divider"></ion-item-divider>
     </ion-row>
   </ion-grid>
 </ion-content>

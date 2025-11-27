@@ -9,13 +9,14 @@ import { Router } from '@angular/router';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { timeout } from 'rxjs';
 import { Manga, MangaResponse } from '../core/interfaces/Manga';
+import { Reviews } from '../core/interfaces/Reviews';
 
 @Component({
   selector: 'app-manga',
   templateUrl: './manga.page.html',
   styleUrls: ['./manga.page.scss'],
   standalone: true,
-  imports: [IonButton,IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon],
+  imports: [IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
 })
 export class MangaPage implements OnInit {
   @ViewChild('liveToast', { static: false }) liveToast!: ElementRef;
@@ -24,6 +25,7 @@ export class MangaPage implements OnInit {
   manga?:Manga
   id:number = -1
   authors = ''
+  reviews?:Reviews[]
   constructor(private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
 
   ngOnInit() {
@@ -72,9 +74,10 @@ showManga(){
             this.manga.publication_date = this.manga.publication_date.split("-")[0];
             this.authors = this.manga.authors.map((a: any) => a.name).join(', ');
             
-
             console.log(this.manga.publication_date)
   
+            this.reviews = response.data.reviews
+            console.log(this.reviews)
           }
           
         }, error => {

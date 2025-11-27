@@ -74,8 +74,6 @@
     </ion-row>
     <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
-
-
     <ion-row>
       <ion-col *ngFor="let manga of mangas?.slice(0,6)" size="6" size-lg="2">
         <a [routerLink]="['/manga', manga.id]">
@@ -86,10 +84,28 @@
       </ion-col>
     </ion-row>
 
-    
-
     <!-- REVIEWS POPULARES EN UNBLOGA -->
     <ion-row class="ion-align-items-center ion-margin-bottom ion-margin-top">
+      <ion-col size="6">
+        <p>Los favoritos en Unbloga</p>
+      </ion-col>
+      <ion-col size="6" class="ion-text-end">
+        <a href=""><b>Más</b></a>
+      </ion-col>
+    </ion-row>
+    <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
+
+    <ion-row>
+      <ion-col *ngFor="let manga of favoritos?.slice(0,6)" size="6" size-lg="2">
+        <a [routerLink]="['/manga', manga.id]">
+          <ion-card>
+            <img [src]="manga.cover_url" />
+          </ion-card>
+        </a>
+      </ion-col>
+    </ion-row>
+    <!-- REVIEWS POPULARES EN UNBLOGA -->
+    <!-- <ion-row class="ion-align-items-center ion-margin-bottom ion-margin-top">
       <ion-col size="6">
         <p>Reviews populares en Unbloga</p>
       </ion-col>
@@ -100,7 +116,7 @@
 <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
     <ion-row>
-      <!-- Tarjeta 1 -->
+       Tarjeta 1
       <ion-col size="12" size-lg="6">
         <ion-card>
           <ion-card-content>
@@ -111,7 +127,7 @@
                 </ion-col>
                 <ion-col size="10">
                   <ion-row class="ion-align-items-center ion-margin-bottom" style="gap: 5px;">
-                    <!-- Bloque superior con foto de perfil -->
+                     Bloque superior con foto de perfil 
                     <ion-col size="auto" style="padding: 0;">
                       <div style="
                         width: 30px;
@@ -159,7 +175,7 @@
       </ion-col>
       
       
-      <!-- Tarjeta 2 -->
+      Tarjeta 2 
       <ion-col size="12" size-lg="6">
         <ion-card>
           <ion-card-content>
@@ -170,7 +186,7 @@
                 </ion-col>
                 <ion-col size="10">
                   <ion-row class="ion-align-items-center ion-margin-bottom" style="gap: 5px;">
-                    <!-- Bloque superior con foto de perfil -->
+                    Bloque superior con foto de perfil 
                     <ion-col size="auto" style="padding: 0;">
                       <div style="
                         width: 30px;
@@ -216,6 +232,6 @@
         <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
       </ion-col>
-    </ion-row>
+    </ion-row> -->
   </ion-grid>
 </ion-content>

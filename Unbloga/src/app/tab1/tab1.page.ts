@@ -16,12 +16,13 @@ import { NgFor } from '@angular/common';
 })
 export class Tab1Page {
     mangas?: Mangas[];
+    favoritos?: Mangas[];
 
   constructor(private mangaService: MangaService,private router: Router) {}
 
   ngOnInit(): void {
     this.mangasMasReseñadosUltimoMes()
-    
+    this.mangasFavoritos()
   }
 
   mangasMasReseñadosUltimoMes(){
@@ -34,9 +35,7 @@ export class Tab1Page {
           if (response.data){
             this.mangas = response.data
             console.log(this.mangas)
-  
           }
-          
         }, error => {
           console.log(error)
           if (error.name == "TimeOutError") {
@@ -44,6 +43,26 @@ export class Tab1Page {
           }
         }
       )
-    }
+  }
+
+  mangasFavoritos(){
+      console.log('hola')
+      this.mangaService.mangasFavoritos().pipe(
+        timeout(50000)
+      ).subscribe(
+        (response) => {
+          console.log(response.data)
+          if (response.data){
+            this.favoritos = response.data
+            console.log(this.favoritos)
+          }
+        }, error => {
+          console.log(error)
+          if (error.name == "TimeOutError") {
+            this.mangasFavoritos()
+          }
+        }
+      )
+  }
 }
 

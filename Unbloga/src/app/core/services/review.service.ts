@@ -6,6 +6,7 @@ import { Responses } from '../interfaces/Responses';
 import { Manga, MangaResponse } from '../interfaces/Manga';
 import { Mangas, MangasResponse } from '../interfaces/Mangas';
 import { CookieService } from 'ngx-cookie-service';
+import { ReviewsFromUserResponse } from '../interfaces/ReviewsFromUser';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class ReviewService {
   constructor(private cookies:CookieService, private http: HttpClient) { 
     this.urlBase = `${environment.apiUrlBase}review/`
   }
-  index(): Observable<MangasResponse>{
-    return this.http.get<MangasResponse>(`${this.urlBase}`);
+  index(): Observable<ReviewsFromUserResponse>{
+    return this.http.get<ReviewsFromUserResponse>(`${this.urlBase}`);
   }
   show(id:number): Observable<MangaResponse>{
     return this.http.get<MangaResponse>(`${this.urlBase}${id}`);
@@ -29,6 +30,9 @@ export class ReviewService {
   }
   recentReviewsFromFollowing(): Observable<Responses>{
     return this.http.get<Responses>(`${this.urlBase}following`);
+  }
+  favorite(): Observable<ReviewsFromUserResponse>{
+    return this.http.get<ReviewsFromUserResponse>(`${this.urlBase}favorite`);
   }
   login(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}login`, user);

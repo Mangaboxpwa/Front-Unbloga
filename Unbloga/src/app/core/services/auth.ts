@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Responses } from '../interfaces/Responses';
 import { CookieService } from 'ngx-cookie-service';
 import { LoginResponse } from '../interfaces/Login';
+import { UserMeResponse } from '../interfaces/user_me';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class Auth {
   constructor(private cookies:CookieService, private http: HttpClient) { 
     this.urlBase = `${environment.apiUrlBase}auth/`
   }
-  me():Observable<Responses>{
-    return this.http.get<Responses>(`${this.urlBase}me`)
+  me():Observable<UserMeResponse>{
+    return this.http.get<UserMeResponse>(`${this.urlBase}me`)
   }
   register(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}register`, user);

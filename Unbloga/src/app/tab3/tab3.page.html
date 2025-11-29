@@ -45,64 +45,38 @@
   <ion-item >
     <div class="avatar-wrapper">
     <ion-avatar>
-      <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      <img alt="Silhouette of a person's head" [src]="User?.avatar_url" />
     </ion-avatar>
   </div>
   </ion-item>
+  <!-- Favoritos -->
   <ion-item>
     <ion-label position="stacked">
     <h1 class="title">Favoritos</h1>
   </ion-label>
-    <ion-row class="tight-row">
-      <ion-col size="3" size-lg="2">
+    <ion-row class="tight-row" style="width: 100%;">
+      <ion-col *ngFor="let favorite of Favorites?.slice(0,4)"  size="3" size-lg="3">
+        <a [routerLink]="['/manga', favorite.manga.id]">
         <ion-card>
-          <img src="assets/vagabong.webp" />
+          <img [src]="favorite.manga.cover_url" />
         </ion-card>
+        </a>
       </ion-col>
-      <ion-col size="3" size-lg="2">
-        <ion-card>
-          <img src="assets/vagabong.webp" />
-        </ion-card>
-      </ion-col>
-      <ion-col size="3" size-lg="2">
-        <ion-card>
-          <img src="assets/vagabong.webp" />
-        </ion-card>
-      </ion-col>
-      <ion-col size="3" size-lg="2">
-        <ion-card>
-          <img src="assets/vagabong.webp" />
-        </ion-card>
-      </ion-col>
-      <!-- Copia más ion-col para más cards -->
     </ion-row>
   </ion-item>
+  <!-- Reseñas recientes -->
   <ion-item>
     <ion-label position="stacked">
     <h1 class="title">Actividad reciente</h1>
   </ion-label>
-    <ion-row class="tight-row">
-      <ion-col size="3" size-lg="2">
+    <ion-row class="tight-row" style="width: 100%;">
+      <ion-col *ngFor="let review of Reviews?.slice(0,4)"  size="3" size-lg="3">
+        <a [routerLink]="['/manga', review.manga.id]">
         <ion-card>
-          <img src="assets/vagabong.webp" />
+          <img [src]="review.manga.cover_url" />
         </ion-card>
+        </a>
       </ion-col>
-      <ion-col size="3" size-lg="2">
-        <ion-card>
-          <img src="assets/vagabong.webp" />
-        </ion-card>
-      </ion-col>
-      <ion-col size="3" size-lg="2">
-        <ion-card>
-          <img src="assets/vagabong.webp" />
-        </ion-card>
-      </ion-col>
-      <ion-col size="3" size-lg="2">
-        <ion-card>
-          <img src="assets/vagabong.webp" />
-        </ion-card>
-      </ion-col>
-      <!-- Copia más ion-col para más cards -->
     </ion-row>
   </ion-item>
   <!-- <ion-item >
@@ -139,28 +113,28 @@
   <ion-item button [routerLink]="'/reviews'">
     <ion-label>Reviews</ion-label>
 
-    <ion-badge slot="end" color="none">12</ion-badge>
+    <ion-badge slot="end" color="none">{{Reviews?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
   <ion-item button [routerLink]="'/favoritos'">
     <ion-label>Favoritos</ion-label>
 
-    <ion-badge slot="end" color="none">8</ion-badge>
+    <ion-badge slot="end" color="none">{{this.Favorites?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
   <ion-item button [routerLink]="'/siguiendo'">
     <ion-label>Siguiendo</ion-label>
 
-    <ion-badge slot="end" color="none">25</ion-badge>
+    <ion-badge slot="end" color="none">{{this.User?.following?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
   <ion-item button [routerLink]="'/seguidores'">
     <ion-label>Seguidores</ion-label>
 
-    <ion-badge slot="end" color="none">120</ion-badge>
+    <ion-badge slot="end" color="none">{{this.User?.followers?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 

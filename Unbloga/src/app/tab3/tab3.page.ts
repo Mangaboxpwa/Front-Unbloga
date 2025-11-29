@@ -3,8 +3,11 @@ import { CommonModule } from '@angular/common';
 import {  IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../core/services/auth';
+import { ReviewService } from '../core/services/review.service';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { timeout } from 'rxjs';
+import { UserMe } from '../core/interfaces/user_me';
+import { ReviewsFromUser } from '../core/interfaces/ReviewsFromUser';
 
 Chart.register(...registerables);
 
@@ -18,8 +21,10 @@ Chart.register(...registerables);
 export class Tab3Page {
   @ViewChild('barCanvas') private barCanvas!: ElementRef;
   private barChart!: Chart;
-
-constructor(private router: Router, private auth: Auth) {
+  User?:UserMe
+  Reviews?:ReviewsFromUser[]
+  Favorites?:ReviewsFromUser[]
+constructor(private reviewService:ReviewService, private router: Router, private auth: Auth) {
 }
 
 ngOnInit(): void {
@@ -27,6 +32,8 @@ ngOnInit(): void {
   //Add 'implements OnInit' to the class.
   if (this.auth.isLoggedIn()){
     this.me()
+    this.index()
+    this.favorites()
   }
 }
   get isLoggedIn(): boolean {
@@ -48,22 +55,55 @@ ngOnInit(): void {
 
   me(){
     this.auth.me().pipe(
-            timeout(50000)
-          ).subscribe(
-            (response) => {
-              console.log(response)
-              if (response.data){
-                
-              }
-            }, error => {
-              console.log(error)
-              if (error.name == "TimeOutError") {
-                this.me()
-              }
-            }
-          )
+      timeout(50000)
+    ).subscribe(
+      (response) => {
+        console.log(response)
+        if (response.data){
+          this.User = response.data
+        }
+      }, error => {
+        console.log(error)
+        if (error.name == "TimeOutError") {
+          this.me()
+        }
+      }
+    )
   }
-  
+  index(){
+    this.reviewService.index().pipe(
+      timeout(50000)
+    ).subscribe(
+      (response) => {
+        console.log(response)
+        if (response.data){
+          this.Reviews = response.data
+        }
+      }, error => {
+        console.log(error)
+        if (error.name == "TimeOutError") {
+          this.me()
+        }
+      }
+    )
+  }
+  favorites(){
+    this.reviewService.favorite().pipe(
+      timeout(50000)
+    ).subscribe(
+      (response) => {
+        console.log(response)
+        if (response.data){
+          this.Favorites = response.data
+        }
+      }, error => {
+        console.log(error)
+        if (error.name == "TimeOutError") {
+          this.me()
+        }
+      }
+    )
+  }
 /*   ngAfterViewChecked() {
   // Si ya existe el canvas y no he creado el chart, lo creo
   if (this.barCanvas && !this.barChart) {

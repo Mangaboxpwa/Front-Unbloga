@@ -27,6 +27,9 @@ export class ReviewService {
   update(review:any, reviewId:number): Observable<Responses>{
     return this.http.put<Responses>(`${this.urlBase}${reviewId}`,review);
   }
+  recentReviewsFromFollowing(): Observable<Responses>{
+    return this.http.get<Responses>(`${this.urlBase}following`);
+  }
   login(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}login`, user);
   }

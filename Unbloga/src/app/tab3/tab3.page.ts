@@ -1,9 +1,10 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
+import {  IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon } from '@ionic/angular/standalone';
+import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../core/services/auth';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { timeout } from 'rxjs';
 
 Chart.register(...registerables);
 
@@ -12,14 +13,22 @@ Chart.register(...registerables);
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonIcon, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonBadge, RouterLink,IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
 })
 export class Tab3Page {
   @ViewChild('barCanvas') private barCanvas!: ElementRef;
   private barChart!: Chart;
 
-constructor(private router: Router, private auth: Auth) {}
+constructor(private router: Router, private auth: Auth) {
+}
 
+ngOnInit(): void {
+  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+  //Add 'implements OnInit' to the class.
+  if (this.auth.isLoggedIn()){
+    this.me()
+  }
+}
   get isLoggedIn(): boolean {
     return this.auth.isLoggedIn();
   }
@@ -36,8 +45,26 @@ constructor(private router: Router, private auth: Auth) {}
     this.auth.logout();
     this.router.navigate(['/tabs/tab3']);
   }
+
+  me(){
+    this.auth.me().pipe(
+            timeout(50000)
+          ).subscribe(
+            (response) => {
+              console.log(response)
+              if (response.data){
+                
+              }
+            }, error => {
+              console.log(error)
+              if (error.name == "TimeOutError") {
+                this.me()
+              }
+            }
+          )
+  }
   
-  ngAfterViewChecked() {
+/*   ngAfterViewChecked() {
   // Si ya existe el canvas y no he creado el chart, lo creo
   if (this.barCanvas && !this.barChart) {
     this.loadChart();
@@ -96,5 +123,5 @@ constructor(private router: Router, private auth: Auth) {}
 
   onMouseUp() {
     console.log('Soltado');
-  }
+  } */
 }

@@ -105,33 +105,66 @@
       <!-- Copia más ion-col para más cards -->
     </ion-row>
   </ion-item>
-  <ion-item >
+  <!-- <ion-item >
   <ion-label position="stacked">
     <h1 class="title">Ratings</h1>
   </ion-label>
 
   <div class="rating-row">
-    <!--  Estrella izquierda -->
+     Estrella izquierda 
     <i name="heart-outline" class="bi bi-heart-fill heart-icon tiny"></i>
 
-    <!--  Gráfica -->
+    Gráfica
     <div class="chart-container"
          (mousedown)="onMouseDown()"
          (mouseup)="onMouseUp()">
       <canvas #barCanvas></canvas>
     </div>
 
-    <!-- Contenedor corazones y valor -->
+    Contenedor corazones y valor
     <div class="hearts-container">
 
 
-      <!-- corazones abajo -->
+      corazones abajo 
       <div class="hearts-row">
         <i name="heart" *ngFor="let h of [1,2,3,4,5]" class="bi bi-heart-fill heart-icon tiny"></i>
       </div>
     </div>
   </div>
-</ion-item>
+</ion-item> -->
+
+<!-- Tercera sección -->
+<ion-list lines="none">
+
+  <ion-item button [routerLink]="'/reviews'">
+    <ion-label>Reviews</ion-label>
+
+    <ion-badge slot="end" color="none">12</ion-badge>
+    <i class="bi bi-chevron-right" slot="end"></i>
+  </ion-item>
+
+  <ion-item button [routerLink]="'/favoritos'">
+    <ion-label>Favoritos</ion-label>
+
+    <ion-badge slot="end" color="none">8</ion-badge>
+    <i class="bi bi-chevron-right" slot="end"></i>
+  </ion-item>
+
+  <ion-item button [routerLink]="'/siguiendo'">
+    <ion-label>Siguiendo</ion-label>
+
+    <ion-badge slot="end" color="none">25</ion-badge>
+    <i class="bi bi-chevron-right" slot="end"></i>
+  </ion-item>
+
+  <ion-item button [routerLink]="'/seguidores'">
+    <ion-label>Seguidores</ion-label>
+
+    <ion-badge slot="end" color="none">120</ion-badge>
+    <i class="bi bi-chevron-right" slot="end"></i>
+  </ion-item>
+
+</ion-list>
 
 
 

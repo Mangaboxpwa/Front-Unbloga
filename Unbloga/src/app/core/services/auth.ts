@@ -16,6 +16,9 @@ export class Auth {
   constructor(private cookies:CookieService, private http: HttpClient) { 
     this.urlBase = `${environment.apiUrlBase}auth/`
   }
+  me():Observable<Responses>{
+    return this.http.get<Responses>(`${this.urlBase}me`)
+  }
   register(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}register`, user);
   }

@@ -4,9 +4,10 @@ import { StarRateComponent } from '../star-rate/star-rate.component';
 import { RatingComponent } from '../rating/rating.component';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonRow } from '@ionic/angular/standalone';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { ReviewService } from '../core/services/review.service';
+import { SpeechService } from '../core/services/speech.service';
 import { timeout } from 'rxjs';
 import { Manga, MangaResponse } from '../core/interfaces/Manga';
 import { Reviews } from '../core/interfaces/Reviews';
@@ -19,6 +20,8 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonGrid,
+  IonCol,
   IonItem,
   IonLabel,
   IonList,
@@ -53,7 +56,9 @@ imports: [
   ],
 })
 export class ReviewPage implements OnInit {
+  microfono_estado:boolean = true;
   rating: number = 0;
+  texto = '';
   like = false;
   id:number = -1
   reviewId:number = -1
@@ -72,7 +77,7 @@ alertButtons = [
     },
   ];
 
-  constructor(private cookie: CookieService,private fb: FormBuilder,private router: Router,private route: ActivatedRoute, private mangaService:MangaService,private reviewService:ReviewService) { 
+  constructor(private speechService: SpeechService, private cookie: CookieService,private fb: FormBuilder,private router: Router,private route: ActivatedRoute, private mangaService:MangaService,private reviewService:ReviewService) { 
     this.ReviewForm = this.fb.group({
       manga_id: ['', [Validators.required]],
       rating: ['', [Validators.required]],
@@ -215,5 +220,24 @@ update(){
 setOpen(isOpen: boolean) {
     this.isAlertOpen = isOpen;
   } 
+
+microfono(){
+  if(this.microfono_estado){
+    this.empezar()
+  }else{
+    this.detener()
+  }
+  this.microfono_estado = !this.microfono_estado
+  
+}
+empezar() {
+  this.speechService.start(t => this.texto = t);
+}
+
+detener() {
+  this.speechService.stop();
+  this.ReviewForm.controls['review'].setValue(this.texto)
+  console.log(this.texto)
+}
 }
 

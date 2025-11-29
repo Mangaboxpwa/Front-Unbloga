@@ -55,3 +55,13 @@ ion-item {
   color: #af9cd9;
   cursor: pointer;
 }
+.mic-btn {
+  margin-top: 4px;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+.mic-icon {
+  margin-top: -60px; /* lo sube */
+  font-size: 20px;
+  color: var(--ion-color-medium);
+}

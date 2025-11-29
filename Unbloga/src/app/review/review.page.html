@@ -46,10 +46,26 @@
       </ion-item>
 
       <ion-item>
-        <form [formGroup]="ReviewForm">
-          <ion-textarea formControlName="review" style="height: 100px;" label="Comentario" labelPlacement="floating" placeholder="Agrega una review"></ion-textarea>
-        </form>
-      </ion-item>
+
+  <!-- PRIMERO en el HTML, PERO alineado a la derecha -->
+   <ion-button (click)="microfono()" name="mic-outline"
+    slot="end" class="mic-icon" fill="clear">
+    <i *ngIf="microfono_estado"  class=" bi bi-mic"></i>
+    <i *ngIf="!microfono_estado" class="bi bi-stop-fill"></i>
+  </ion-button>
+
+  <form [formGroup]="ReviewForm" style="width: 100%;">
+    <ion-textarea
+      formControlName="review"
+      style="height: 100px;"
+      label="Comentario"
+      labelPlacement="floating"
+      placeholder="Agrega una review">
+    </ion-textarea>
+  </form>
+
+</ion-item>
+
     </ion-list>
   </ion-card-content>
 </ion-card>

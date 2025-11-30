@@ -1,11 +1,10 @@
 import { Component, OnInit,ViewChild,ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {IonButton,IonToast,IonItemDivider, IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon} from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { RatingComponent } from "../rating/rating.component";
 import { StarRateComponent } from "../star-rate/star-rate.component";
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { timeout } from 'rxjs';
 import { Manga, MangaResponse } from '../core/interfaces/Manga';
@@ -17,7 +16,7 @@ import { User } from '../core/interfaces/Users';
   templateUrl: './manga.page.html',
   styleUrls: ['./manga.page.scss'],
   standalone: true,
-  imports: [IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
+  imports: [RouterLink, IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
 })
 export class MangaPage implements OnInit {
   @ViewChild('liveToast', { static: false }) liveToast!: ElementRef;

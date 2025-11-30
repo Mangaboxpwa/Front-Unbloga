@@ -1,0 +1,91 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {  IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon } from '@ionic/angular/standalone';
+import { Router, RouterLink,ActivatedRoute } from '@angular/router';
+import { timeout } from 'rxjs';
+import { ReviewsFromUser } from 'src/app/core/interfaces/ReviewsFromUser';
+import { UserMe } from 'src/app/core/interfaces/user_me';
+import { Auth } from 'src/app/core/services/auth';
+import { ReviewService } from 'src/app/core/services/review.service';
+import { UserService } from 'src/app/core/services/user.service';
+
+@Component({
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.page.html',
+  styleUrls: ['./user-profile.page.scss'],
+  standalone: true,
+  imports: [IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+})
+export class UserProfilePage implements OnInit {
+User?:UserMe
+  Reviews?:ReviewsFromUser[]
+  Favorites?:ReviewsFromUser[]
+  id:number = 0
+  constructor(private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
+
+  ngOnInit() {
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    console.log(this.id)
+    if (this.id > 0){
+      this.userInfo()
+      this.reviews()
+      this.favorites()
+    }
+  }
+
+
+  userInfo(){
+  console.log('entra')
+  this.userService.userInfo(this.id).pipe(
+        timeout(50000)
+      ).subscribe(
+        (response) => {
+          console.log(response)
+          if (response.data){
+            this.User = response.data
+          }
+          
+        }, error => {
+          console.log(error)
+          if (error.name == "TimeOutError") {
+            //this.indexMangas()
+          }
+        }
+      )
+}
+reviews(){
+    this.reviewService.index(this.id).pipe(
+      timeout(50000)
+    ).subscribe(
+      (response) => {
+        console.log(response)
+        if (response.data){
+          this.Reviews = response.data
+        }
+      }, error => {
+        console.log(error)
+        if (error.name == "TimeOutError") {
+          this.reviews()
+        }
+      }
+    )
+  }
+  favorites(){
+    this.reviewService.favorite(this.id).pipe(
+      timeout(50000)
+    ).subscribe(
+      (response) => {
+        console.log(response)
+        if (response.data){
+          this.Favorites = response.data
+        }
+      }, error => {
+        console.log(error)
+        if (error.name == "TimeOutError") {
+          this.favorites()
+        }
+      }
+    )
+  }
+}

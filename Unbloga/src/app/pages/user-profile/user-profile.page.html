@@ -1,0 +1,111 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{User?.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+  <ion-item >
+    <div class="avatar-wrapper">
+      <ion-avatar>
+        <img alt="Silhouette of a person's head" [src]="User?.avatar_url" />
+      </ion-avatar>
+      <ion-button fill="outline" color="medium">Seguir</ion-button>
+    </div>
+  </ion-item>
+  <!-- Favoritos -->
+  <ion-item>
+    <ion-label position="stacked">
+    <h1 class="title">Favoritos</h1>
+  </ion-label>
+    <ion-row class="tight-row" style="width: 100%;">
+      <ion-col *ngFor="let favorite of Favorites?.slice(0,4)"  size="3" size-lg="3">
+        <a [routerLink]="['/manga', favorite.manga.id]">
+        <ion-card>
+          <img [src]="favorite.manga.cover_url" />
+        </ion-card>
+        </a>
+      </ion-col>
+    </ion-row>
+  </ion-item>
+  <!-- Reseñas recientes -->
+  <ion-item>
+    <ion-label position="stacked">
+    <h1 class="title">Actividad reciente</h1>
+  </ion-label>
+    <ion-row class="tight-row" style="width: 100%;">
+      <ion-col *ngFor="let review of Reviews?.slice(0,4)"  size="3" size-lg="3">
+        <a [routerLink]="['/manga', review.manga.id]">
+        <ion-card>
+          <img [src]="review.manga.cover_url" />
+        </ion-card>
+        </a>
+      </ion-col>
+    </ion-row>
+  </ion-item>
+  <!-- <ion-item >
+  <ion-label position="stacked">
+    <h1 class="title">Ratings</h1>
+  </ion-label>
+
+  <div class="rating-row">
+     Estrella izquierda 
+    <i name="heart-outline" class="bi bi-heart-fill heart-icon tiny"></i>
+
+    Gráfica
+    <div class="chart-container"
+         (mousedown)="onMouseDown()"
+         (mouseup)="onMouseUp()">
+      <canvas #barCanvas></canvas>
+    </div>
+
+    Contenedor corazones y valor
+    <div class="hearts-container">
+
+
+      corazones abajo 
+      <div class="hearts-row">
+        <i name="heart" *ngFor="let h of [1,2,3,4,5]" class="bi bi-heart-fill heart-icon tiny"></i>
+      </div>
+    </div>
+  </div>
+</ion-item> -->
+
+<!-- Tercera sección -->
+<ion-list lines="none">
+
+  <ion-item button [routerLink]="'/reviews'">
+    <ion-label>Reviews</ion-label>
+
+    <ion-badge slot="end" color="none">{{Reviews?.length}}</ion-badge>
+    <i class="bi bi-chevron-right" slot="end"></i>
+  </ion-item>
+
+  <ion-item button [routerLink]="'/favoritos'">
+    <ion-label>Favoritos</ion-label>
+
+    <ion-badge slot="end" color="none">{{this.Favorites?.length}}</ion-badge>
+    <i class="bi bi-chevron-right" slot="end"></i>
+  </ion-item>
+
+  <ion-item button [routerLink]="['/network', this.id]">
+    <ion-label>Siguiendo</ion-label>
+
+    <ion-badge slot="end" color="none">{{this.User?.following?.length}}</ion-badge>
+    <i class="bi bi-chevron-right" slot="end"></i>
+  </ion-item>
+
+  <ion-item button [routerLink]="['/network', this.id]">
+    <ion-label>Seguidores</ion-label>
+
+    <ion-badge slot="end" color="none">{{this.User?.followers?.length}}</ion-badge>
+    <i class="bi bi-chevron-right" slot="end"></i>
+  </ion-item>
+
+</ion-list>
+
+
+
+</ion-list>
+</ion-content>

@@ -20,6 +20,9 @@ export class Auth {
   me():Observable<UserMeResponse>{
     return this.http.get<UserMeResponse>(`${this.urlBase}me`)
   }
+  userInfo(id:number):Observable<UserMeResponse>{
+    return this.http.get<UserMeResponse>(`${this.urlBase}user-info/${id}`)
+  }
   register(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}register`, user);
   }

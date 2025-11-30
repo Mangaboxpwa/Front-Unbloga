@@ -16,8 +16,8 @@ export class ReviewService {
   constructor(private cookies:CookieService, private http: HttpClient) { 
     this.urlBase = `${environment.apiUrlBase}review/`
   }
-  index(): Observable<ReviewsFromUserResponse>{
-    return this.http.get<ReviewsFromUserResponse>(`${this.urlBase}`);
+  index(userId?: number): Observable<ReviewsFromUserResponse>{
+    return this.http.get<ReviewsFromUserResponse>(userId ? `${this.urlBase}user/${userId}` : `${this.urlBase}user`);
   }
   show(id:number): Observable<MangaResponse>{
     return this.http.get<MangaResponse>(`${this.urlBase}${id}`);
@@ -31,8 +31,8 @@ export class ReviewService {
   recentReviewsFromFollowing(): Observable<Responses>{
     return this.http.get<Responses>(`${this.urlBase}following`);
   }
-  favorite(): Observable<ReviewsFromUserResponse>{
-    return this.http.get<ReviewsFromUserResponse>(`${this.urlBase}favorite`);
+  favorite(userId?: number): Observable<ReviewsFromUserResponse>{
+    return this.http.get<ReviewsFromUserResponse>(userId ? `${this.urlBase}favorite/${userId}` : `${this.urlBase}favorite`);
   }
   login(user:any): Observable<Responses>{
     return this.http.post<Responses>(`${this.urlBase}login`, user);

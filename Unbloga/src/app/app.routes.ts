@@ -42,4 +42,16 @@ export const routes: Routes = [
     path: 'new-pass',
     loadComponent: () => import('./pages/new-pass/new-pass.page').then( m => m.NewPassPage)
   },
+  {
+    path: 'network/:id',
+    loadComponent: () => import('./pages/network/network.page').then( m => m.NetworkPage)
+  },
+  {
+    path: 'network/',
+    loadComponent: () => import('./pages/network/network.page').then( m => m.NetworkPage)
+  },
+  {
+    path: 'user-profile/:id',
+    loadComponent: () => import('./pages/user-profile/user-profile.page').then( m => m.UserProfilePage)
+  },
 ];

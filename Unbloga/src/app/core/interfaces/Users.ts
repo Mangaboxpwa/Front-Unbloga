@@ -8,4 +8,5 @@ export interface User {
     avatar_url: string,
     email: string,
     name: string,
+    is_following:boolean,
 }

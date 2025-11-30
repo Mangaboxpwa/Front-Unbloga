@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>network</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment>
+  <ion-segment-button value="first" content-id="first">
+    <ion-label>Seguidos</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="second" content-id="second">
+    <ion-label>Seguidores</ion-label>
+  </ion-segment-button>
+</ion-segment>
+<ion-segment-view>
+  <ion-segment-content id="first">First</ion-segment-content>
+
+  
+  <ion-segment-content id="second">
+    <ion-list lines="none">
+
+      <ion-item *ngFor="let follower of this.followers" (click)="goToProfile(follower.id)">
+        <div class="avatar-wrapper">
+          <ion-avatar>
+            <img alt="Silhouette of a person's head" [src]="follower.avatar_url" />
+          </ion-avatar>
+        </div>
+        <ion-label style="margin-left: 5px;">{{follower.name}}</ion-label>
+      
+        <ion-badge slot="end" color="none" id="open-action-sheet"  button (click)="openActions($event, follower)"><i class="bi bi-three-dots"></i></ion-badge>
+        <i *ngIf="!follower.is_following" class="bi bi-plus-circle-fill" slot="end" button></i>
+        <i *ngIf="follower.is_following" class="bi bi-check-circle-fill" slot="end" button></i>
+      </ion-item>
+    </ion-list>
+  </ion-segment-content>
+</ion-segment-view> 
+<ion-action-sheet
+  [isOpen]="isActionSheetOpen"
+  [header]="UserActionSheet?.name"
+  [buttons]="actionSheetButtons"
+  (didDismiss)="setOpen()"
+></ion-action-sheet>
+</ion-content>

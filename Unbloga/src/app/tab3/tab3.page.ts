@@ -82,7 +82,7 @@ ngOnInit(): void {
       }, error => {
         console.log(error)
         if (error.name == "TimeOutError") {
-          this.me()
+          this.index()
         }
       }
     )
@@ -99,7 +99,7 @@ ngOnInit(): void {
       }, error => {
         console.log(error)
         if (error.name == "TimeOutError") {
-          this.me()
+          this.favorites()
         }
       }
     )

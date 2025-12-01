@@ -22,8 +22,11 @@ export class FollowService {
   following(userId?: number): Observable<Responses>{
     return this.http.get<Responses>(userId ? `${this.urlBase}following/${userId}` : `${this.urlBase}following`);
   }
-  store(review:any): Observable<Responses>{
-    return this.http.post<Responses>(`${this.urlBase}`,review);
+  follow(id:number): Observable<Responses>{
+    return this.http.post<Responses>(`${this.urlBase}follow/${id}`,{});
+  }
+  unfollow(id:number): Observable<Responses>{
+    return this.http.post<Responses>(`${this.urlBase}unfollow/${id}`,{});
   }
   update(review:any, reviewId:number): Observable<Responses>{
     return this.http.put<Responses>(`${this.urlBase}${reviewId}`,review);

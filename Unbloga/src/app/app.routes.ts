@@ -47,7 +47,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/network/network.page').then( m => m.NetworkPage)
   },
   {
-    path: 'network/',
+    path: 'network',
     loadComponent: () => import('./pages/network/network.page').then( m => m.NetworkPage)
   },
   {

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {IonActionSheet, IonList,IonItem, IonBadge, IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView, IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar } from '@ionic/angular/standalone';
-import { Router, RouterLink,ActivatedRoute } from '@angular/router';
+import { IonButton, IonModal, IonActionSheet, IonList,IonItem, IonBadge, IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView, IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonToast, IonIcon } from '@ionic/angular/standalone';
+import { Router, RouterLink,ActivatedRoute, } from '@angular/router';
 import { FollowService } from 'src/app/core/services/follows.service';
 import { timeout } from 'rxjs';
 import { User } from 'src/app/core/interfaces/Users';
@@ -11,26 +11,25 @@ import { User } from 'src/app/core/interfaces/Users';
   templateUrl: './network.page.html',
   styleUrls: ['./network.page.scss'],
   standalone: true,
-  imports: [IonActionSheet, IonAvatar, IonList, RouterLink, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonButton, IonModal,IonToast, IonActionSheet, IonAvatar, IonList, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class NetworkPage implements OnInit {
  public actionSheetButtons = [
     {
-      text: 'Delete',
-      role: 'destructive',
+      text: 'Ver código QR',
       data: {
-        action: 'delete',
+        action: 'QR',
       },
     },
     {
-      text: 'Share',
-      handler:()=>this.compartir(),
+      text: 'Compartir',
+      handler:()=>this.compartir(true),
       data: {
         action: 'share',
       },
     },
     {
-      text: 'Cancel',
+      text: 'Cerrar',
       role: 'cancel',
       data: {
         action: 'cancel',
@@ -41,7 +40,11 @@ export class NetworkPage implements OnInit {
   followers?:User[]
   following?:User[]
   UserActionSheet?:User
+  indexUserSelected:number = 0
   isActionSheetOpen = false;
+  isToastOpen = false;
+  isModalOpen = false;
+  onFollowers = false;
   constructor(private followService:FollowService, private router: Router,private route: ActivatedRoute,) { }
 
   ngOnInit() {
@@ -125,6 +128,85 @@ export class NetworkPage implements OnInit {
       }
     )
   }
+  follow(){
+    if(this.UserActionSheet?.id)
+      {this.followService.follow(this.UserActionSheet?.id).pipe(
+      timeout(50000)
+      ).subscribe(
+      (response) => {
+        console.log(response)
+        if (response.data){
+          if (this.onFollowers && this.followers){
+            this.followers[this.indexUserSelected].is_following = true
+            if (this.following){
+              for (let i = 0; i < this.following.length; i++) {
+                if (this.UserActionSheet?.id == this.following[i].id){
+                  this.following[i].is_following = true
+                }
+              }
+            }
+          }
+          if (!this.onFollowers && this.following){
+            this.following[this.indexUserSelected].is_following = true
+            if (this.followers){
+            for (let i = 0; i < this.followers.length; i++) {
+              if (this.UserActionSheet?.id == this.followers[i].id){
+                this.followers[i].is_following = true
+              }
+            }
+          }
+          }
+          this.setModalOpen(false)
+        }
+      }, error => {
+        console.log(error)
+        if (error.name == "TimeOutError") {
+          this.follow()
+        }
+      }
+      )
+    }
+  }
+  unfollow(){
+    if(this.UserActionSheet?.id)
+      {this.followService.unfollow(this.UserActionSheet?.id).pipe(
+      timeout(50000)
+      ).subscribe(
+      (response) => {
+        console.log(response)
+        if (response.message = "Has dejado de seguir a este usuario"){
+          if (this.onFollowers && this.followers){
+            this.followers[this.indexUserSelected].is_following = false
+            if (this.following){
+              for (let i = 0; i < this.following.length; i++) {
+                if (this.UserActionSheet?.id == this.following[i].id){
+                  this.following[i].is_following = false
+                }
+              }
+            }
+          }
+          if (!this.onFollowers && this.following){
+            this.following[this.indexUserSelected].is_following = false
+            if (this.followers){
+            for (let i = 0; i < this.followers.length; i++) {
+              if (this.UserActionSheet?.id == this.followers[i].id){
+                this.followers[i].is_following = false
+              }
+            }
+          }
+          }
+          this.setModalOpen(false)
+        }
+      }, error => {
+        console.log(error)
+        if (error.name == "TimeOutError") {
+          this.follow()
+        }
+      }
+      )
+    }
+  }
+
   goToProfile(id: number) {
   this.router.navigate(['/user-profile', id]);
 }
@@ -137,7 +219,26 @@ export class NetworkPage implements OnInit {
 setOpen(){
   this.isActionSheetOpen = false; 
 }
-compartir(){
-
+compartir(isOpen:boolean){
+  this.isToastOpen = isOpen;
+  if (isOpen){
+    const url ="https://igmarapruebameporfavor.site/user-profile/"+this.UserActionSheet?.id;
+  navigator.clipboard.writeText(url).then(() => {
+      
+  }).catch(err => {
+    console.error('Error al copiar:', err);
+  });
+  }
+}
+openActionsFollow(event: Event, follower: any, i:number, onFollowers:boolean) {
+  event.stopPropagation(); // ⛔ Evita activar el ion-item
+  console.log("Abrir action sheet", follower);
+  this.UserActionSheet = follower
+  this.setModalOpen(true)
+  this.indexUserSelected = i
+  this.onFollowers = onFollowers
+}
+setModalOpen(isOpen:boolean){
+  this.isModalOpen = isOpen;
 }
 }

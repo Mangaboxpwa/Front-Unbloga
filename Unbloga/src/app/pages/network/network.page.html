@@ -14,13 +14,11 @@
   </ion-segment-button>
 </ion-segment>
 <ion-segment-view>
-  <ion-segment-content id="first">First</ion-segment-content>
-
-  
-  <ion-segment-content id="second">
+  <!-- SEGUIDOS CONTENIDOOOOOOOOO -->
+  <ion-segment-content id="first">
     <ion-list lines="none">
 
-      <ion-item *ngFor="let follower of this.followers" (click)="goToProfile(follower.id)">
+      <ion-item *ngFor="let follower of this.following let i = index" (click)="goToProfile(follower.id)">
         <div class="avatar-wrapper">
           <ion-avatar>
             <img alt="Silhouette of a person's head" [src]="follower.avatar_url" />
@@ -29,8 +27,28 @@
         <ion-label style="margin-left: 5px;">{{follower.name}}</ion-label>
       
         <ion-badge slot="end" color="none" id="open-action-sheet"  button (click)="openActions($event, follower)"><i class="bi bi-three-dots"></i></ion-badge>
-        <i *ngIf="!follower.is_following" class="bi bi-plus-circle-fill" slot="end" button></i>
-        <i *ngIf="follower.is_following" class="bi bi-check-circle-fill" slot="end" button></i>
+        <i *ngIf="!follower.is_following" id="open-custom-dialog" class="bi bi-plus-circle-fill" slot="end" button (click)="openActionsFollow($event, follower, i, false)"></i>
+        <i style="color:rgb(50, 212, 35)" *ngIf="follower.is_following" id="open-custom-dialog" class="bi bi-check-circle-fill" slot="end" button (click)="openActionsFollow($event, follower, i, false)"></i>
+      </ion-item>
+    </ion-list>
+  </ion-segment-content>
+
+  
+  <!-- SEGUIDORES CONTENIDOOOOO -->
+  <ion-segment-content id="second">
+    <ion-list lines="none">
+
+      <ion-item *ngFor="let follower of this.followers let i = index" (click)="goToProfile(follower.id)">
+        <div class="avatar-wrapper">
+          <ion-avatar>
+            <img alt="Silhouette of a person's head" [src]="follower.avatar_url" />
+          </ion-avatar>
+        </div>
+        <ion-label style="margin-left: 5px;">{{follower.name}}</ion-label>
+      
+        <ion-badge slot="end" color="none" id="open-action-sheet"  button (click)="openActions($event, follower)"><i class="bi bi-three-dots"></i></ion-badge>
+        <i *ngIf="!follower.is_following" id="open-custom-dialog" class="bi bi-plus-circle-fill" slot="end" button (click)="openActionsFollow($event, follower, i, true)"></i>
+        <i style="color:rgb(50, 212, 35)" *ngIf="follower.is_following" id="open-custom-dialog" class="bi bi-check-circle-fill" slot="end" button (click)="openActionsFollow($event, follower, i, true)"></i>
       </ion-item>
     </ion-list>
   </ion-segment-content>
@@ -41,4 +59,20 @@
   [buttons]="actionSheetButtons"
   (didDismiss)="setOpen()"
 ></ion-action-sheet>
+<ion-toast (didDismiss)="compartir(false)" [isOpen]="isToastOpen" trigger="open-toast" message="Enlace copiado" [duration]="3000"></ion-toast>
+<ion-modal backdropDismiss="false" [isOpen]="isModalOpen" id="example-modal" #modal trigger="open-custom-dialog">
+    <ng-template>
+      <div class="wrapper">
+        <h3 style="text-align: center;" *ngIf="UserActionSheet?.is_following">Dejar de seguir {{this.UserActionSheet?.name}}</h3>
+        <h3 style="text-align: center;" *ngIf="!UserActionSheet?.is_following">Seguir {{this.UserActionSheet?.name}}</h3>
+        
+            <div class="actions-row">
+              <ion-button style="color: white;" (click)="setModalOpen(false)" fill="clear">Cancelar</ion-button>
+              <ion-button (click)="follow()" color="tertiary" *ngIf="!UserActionSheet?.is_following">Seguir</ion-button>
+              <ion-button (click)="unfollow()" color="tertiary" *ngIf="UserActionSheet?.is_following">Dejar de seguir</ion-button>
+            </div>
+          
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>

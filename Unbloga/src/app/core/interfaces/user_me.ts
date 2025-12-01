@@ -11,6 +11,7 @@ export interface UserMe {
     avatar_url: string,
     email: string,
     name: string,
+    is_following:boolean,
     reviews:Reviews[],
     following:User[],
     followers:User[],

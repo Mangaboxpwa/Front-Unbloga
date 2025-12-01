@@ -200,7 +200,7 @@ export class NetworkPage implements OnInit {
       }, error => {
         console.log(error)
         if (error.name == "TimeOutError") {
-          this.follow()
+          this.unfollow()
         }
       }
       )

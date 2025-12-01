@@ -9,20 +9,21 @@ import { UserMe } from 'src/app/core/interfaces/user_me';
 import { Auth } from 'src/app/core/services/auth';
 import { ReviewService } from 'src/app/core/services/review.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { FollowService } from 'src/app/core/services/follows.service';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.page.html',
   styleUrls: ['./user-profile.page.scss'],
   standalone: true,
-  imports: [IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class UserProfilePage implements OnInit {
 User?:UserMe
   Reviews?:ReviewsFromUser[]
   Favorites?:ReviewsFromUser[]
   id:number = 0
-  constructor(private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
+  constructor(private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -88,4 +89,47 @@ reviews(){
       }
     )
   }
+  follow(){
+      if(this.User?.id)
+        {this.followService.follow(this.User.id).pipe(
+        timeout(50000)
+        ).subscribe(
+        (response) => {
+          console.log(response)
+          if (response.data){
+            if(this.User){
+              this.User.is_following = true
+            }
+            
+          }
+        }, error => {
+          console.log(error)
+          if (error.name == "TimeOutError") {
+            this.follow()
+          }
+        }
+        )
+      }
+    }
+    unfollow(){
+      if(this.User?.id)
+        {this.followService.unfollow(this.User?.id).pipe(
+        timeout(50000)
+        ).subscribe(
+        (response) => {
+          console.log(response)
+          if (response.message = "Has dejado de seguir a este usuario"){
+            if(this.User){
+              this.User.is_following = false
+            }
+          }
+        }, error => {
+          console.log(error)
+          if (error.name == "TimeOutError") {
+            this.unfollow()
+          }
+        }
+        )
+      }
+    }
 }

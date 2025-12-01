@@ -82,7 +82,7 @@
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
-  <ion-item button [routerLink]="'/favoritos'">
+  <ion-item button [routerLink]="['/favorites/',this.id]">
     <ion-label>Favoritos</ion-label>
 
     <ion-badge slot="end" color="none">{{this.Favorites?.length}}</ion-badge>

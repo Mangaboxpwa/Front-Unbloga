@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>favoritos de {{User?.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-row>
+      <ion-col *ngFor="let favorite of Favorites" [routerLink]="['/manga/',favorite.manga.id]" size="3" size-lg="3">
+        <ion-card style="margin: 0;">
+          <img [src]="favorite.manga.cover_url" />
+          <ion-card-content style="padding: 0;">          
+            <ion-row style="margin: 0; padding: 0;">
+              <ion-col size="12" style="padding-left: 0; display: flex; gap: 5px; align-items: center;">
+                <app-rating [rating]="favorite.rating"></app-rating>
+                <i *ngIf="favorite.is_favorite" i class="bi bi-heart-fill"></i>
+                <i *ngIf="favorite.review" class="bi bi-file-text"></i>
+              
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+      </ion-col>
+      
+      
+      
+      
+      <!-- Copia más ion-col para más cards -->
+    </ion-row>
+</ion-content>

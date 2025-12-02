@@ -3,6 +3,11 @@
     <ion-title>
       Perfil
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button id="open-action-sheet">
+        <i class="bi bi-share-fill"></i>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -79,34 +84,7 @@
       </ion-col>
     </ion-row>
   </ion-item>
-  <!-- <ion-item >
-  <ion-label position="stacked">
-    <h1 class="title">Ratings</h1>
-  </ion-label>
-
-  <div class="rating-row">
-     Estrella izquierda 
-    <i name="heart-outline" class="bi bi-heart-fill heart-icon tiny"></i>
-
-    Gráfica
-    <div class="chart-container"
-         (mousedown)="onMouseDown()"
-         (mouseup)="onMouseUp()">
-      <canvas #barCanvas></canvas>
-    </div>
-
-    Contenedor corazones y valor
-    <div class="hearts-container">
-
-
-      corazones abajo 
-      <div class="hearts-row">
-        <i name="heart" *ngFor="let h of [1,2,3,4,5]" class="bi bi-heart-fill heart-icon tiny"></i>
-      </div>
-    </div>
-  </div>
-</ion-item> -->
-
+  
 <!-- Tercera sección -->
 <ion-list lines="none">
 
@@ -140,12 +118,16 @@
 
 </ion-list>
 
-
-
 </ion-list>
 
 
 
     <ion-button (click)="logout()">Cerrar sesión</ion-button>
+<ion-action-sheet
+trigger="open-action-sheet"  
+[header]="User?.name"
+  [buttons]="actionSheetButtons"
+></ion-action-sheet>
+<ion-toast trigger="open-toast" message="Enlace copiado" [duration]="3000"></ion-toast>
   </ng-template>
 </ion-content>

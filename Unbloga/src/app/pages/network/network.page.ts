@@ -17,6 +17,7 @@ export class NetworkPage implements OnInit {
  public actionSheetButtons = [
     {
       text: 'Ver código QR',
+      handler:()=>this.qr(),
       data: {
         action: 'QR',
       },
@@ -240,5 +241,8 @@ openActionsFollow(event: Event, follower: any, i:number, onFollowers:boolean) {
 }
 setModalOpen(isOpen:boolean){
   this.isModalOpen = isOpen;
+}
+qr(){
+  this.router.navigate(['/qr-code/'+this.UserActionSheet?.id]);
 }
 }

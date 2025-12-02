@@ -1,6 +1,6 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {  IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon } from '@ionic/angular/standalone';
+import { IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonActionSheet } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../core/services/auth';
 import { ReviewService } from '../core/services/review.service';
@@ -16,7 +16,7 @@ Chart.register(...registerables);
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonBadge, RouterLink,IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonActionSheet, IonToast, IonButtons, IonBadge, RouterLink,IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
 })
 export class Tab3Page {
   @ViewChild('barCanvas') private barCanvas!: ElementRef;
@@ -24,6 +24,30 @@ export class Tab3Page {
   User?:UserMe
   Reviews?:ReviewsFromUser[]
   Favorites?:ReviewsFromUser[]
+  public actionSheetButtons = [
+    {
+      text: 'Ver código QR',
+      handler:()=>this.qr(),
+      data: {
+        action: 'QR',
+      },
+    },
+    {
+      text: 'Compartir',
+      handler:()=>this.compartir(),
+      id:"open-toast",
+      data: {
+        action: 'share',
+      },
+    },
+    {
+      text: 'Cerrar',
+      role: 'cancel',
+      data: {
+        action: 'cancel',
+      },
+    },
+  ];
 constructor(private reviewService:ReviewService, private router: Router, private auth: Auth) {
 }
 
@@ -104,64 +128,15 @@ ngOnInit(): void {
       }
     )
   }
-/*   ngAfterViewChecked() {
-  // Si ya existe el canvas y no he creado el chart, lo creo
-  if (this.barCanvas && !this.barChart) {
-    this.loadChart();
-  }
-}
-
-  loadChart() {
-    this.barChart = new Chart(this.barCanvas.nativeElement, {
-      type: 'bar',
-      data: {
-        labels: Array(10).fill(''), // sin etiquetas
-        datasets: [{
-          data: [12, 19, 3, 5, 2, 3, 15, 7, 9, 4],
-          backgroundColor: '#3b82f6', // azul Tailwind (puedes cambiarlo)
-          borderRadius: 6,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }, // sin leyenda
-          tooltip: { enabled: false } // sin tooltips
-        },
-        scales: {
-          x: {
-            display: false, // oculta eje X
-            grid: { display: false }
-          },
-          y: {
-            display: false, // oculta eje Y
-            grid: { display: false }
-          }
-        },
-        layout: {
-          padding: 0
-        },
-        onHover: (event, elements) => {
-          const el = event.native?.target as HTMLElement;
-          el.style.cursor = elements.length ? 'pointer' : 'default';
-        },
-        onClick: (event, elements) => {
-          if (elements.length > 0) {
-            const index = elements[0].index;
-            console.log('Click en barra', index);
-          }
-        }
-      }
+compartir(){
+    const url ="https://igmarapruebameporfavor.site/user-profile/"+this.User?.id;
+    navigator.clipboard.writeText(url).then(() => {  
+    }).catch(err => {
+      console.error('Error al copiar:', err);
     });
-  }
-
-  onMouseDown() {
-    console.log('Presionando...');
-    // Aquí puedes poner tu acción al mantener presionado
-  }
-
-  onMouseUp() {
-    console.log('Soltado');
-  } */
+  
+}
+qr(){
+  this.router.navigate(['/qr-code/'+this.User?.id]);
+}
 }

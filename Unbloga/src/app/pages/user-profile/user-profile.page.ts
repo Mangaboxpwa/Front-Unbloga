@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {  IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon } from '@ionic/angular/standalone';
+import { IonActionSheet, IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast } from '@ionic/angular/standalone';
 import { Router, RouterLink,ActivatedRoute } from '@angular/router';
 import { timeout } from 'rxjs';
 import { ReviewsFromUser } from 'src/app/core/interfaces/ReviewsFromUser';
@@ -16,14 +16,38 @@ import { FollowService } from 'src/app/core/services/follows.service';
   templateUrl: './user-profile.page.html',
   styleUrls: ['./user-profile.page.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonActionSheet, IonToast, IonButtons, FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class UserProfilePage implements OnInit {
 User?:UserMe
   Reviews?:ReviewsFromUser[]
   Favorites?:ReviewsFromUser[]
   id:number = 0
-  constructor(private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
+  public actionSheetButtons = [
+    {
+      text: 'Ver código QR',
+      handler:()=>this.qr(),
+      data: {
+        action: 'QR',
+      },
+    },
+    {
+      text: 'Compartir',
+      handler:()=>this.compartir(),
+      id:"open-toast",
+      data: {
+        action: 'share',
+      },
+    },
+    {
+      text: 'Cerrar',
+      role: 'cancel',
+      data: {
+        action: 'cancel',
+      },
+    },
+  ];
+  constructor(private router:Router, private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -132,4 +156,15 @@ reviews(){
         )
       }
     }
+compartir(){
+    const url ="https://igmarapruebameporfavor.site/user-profile/"+this.User?.id;
+    navigator.clipboard.writeText(url).then(() => {  
+    }).catch(err => {
+      console.error('Error al copiar:', err);
+    });
+  
+}
+qr(){
+  this.router.navigate(['/qr-code/'+this.id]);
+}
 }

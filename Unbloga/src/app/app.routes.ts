@@ -70,4 +70,8 @@ export const routes: Routes = [
     path: 'reviews',
     loadComponent: () => import('./pages/reviews/reviews.page').then( m => m.ReviewsPage)
   },
+  {
+    path: 'qr-code/:id',
+    loadComponent: () => import('./pages/qr-code/qr-code.page').then( m => m.QrCodePage)
+  },
 ];

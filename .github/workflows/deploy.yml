@@ -39,6 +39,8 @@ jobs:
             echo "== Instalando Ionic CLI =="
             sudo npm install -g @ionic/cli
 
+            npm install socket.io-client
+
             echo "== Limpiando carpeta www existente =="
             sudo rm -rf www
 

@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { NotificationsService } from 'src/app/core/services/notifications.service';
+import { SwUpdate } from '@angular/service-worker';
+
 
 @Component({
   selector: 'app-two-factor',
@@ -30,7 +33,7 @@ alertButtons = [
       },
     },
   ];
-constructor(private cookies:CookieService, private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private notify: NotificationsService,private cookies:CookieService, private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.twoFactorForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
@@ -57,7 +60,7 @@ scrollToTop() {
         if (response.token){
           sessionStorage.removeItem('email');
           this.authService.isLogin(response.token)
-          this.router.navigate(['/tabs/tab3']);
+          this.me()
         }
       }, error => {
         console.log(error)
@@ -144,4 +147,24 @@ scrollToTop() {
       }
     )
   }
+    me(){
+      this.authService.me().pipe(
+        timeout(50000)
+      ).subscribe(
+        (response) => {
+          console.log(response)
+          if (response.data){
+            const userId = response.data.id; 
+            this.notify.requestPermission();
+            this.notify.listenToFollowerEvents(userId);
+            this.router.navigate(['/tabs/tab3']);
+          }
+        }, error => {
+          console.log(error)
+          if (error.name == "TimeOutError") {
+            this.me()
+          }
+        }
+      )
+    }
 }

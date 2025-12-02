@@ -29,4 +29,12 @@ export class NotificationsService {
       });
     }
   }
+  requestPermission() {
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission().then(permission => {
+      console.log("Permiso:", permission);
+    });
+  }
+}
+
 }

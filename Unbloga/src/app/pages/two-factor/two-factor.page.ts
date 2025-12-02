@@ -60,6 +60,8 @@ scrollToTop() {
         if (response.token){
           sessionStorage.removeItem('email');
           this.authService.isLogin(response.token)
+          this.notify.requestPermission();
+
           this.me()
         }
       }, error => {
@@ -155,7 +157,6 @@ scrollToTop() {
           console.log(response)
           if (response.data){
             const userId = response.data.id; 
-            this.notify.requestPermission();
             this.notify.listenToFollowerEvents(userId);
             this.router.navigate(['/tabs/tab3']);
           }

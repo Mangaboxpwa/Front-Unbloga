@@ -35,11 +35,13 @@ jobs:
             echo "== Instalando dependencias =="
             sudo rm -rf node_modules
             sudo npm install --legacy-peer-deps
+            sudo npm update
             
             echo "== Instalando Ionic CLI =="
             sudo npm install -g @ionic/cli
 
-            npm install socket.io-client
+            echo "== Instalando soket.io =="
+            sudo npm install socket.io-client
 
             echo "== Limpiando carpeta www existente =="
             sudo rm -rf www

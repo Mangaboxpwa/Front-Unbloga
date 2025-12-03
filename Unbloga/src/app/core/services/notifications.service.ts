@@ -37,4 +37,15 @@ export class NotificationsService {
       });
     }
   }
+
+  /**
+   * Solicita permiso para notificaciones si no está concedido
+   */
+  requestPermission() {
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission().then(permission => {
+        console.log("Permiso de notificación:", permission);
+      });
+    }
+  }
 }

@@ -1,8 +1,12 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { environment } from 'src/environments/environment';
+import { CookieService } from 'ngx-cookie-service';
+import { inject } from '@angular/core';
 
 (window as any).Pusher = Pusher; // 🚨 esto hace que Pusher sea global
+  const cookie = inject(CookieService);
+  let token = cookie.get('token');
 
 export const echo = new Echo({
   broadcaster: 'pusher',
@@ -23,7 +27,8 @@ export const echo = new Echo({
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': 'Bearer '+ token,
           },
           body: JSON.stringify({
             socket_id: socketId,

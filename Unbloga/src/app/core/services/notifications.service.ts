@@ -7,24 +7,39 @@ export class NotificationsService {
 
   constructor(private cookie: CookieService) {}
 
-  // Inicializa Echo con el token actual
+  /**
+   * Inicializa Echo con el token actual.
+   * Debe llamarse antes de suscribirse a cualquier canal privado.
+   */
   initEcho() {
     const token = this.cookie.get('token');
     if (token) {
       setEchoAuthorizer(token);
+      console.log('Echo inicializado con token.');
+    } else {
+      console.warn('No se encontró token para inicializar Echo.');
     }
   }
 
+  /**
+   * Suscribirse a eventos de nuevos seguidores del usuario
+   */
   listenToFollowerEvents(userId: number) {
-    console.log('Escuchando canal user.' + userId);
+    console.log('Escuchando canal privado user.' + userId);
 
     echo.private(`user.${userId}`)
-      .listen('NewFollower', (data: any) => {
+      .listen('.NewFollower', (data: any) => { // ⚠️ punto antes del evento
         console.log('EVENTO RECIBIDO:', data);
         this.sendNotification(data);
+      })
+      .error((err: any) => {
+        console.error('Error al suscribirse al canal:', err);
       });
   }
 
+  /**
+   * Mostrar notificación push en el navegador
+   */
   sendNotification(data: any) {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready.then(reg => {
@@ -36,10 +51,13 @@ export class NotificationsService {
     }
   }
 
+  /**
+   * Solicita permiso para notificaciones si no está concedido
+   */
   requestPermission() {
     if (Notification.permission !== 'granted') {
       Notification.requestPermission().then(permission => {
-        console.log("Permiso:", permission);
+        console.log("Permiso de notificación:", permission);
       });
     }
   }

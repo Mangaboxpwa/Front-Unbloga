@@ -3,6 +3,7 @@ import Pusher from 'pusher-js';
 import { environment } from 'src/environments/environment';
 
 (window as any).Pusher = Pusher;
+(Pusher as any).logToConsole = true;
 
 export const echo = new Echo({
   broadcaster: 'pusher',
@@ -16,18 +17,18 @@ export const echo = new Echo({
   disableStats: true,
   enabledTransports: ['ws', 'wss'],
 
-  // Authorizer inicial temporal, se actualizará luego con el token
+  // Authorizer temporal (solo hasta que se llame setEchoAuthorizer)
   authorizer: (_channel) => ({
     authorize: (_socketId: any, callback: any) => {
-      callback(false, {}); // temporal
+      callback(true, {}); // fuerza a usar token real
     },
   }),
 });
 
-// Función para actualizar el authorizer con el token del usuario
+// Función para actualizar el authorizer con el token JWT
 export const setEchoAuthorizer = (token: string) => {
   echo.options.authorizer = (channel: any) => ({
-    authorize: (socketId: any, callback: any) => {
+    authorize: (socketId: string, callback: (err: any, authData: any) => void) => {
       fetch(environment.apiUrlBase + 'broadcasting/auth', {
         method: 'POST',
         credentials: 'include',
@@ -46,11 +47,11 @@ export const setEchoAuthorizer = (token: string) => {
           return res.json();
         })
         .then(data => {
-          callback(null, data); // ✅ primer parámetro null = sin error
+          callback(null, data); // ✅ Correcto
         })
         .catch(err => {
           console.error('Error auth channel:', err);
-          callback(err, null); // ❌ primer parámetro = error
+          callback(err, null); // ❌ Primer parámetro = error
         });
     },
   });

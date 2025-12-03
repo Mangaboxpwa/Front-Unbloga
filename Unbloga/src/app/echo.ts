@@ -41,9 +41,17 @@ export const setEchoAuthorizer = (token: string) => {
           channel_name: channel.name,
         }),
       })
-        .then(res => res.json())
-        .then(data => callback(false, data))
-        .catch(err => callback(true, err));
+        .then(res => {
+          if (!res.ok) throw new Error('Auth failed');
+          return res.json();
+        })
+        .then(data => {
+          callback(null, data); // ✅ primer parámetro null = sin error
+        })
+        .catch(err => {
+          console.error('Error auth channel:', err);
+          callback(err, null); // ❌ primer parámetro = error
+        });
     },
   });
 };

@@ -2,6 +2,8 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { environment } from 'src/environments/environment';
 
+(window as any).Pusher = Pusher;
+
 export const createEcho = (token: string) => {
   return new Echo({
     broadcaster: 'pusher',

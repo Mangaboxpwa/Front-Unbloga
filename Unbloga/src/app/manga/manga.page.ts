@@ -1,6 +1,6 @@
 import { Component, OnInit,ViewChild,ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {IonButton,IonToast,IonItemDivider, IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon} from '@ionic/angular/standalone';
+import {IonRefresherContent, IonButton,IonToast,IonItemDivider, IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonRefresher } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { RatingComponent } from "../rating/rating.component";
 import { StarRateComponent } from "../star-rate/star-rate.component";
@@ -10,13 +10,14 @@ import { timeout } from 'rxjs';
 import { Manga, MangaResponse } from '../core/interfaces/Manga';
 import { Reviews } from '../core/interfaces/Reviews';
 import { User } from '../core/interfaces/Users';
+import { RefresherCustomEvent } from '@ionic/core';
 
 @Component({
   selector: 'app-manga',
   templateUrl: './manga.page.html',
   styleUrls: ['./manga.page.scss'],
   standalone: true,
-  imports: [RouterLink, IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
+  imports: [IonRefresherContent, IonRefresher, RouterLink, IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
 })
 export class MangaPage implements OnInit {
   @ViewChild('liveToast', { static: false }) liveToast!: ElementRef;
@@ -37,6 +38,13 @@ export class MangaPage implements OnInit {
       this.showManga()
     }
   }
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
+  }
+  
 
   copiarEnlace() {
     const url = window.location.href;

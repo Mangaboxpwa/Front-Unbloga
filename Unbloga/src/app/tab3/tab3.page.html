@@ -122,12 +122,16 @@
 
 
 
-    <ion-button (click)="logout()">Cerrar sesión</ion-button>
+<ion-button (click)="logout()">Cerrar sesión</ion-button>
 <ion-action-sheet
 trigger="open-action-sheet"  
 [header]="User?.name"
   [buttons]="actionSheetButtons"
 ></ion-action-sheet>
+<ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+</ion-refresher>
+  
 <ion-toast trigger="open-toast" message="Enlace copiado" [duration]="3000"></ion-toast>
   </ng-template>
 </ion-content>

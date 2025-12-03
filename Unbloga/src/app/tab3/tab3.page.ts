@@ -1,6 +1,6 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonActionSheet } from '@ionic/angular/standalone';
+import { RefresherCustomEvent,IonRefresher, IonRefresherContent, IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonActionSheet } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../core/services/auth';
 import { ReviewService } from '../core/services/review.service';
@@ -16,7 +16,7 @@ Chart.register(...registerables);
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonActionSheet, IonToast, IonButtons, IonBadge, RouterLink,IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonRefresher, IonRefresherContent,IonActionSheet, IonToast, IonButtons, IonBadge, RouterLink,IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
 })
 export class Tab3Page {
   @ViewChild('barCanvas') private barCanvas!: ElementRef;
@@ -139,4 +139,10 @@ compartir(){
 qr(){
   this.router.navigate(['/qr-code/'+this.User?.id]);
 }
+handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
+  }
 }

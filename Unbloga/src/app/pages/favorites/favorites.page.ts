@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem } from '@ionic/angular/standalone';
+import { RefresherCustomEvent, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { NgFor } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { RatingComponent } from 'src/app/rating/rating.component';
@@ -17,7 +17,7 @@ import { Auth } from 'src/app/core/services/auth';
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
-imports: [CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
+imports: [IonRefresherContent, IonRefresher, CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
 })
 export class FavoritesPage implements OnInit {
 Favorites?:ReviewsFromUser[]
@@ -36,6 +36,12 @@ User?:UserMe
       this.favorites()
       this.me()
     }
+  }
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
   }
 
   me(){

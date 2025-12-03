@@ -85,4 +85,7 @@
       <ion-item-divider class="custom-divider"></ion-item-divider>
     </ion-row>
   </ion-grid>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 </ion-content>

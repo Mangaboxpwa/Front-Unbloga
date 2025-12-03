@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem } from '@ionic/angular/standalone';
+import { RefresherCustomEvent,IonRefresherContent, IonRefresher, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem } from '@ionic/angular/standalone';
 import { NgFor } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { RatingComponent } from 'src/app/rating/rating.component';
@@ -17,7 +17,7 @@ import { Auth } from 'src/app/core/services/auth';
   templateUrl: './reviews.page.html',
   styleUrls: ['./reviews.page.scss'],
   standalone: true,
-  imports: [CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
+  imports: [IonRefresher,IonRefresherContent,CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
 })
 export class ReviewsPage implements OnInit {
 id:number = 0
@@ -37,7 +37,12 @@ constructor(private auth:Auth, private userService:UserService, private reviewSe
         this.me()
       }
     }
-  
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
+  }
 me(){
       this.auth.me().pipe(
         timeout(50000)

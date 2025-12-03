@@ -1,18 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StarRateComponent } from '../star-rate/star-rate.component';
-import { RatingComponent } from '../rating/rating.component';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonRow } from '@ionic/angular/standalone';
+import { IonRefresherContent, RefresherCustomEvent, IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonRow, IonRefresher } from '@ionic/angular/standalone';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { ReviewService } from '../core/services/review.service';
 import { SpeechService } from '../core/services/speech.service';
 import { timeout } from 'rxjs';
 import { Manga, MangaResponse } from '../core/interfaces/Manga';
-import { Reviews } from '../core/interfaces/Reviews';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { inject } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import {
   IonCard,
@@ -37,8 +34,9 @@ import {
   templateUrl: './review.page.html',
   styleUrls: ['./review.page.scss'],
   standalone: true,
-imports: [
+imports: [IonRefresher, 
     IonContent, IonHeader, IonTitle, IonToolbar,
+    IonRefresherContent,
     IonTextarea,
     IonCard,
     IonBackButton,
@@ -95,6 +93,12 @@ alertButtons = [
     let token = this.cookie.get('token');
     console.log(token)
   }
+handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
+}
   showManga(){
     console.log('entra')
     this.mangaService.show(this.id).pipe(

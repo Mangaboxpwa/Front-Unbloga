@@ -22,10 +22,8 @@
         </ion-card>
 
       </ion-col>
-      
-      
-      
-      
-      <!-- Copia más ion-col para más cards -->
     </ion-row>
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
 </ion-content>

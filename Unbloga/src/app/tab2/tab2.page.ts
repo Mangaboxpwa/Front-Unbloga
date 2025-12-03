@@ -1,24 +1,31 @@
 import { Component } from '@angular/core';
-import { IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import { IonRefresher,IonRefresherContent, RefresherCustomEvent, IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { timeout } from 'rxjs';
-import { Mangas, MangasResponse } from '../core/interfaces/Mangas';
+import { Mangas } from '../core/interfaces/Mangas';
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonTitle, IonContent]
+  imports: [IonRefresher,IonRefresherContent, IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonTitle, IonContent]
 })
 export class Tab2Page {
   mangas?: Mangas[];
   constructor(private mangaService: MangaService,private router: Router) {
-    this.indexMangas()
-    this.mangas = undefined
   }
  public titles: string[] = [];
   public results: Mangas[] = []; // vacía al inicio
-
+ngOnInit(): void {
+  this.indexMangas()
+  this.mangas = undefined
+}
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
+  }
   handleInput(event: Event) {
   const target = event.target as HTMLIonSearchbarElement;
   const query = target.value?.toLowerCase().trim() || '';

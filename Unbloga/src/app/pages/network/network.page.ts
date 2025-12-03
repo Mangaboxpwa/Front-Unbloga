@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonModal, IonActionSheet, IonList,IonItem, IonBadge, IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView, IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonToast, IonIcon } from '@ionic/angular/standalone';
+import { IonRefresherContent, RefresherCustomEvent, IonButton, IonModal, IonActionSheet, IonList,IonItem, IonBadge, IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView, IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonToast, IonIcon, IonRefresher } from '@ionic/angular/standalone';
 import { Router, RouterLink,ActivatedRoute, } from '@angular/router';
 import { FollowService } from 'src/app/core/services/follows.service';
 import { timeout } from 'rxjs';
@@ -11,7 +11,7 @@ import { User } from 'src/app/core/interfaces/Users';
   templateUrl: './network.page.html',
   styleUrls: ['./network.page.scss'],
   standalone: true,
-  imports: [IonButton, IonModal,IonToast, IonActionSheet, IonAvatar, IonList, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonRefresherContent, IonRefresher, IonButton, IonModal,IonToast, IonActionSheet, IonAvatar, IonList, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class NetworkPage implements OnInit {
  public actionSheetButtons = [
@@ -58,6 +58,12 @@ export class NetworkPage implements OnInit {
       this.getFolllowers()
       this.getFolllowing()
     }
+  }
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
   }
 
   getFolllowers(){

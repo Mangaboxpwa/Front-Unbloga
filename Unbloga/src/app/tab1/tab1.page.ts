@@ -1,19 +1,17 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
-import { RatingComponent } from '../rating/rating.component';
+import { IonRefresher, RefresherCustomEvent, IonRefresherContent, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { ReviewService } from '../core/services/review.service';
 import { timeout } from 'rxjs';
-import { Mangas, MangasResponse } from '../core/interfaces/Mangas';
+import { Mangas } from '../core/interfaces/Mangas';
 import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  imports: [RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow, IonGrid, IonIcon],
+  imports: [IonRefresher, IonRefresherContent, RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow, IonGrid, IonIcon],
 })
 export class Tab1Page {
     mangas?: Mangas[];
@@ -25,6 +23,12 @@ export class Tab1Page {
     this.mangasMasReseñadosUltimoMes()
     this.mangasFavoritos()
     this.recentReviewsFromFollowing()
+  }
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
   }
 
   mangasMasReseñadosUltimoMes(){

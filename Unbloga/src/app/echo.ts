@@ -2,6 +2,8 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { environment } from 'src/environments/environment';
 
+console.log("🟥 CARGANDO ECHO CONFIG...");
+
 (window as any).Pusher = Pusher;
 (Pusher as any).logToConsole = true;
 
@@ -17,42 +19,71 @@ export const echo = new Echo({
   disableStats: true,
   enabledTransports: ['ws', 'wss'],
 
-  // Authorizer temporal (solo hasta que se llame setEchoAuthorizer)
-  authorizer: (_channel) => ({
-    authorize: (_socketId: any, callback: any) => {
-      callback(true, {}); // fuerza a usar token real
-    },
-  }),
+  authorizer: (channel) => {
+    console.log("🟦 USANDO AUTHORIZER TEMPORAL EN:", channel.name);
+    return {
+      authorize: (socketId: any, callback: any) => {
+        console.log("🟦 AUTHORIZE TEMPORAL → NO USA TOKEN", {
+          channel: channel.name,
+          socketId
+        });
+
+        callback(true, {}); // ignora auth hasta que setEchoAuthorizer sea aplicado
+      }
+    };
+  }
 });
 
-// Función para actualizar el authorizer con el token JWT
+console.log("🟥 ECHO CREADO OK");
+
+
+// 🚀 Se ejecuta cuando el usuario inicia sesión y existe token
 export const setEchoAuthorizer = (token: string) => {
-  echo.options.authorizer = (channel: any) => ({
-    authorize: (socketId: string, callback: (err: any, authData: any) => void) => {
-      fetch(environment.apiUrlBase + 'broadcasting/auth', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ' + token,
-        },
-        body: JSON.stringify({
-          socket_id: socketId,
-          channel_name: channel.name,
-        }),
-      })
-        .then(res => {
-          if (!res.ok) throw new Error('Auth failed');
-          return res.json();
-        })
-        .then(data => {
-          callback(null, data); // ✅ Correcto
-        })
-        .catch(err => {
-          console.error('Error auth channel:', err);
-          callback(err, null); // ❌ Primer parámetro = error
+  console.log("🟧 SETEANDO AUTHORIZER REAL CON TOKEN:", token);
+
+  echo.options.authorizer = (channel: any) => {
+    console.log("🟨 AUTHORIZER REAL INSTALADO PARA:", channel.name);
+
+    return {
+      authorize: (socketId: string, callback: any) => {
+
+        console.log("🟨 INICIANDO AUTH CONTRA BACKEND:", {
+          channel: channel.name,
+          socketId
         });
-    },
-  });
+
+        fetch(environment.apiUrlBase + 'broadcasting/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            socket_id: socketId,
+            channel_name: channel.name
+          }),
+        })
+          .then(async res => {
+            console.log("🟦 AUTH RESPONSE STATUS:", res.status);
+
+            if (!res.ok) {
+              const errText = await res.text();
+              console.error("❌ ERROR AUTH BACKEND RESPONSE:", errText);
+              throw new Error('HTTP ' + res.status);
+            }
+
+            return res.json();
+          })
+          .then(data => {
+            console.log("✅ AUTH OK (BACKEND):", data);
+            callback(null, data);
+          })
+          .catch(error => {
+            console.error("❌ ERROR DURANTE AUTHORIZACION:", error);
+            callback(error, { auth: "" });
+          });
+      }
+    };
+  };
 };

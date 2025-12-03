@@ -18,12 +18,13 @@ import { timeout } from 'rxjs';
 export class QrCodePage implements OnInit {
   id = 0
   User?:UserMe
-  public myAngularxQrCode: string = 'https://igmarapruebameporfavor.site/user-profile/'+this.id;
+  public myAngularxQrCode: string = '';
   constructor(private route: ActivatedRoute, private userService:UserService) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     this.userInfo()
+    this.myAngularxQrCode = 'https://igmarapruebameporfavor.site/user-profile/'+this.id
   }
   handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {

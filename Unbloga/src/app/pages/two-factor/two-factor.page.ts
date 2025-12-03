@@ -157,6 +157,9 @@ scrollToTop() {
           console.log(response)
           if (response.data){
             const userId = response.data.id; 
+            // Inicializar Echo con token
+            this.notify.initEcho();
+            
             this.notify.listenToFollowerEvents(userId);
             this.router.navigate(['/tabs/tab3']);
           }

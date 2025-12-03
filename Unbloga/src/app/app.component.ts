@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { SwUpdate,VersionReadyEvent  } from '@angular/service-worker';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { AlertController } from '@ionic/angular';
 import { filter } from 'rxjs/operators';
 import { NotificationsService } from './core/services/notifications.service';
@@ -18,8 +18,8 @@ export class AppComponent {
     private swUpdate: SwUpdate,
     private alertController: AlertController,
     private notify: NotificationsService,
-    private cookies:CookieService,
-    private authService:Auth
+    private cookies: CookieService,
+    private authService: Auth
   ) {
     this.listenForUpdates();
   }
@@ -54,28 +54,39 @@ export class AppComponent {
       });
   }
   ngOnInit() {
-    if (this.cookies.get('token')){
-      this.me()
+    const token = this.cookies.get('token');
+    if (token) {
+      this.me().then(userId => {
+        // Solo suscribirse cuando Echo ya tenga authorizer real
+        this.notify.listenToFollowerEvents(userId);
+      });
     }
   }
-  me(){
-      this.authService.me().pipe(
-        timeout(50000)
-      ).subscribe(
-        (response) => {
-          console.log(response)
-          if (response.data){
-            const userId = response.data.id; 
-            this.notify.initEcho();
 
-            this.notify.listenToFollowerEvents(userId);
+  // Modificar me() para devolver una Promise con userId
+  me(): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.authService.me().pipe(timeout(50000)).subscribe(
+        (response) => {
+          console.log(response);
+          if (response.data) {
+            const userId = response.data.id;
+            this.notify.initEcho(); // setea authorizer real con token
+            resolve(userId);
+          } else {
+            reject('No hay data de usuario');
           }
-        }, error => {
-          console.log(error)
-          if (error.name == "TimeOutError") {
-            this.me()
+        },
+        (error) => {
+          console.log(error);
+          if (error.name === "TimeOutError") {
+            // reintento
+            this.me().then(resolve).catch(reject);
+          } else {
+            reject(error);
           }
         }
-      )
-    }
+      );
+    });
+  }
 }

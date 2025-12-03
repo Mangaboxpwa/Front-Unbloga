@@ -3,6 +3,10 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { SwUpdate,VersionReadyEvent  } from '@angular/service-worker';
 import { AlertController } from '@ionic/angular';
 import { filter } from 'rxjs/operators';
+import { NotificationsService } from './core/services/notifications.service';
+import { CookieService } from 'ngx-cookie-service';
+import { Auth } from './core/services/auth';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +17,9 @@ export class AppComponent {
   constructor(
     private swUpdate: SwUpdate,
     private alertController: AlertController,
+    private notify: NotificationsService,
+    private cookies:CookieService,
+    private authService:Auth
   ) {
     this.listenForUpdates();
   }
@@ -46,4 +53,29 @@ export class AppComponent {
         await alert.present();
       });
   }
+  ngOnInit() {
+    if (this.cookies.get('token')){
+      this.me()
+    }
+  }
+  me(){
+      this.authService.me().pipe(
+        timeout(50000)
+      ).subscribe(
+        (response) => {
+          console.log(response)
+          if (response.data){
+            const userId = response.data.id; 
+            this.notify.initEcho();
+
+            this.notify.listenToFollowerEvents(userId);
+          }
+        }, error => {
+          console.log(error)
+          if (error.name == "TimeOutError") {
+            this.me()
+          }
+        }
+      )
+    }
 }

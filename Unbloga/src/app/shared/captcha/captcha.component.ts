@@ -44,6 +44,7 @@ export class CaptchaComponent {
       win.grecaptcha.render(container, {
         sitekey: this.siteKey,
         callback: 'onCaptchaResolved',
+        theme: 'dark'
       });
     }
   }

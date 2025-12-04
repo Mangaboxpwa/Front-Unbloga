@@ -6,6 +6,7 @@
     <ion-title>
       Login
     </ion-title>
+    <ion-progress-bar *ngIf="btnUndefined" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -37,10 +38,13 @@
           <ion-item>
             <app-captcha  style="margin-top:10px" (resolved)="onCaptchaResolved($event)"></app-captcha>
           </ion-item>
+          <div *ngIf="LoginForm.get('captcha')?.touched && LoginForm.get('captcha')?.invalid">
+              <small style="color:red">Por favor completa el captcha.</small>
+            </div>
           <div class="button-row">
             <ion-button shape="round" (click)="goRegister()">Únete</ion-button>
             <ion-button shape="round" (click)="recuperarContrasena()">Resetear contraseña</ion-button>
-            <ion-button shape="round" (click)="enviarLogin()">Ir</ion-button>
+            <ion-button shape="round" [disabled]="btnUndefined" (click)="enviarLogin()">Ir</ion-button>
           </div>
         </form>
         <hr />

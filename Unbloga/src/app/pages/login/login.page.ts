@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -12,7 +12,7 @@ import { CaptchaComponent } from 'src/app/shared/captcha/captcha.component';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonProgressBar, CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class LoginPage implements OnInit {
 LoginForm: FormGroup;
@@ -20,6 +20,7 @@ isAlertOpen = false;
 message: any[] = [];
 headerAlert = "";
 subHeader = "";
+btnUndefined = false
 alertButtons = [
     {
       text: 'OK',
@@ -33,7 +34,7 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
   this.LoginForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
-      captcha:['',]
+      captcha:['',[Validators.required]]
     })
 }
 onCaptchaResolved(token:string){
@@ -50,17 +51,25 @@ scrollToTop() {
     });
   }
   enviarLogin() {
+    this.btnUndefined = true
     console.log("entra?")
     console.log(this.LoginForm)
+    if (this.LoginForm.invalid) {
+      this.LoginForm.markAllAsTouched(); // muestra los errores en pantalla
+      this.btnUndefined = false
+      return; // detiene el submit
+    }
     
     this.authService.login(this.LoginForm.value).pipe(
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         sessionStorage.setItem('email',''+response.email)
         this.router.navigate(['two-factor']);
       }, error => {
+        this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;

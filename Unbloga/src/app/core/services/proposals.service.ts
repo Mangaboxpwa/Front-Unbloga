@@ -4,7 +4,6 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Responses } from '../interfaces/Responses';
 import { Manga, MangaResponse } from '../interfaces/Manga';
-import { Mangas, MangasResponse } from '../interfaces/Mangas';
 import { CookieService } from 'ngx-cookie-service';
 import { ReviewsFromUserResponse } from '../interfaces/ReviewsFromUser';
 

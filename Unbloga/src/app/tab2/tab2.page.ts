@@ -57,7 +57,8 @@ handleInput(event: Event) {
   this.results = this.mangas?.filter(manga =>
     manga.title.toLowerCase().includes(query)
   ) || [];
-  console.log(this.results)
+  console.log(this.results.length)
+  console.log(this.auth.isLoggedIn())
   if (this.results.length == 0 && this.auth.isLoggedIn()){
     console.log(0)
     this.isEmpty = true

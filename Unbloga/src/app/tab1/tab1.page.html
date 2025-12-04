@@ -20,7 +20,7 @@
     </ion-row>
 
     <!-- NUEVO DE SEGUIDOS -->
-    <ion-row class="ion-align-items-center ion-margin-bottom">
+    <ion-row *ngIf="resenas.length > 0" class="ion-align-items-center ion-margin-bottom">
       <ion-col size="6">
         <p>Nuevo de seguidos</p>
       </ion-col>
@@ -31,22 +31,22 @@
     <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
     <ion-row>
-      <ion-col size="6" size-lg="2">
+      <ion-col *ngFor="let resena of resenas.slice(0,6)" size="6" size-lg="2">
         <ion-card>
-          <img src="assets/vagabong.webp" />
+          <img [src]="resena.manga.cover_url" />
           <ion-card-content style="padding: 0;">
             <div style="background-color: #735ba6; color: white; width: 100%; padding: 8px ; padding-left: 2px;">
-               José Durán
+               {{resena.users.name}}
             </div>
           
             <ion-row style="margin: 0; padding: 0;">
               <ion-col size="6" style="padding-left: 0; display: flex; gap: 5px; align-items: center;">
-                <i class="bi bi-heart-fill"></i>
-                <i class="bi bi-file-text"></i>
+                <i *ngIf="resena.is_favorite" class="bi bi-heart-fill"></i>
+                <i *ngIf="resena.review" class="bi bi-file-text"></i>
               
               </ion-col>
               <ion-col size="6" style=" text-align: end;">
-                <b>Abrill 07</b>
+                <b>{{formatoFecha(resena.created_at)}}</b>
               </ion-col>
             </ion-row>
           </ion-card-content>
@@ -54,13 +54,6 @@
 
       </ion-col>
       <!-- Copia más ion-col para más cards -->
-    </ion-row>
-
-    <!-- ANUNCIO -->
-    <ion-row>
-      <ion-col size="12">
-        <ion-card style="background-color: #735ba6; height: 120px;"></ion-card>
-      </ion-col>
     </ion-row>
 
     <!-- POPULAR EN UNBLOGA -->

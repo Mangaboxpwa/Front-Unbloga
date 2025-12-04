@@ -1,4 +1,5 @@
 import { Manga } from "./Manga";
+import { User } from "./Users";
 
 export interface ReviewsFromUserResponse {
     result: boolean,
@@ -13,5 +14,6 @@ export interface ReviewsFromUser {
     is_favorite: boolean,
     manga_id:number,
     user_id: number,
-    manga:Manga
+    manga:Manga,
+    users:User
 }

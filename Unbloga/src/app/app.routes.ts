@@ -74,8 +74,4 @@ export const routes: Routes = [
     path: 'qr-code/:id',
     loadComponent: () => import('./pages/qr-code/qr-code.page').then( m => m.QrCodePage)
   },
-  {
-    path: 'proposal',
-    loadComponent: () => import('./pages/proposal/proposal.page').then( m => m.ProposalPage)
-  },
 ];

@@ -8,12 +8,13 @@ import { scan, book } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import { Auth } from '../core/services/auth';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [RouterLink, IonSegment,IonSegmentContent,IonSegmentView, IonSegmentButton, IonIcon, IonRefresher,IonRefresherContent, IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonContent]
+  imports: [NgIf,RouterLink, IonSegment,IonSegmentContent,IonSegmentView, IonSegmentButton, IonIcon, IonRefresher,IonRefresherContent, IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonContent]
 })
 export class Tab2Page {
   isScanning = false;
@@ -56,7 +57,9 @@ handleInput(event: Event) {
   this.results = this.mangas?.filter(manga =>
     manga.title.toLowerCase().includes(query)
   ) || [];
+  console.log(this.results)
   if (this.results.length == 0 && this.auth.isLoggedIn()){
+    console.log(0)
     this.isEmpty = true
   }else{
     this.isEmpty = false

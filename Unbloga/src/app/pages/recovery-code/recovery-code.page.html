@@ -6,6 +6,7 @@
     <ion-title>
       Código de recuperación
     </ion-title>
+    <ion-progress-bar *ngIf="btnUndefined" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -22,7 +23,7 @@
       
       <!-- Sección 1: Imagen centrada -->
       <div class="topp-section">
-        <h1>???</h1>
+        <h1>Código en tu correo</h1>
       </div>
 
       <!-- Sección 2: Botones -->
@@ -35,7 +36,7 @@
             <ion-button shape="round" [disabled]="contador > 0" (click)="iniciarContador()">
               {{ contador > 0 ? 'Reenviar código (' + contador + 's)' : 'Reenviar código' }}
             </ion-button>
-            <ion-button shape="round" (click)="enviarRecoveryCode()">Ir</ion-button>
+            <ion-button shape="round" [disabled]="btnUndefined" (click)="enviarRecoveryCode()">Ir</ion-button>
           </div>
         </form>
         <hr />

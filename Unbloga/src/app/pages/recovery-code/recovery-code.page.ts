@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -11,7 +11,7 @@ import { timeout } from 'rxjs';
   templateUrl: './recovery-code.page.html',
   styleUrls: ['./recovery-code.page.scss'],
   standalone: true,
-  imports: [IonRefresher, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonProgressBar, IonRefresher, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class RecoveryCodePage implements OnInit {
 recoveryCodeForm: FormGroup;
@@ -21,6 +21,7 @@ isAlertOpen = false;
 message: any[] = [];
 headerAlert = "";
 subHeader = "";
+btnUndefined = false
 alertButtons = [
     {
       text: 'OK',
@@ -46,16 +47,19 @@ scrollToTop() {
     });
   }
   enviarRecoveryCode() {
+    this.btnUndefined = true
     console.log("entra?")
     this.authService.verifyCode(this.recoveryCodeForm.value).pipe(
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         if (response.token){
           this.router.navigate(['/new-pass']);
         }
       }, error => {
+        this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;

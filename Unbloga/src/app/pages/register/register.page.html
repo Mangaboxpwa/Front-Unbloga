@@ -6,6 +6,7 @@
     <ion-title>
       Register
     </ion-title>
+    <ion-progress-bar *ngIf="btnUndefined" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -44,7 +45,7 @@
         
         <div class="button-row">
           <ion-button shape="round" (click)="goLogin()">Inicia sesión</ion-button>
-          <ion-button shape="round"(click)="enviarRegistro()">Ir</ion-button>
+          <ion-button shape="round" [disabled]="btnUndefined" (click)="enviarRegistro()">Ir</ion-button>
         </div>
         <ion-alert
           [isOpen]="isAlertOpen"

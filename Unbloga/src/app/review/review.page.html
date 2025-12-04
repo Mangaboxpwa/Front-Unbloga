@@ -4,8 +4,9 @@
       <ion-back-button [defaultHref]=" '/manga/' + id "></ion-back-button>
     </ion-buttons>
     <ion-title>Review</ion-title>
+    <ion-progress-bar *ngIf="btnUndefined" type="indeterminate"></ion-progress-bar>
     <ion-buttons slot="end">
-      <ion-button (click)="guardar()">
+      <ion-button [disabled]="btnUndefined" (click)="guardar()">
         <i class="bi bi-check2"></i>
       </ion-button>
     </ion-buttons>

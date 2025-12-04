@@ -6,6 +6,7 @@
     <ion-title>
       Segundo factor
     </ion-title>
+    <ion-progress-bar *ngIf="btnUndefined" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -35,7 +36,7 @@
             <ion-button shape="round" [disabled]="contador > 0" (click)="iniciarContador()">
               {{ contador > 0 ? 'Reenviar código (' + contador + 's)' : 'Reenviar código' }}
             </ion-button>
-            <ion-button shape="round" (click)="enviarTwoFactor()">Ir</ion-button>
+            <ion-button shape="round" [disabled]="btnUndefined" (click)="enviarTwoFactor()">Ir</ion-button>
           </div>
         </form>
         <hr />

@@ -6,6 +6,7 @@
     <ion-title>
       Nueva contraseña
     </ion-title>
+    <ion-progress-bar *ngIf="btnUndefined" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -37,7 +38,7 @@
         </ion-item> 
         
         <div class="button-row">
-          <ion-button shape="round"(click)="enviarContrasenasNuevas()">Ir</ion-button>
+          <ion-button [disabled]="btnUndefined" shape="round"(click)="enviarContrasenasNuevas()">Ir</ion-button>
         </div>
         <ion-alert
           [isOpen]="isAlertOpen"

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton } from '@ionic/angular/standalone';
+import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonProgressBar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -12,7 +12,7 @@ import { timeout } from 'rxjs';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class RegisterPage implements OnInit {
 RegistrarForm: FormGroup;
@@ -20,6 +20,7 @@ isAlertOpen = false;
 message: any[] = [];
 headerAlert = "";
 subHeader = "";
+btnUndefined = false
 alertButtons = [
     {
       text: 'OK',
@@ -46,10 +47,12 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
     });
   }
   enviarRegistro() {
+    this.btnUndefined = true
     console.log("entra?")
     console.log(this.RegistrarForm.value)
     this.authService.register(this.RegistrarForm.value).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         this.headerAlert = response.message
         this.scrollToTop()
@@ -67,6 +70,7 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
         this.setOpen(true)
 
       }, error => {
+        this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;

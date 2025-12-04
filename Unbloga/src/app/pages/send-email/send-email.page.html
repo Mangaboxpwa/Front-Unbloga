@@ -6,6 +6,7 @@
     <ion-title>
       Recuperar Contraseña
     </ion-title>
+    <ion-progress-bar *ngIf="btnUndefined" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -22,7 +23,7 @@
       
       <!-- Sección 1: Imagen centrada -->
       <div class="topp-section">
-        <h1>A</h1>
+        <h1>Revisa tu correo</h1>
       </div>
 
       <!-- Sección 2: Botones -->
@@ -32,7 +33,7 @@
             <ion-input label="Correo" helperText="Ingresa el correo de tu cuenta" type="email" formControlName="email" labelPlacement="floating" placeholder=""></ion-input>
           </ion-item>
           <div class="button-row">
-            <ion-button shape="round" (click)="sendRecoverPasswordCode()">Ir</ion-button>
+            <ion-button shape="round" [disabled]="btnUndefined" (click)="sendRecoverPasswordCode()">Ir</ion-button>
           </div>
         </form>
         <hr />

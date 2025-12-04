@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher } from '@ionic/angular/standalone';
+import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -11,7 +11,7 @@ import { timeout } from 'rxjs';
   templateUrl: './new-pass.page.html',
   styleUrls: ['./new-pass.page.scss'],
   standalone: true,
-  imports: [IonRefresher, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class NewPassPage implements OnInit {
 nuevaContrasenaForm: FormGroup;
@@ -19,6 +19,7 @@ isAlertOpen = false;
 message: any[] = [];
 headerAlert = "";
 subHeader = "";
+btnUndefined = false
 alertButtons = [
     {
       text: 'OK',
@@ -43,12 +44,14 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
     });
   }
   enviarContrasenasNuevas() {
+    this.btnUndefined = true
     console.log("entra?")
     console.log(this.nuevaContrasenaForm.value)
     this.authService.register(this.nuevaContrasenaForm.value).pipe(
       timeout(10000)
     ).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         this.headerAlert = response.message
         this.scrollToTop()
@@ -66,6 +69,7 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
         this.setOpen(true)
 
       }, error => {
+        this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;

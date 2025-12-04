@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -15,7 +15,7 @@ import { SwUpdate } from '@angular/service-worker';
   templateUrl: './two-factor.page.html',
   styleUrls: ['./two-factor.page.scss'],
   standalone: true,
-  imports: [IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class TwoFactorPage implements OnInit {
 twoFactorForm: FormGroup;
@@ -25,6 +25,7 @@ isAlertOpen = false;
 message: any[] = [];
 headerAlert = "";
 subHeader = "";
+btnUndefined = false
 alertButtons = [
     {
       text: 'OK',
@@ -50,12 +51,14 @@ scrollToTop() {
     });
   }
   enviarTwoFactor() {
+    this.btnUndefined = true
     console.log("entra?")
     console.log(this.twoFactorForm)
     this.authService.verifyCode(this.twoFactorForm.value).pipe(
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         if (response.token){
           sessionStorage.removeItem('email');
@@ -65,6 +68,7 @@ scrollToTop() {
           this.me()
         }
       }, error => {
+        this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;

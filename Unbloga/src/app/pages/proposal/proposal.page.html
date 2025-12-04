@@ -6,6 +6,7 @@
     <ion-title>
       Propuesta
     </ion-title>
+    <ion-progress-bar *ngIf="btnUndefined" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -38,7 +39,7 @@
             </ion-textarea>
           </ion-item> 
           <div class="button-row">
-            <ion-button shape="round" (click)="sendProposal()">Enviar</ion-button>
+            <ion-button shape="round" [disabled]="btnUndefined" (click)="sendProposal()">Enviar</ion-button>
           </div>
         </form>
         <hr />

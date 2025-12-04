@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -11,7 +11,7 @@ import { timeout } from 'rxjs';
   templateUrl: './send-email.page.html',
   styleUrls: ['./send-email.page.scss'],
   standalone: true,
-    imports: [IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+    imports: [IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class SendEmailPage implements OnInit {
 emailForm: FormGroup;
@@ -21,6 +21,7 @@ isAlertOpen = false;
 message: any[] = [];
 headerAlert = "";
 subHeader = "";
+btnUndefined = false
 alertButtons = [
     {
       text: 'OK',
@@ -43,17 +44,20 @@ scrollToTop() {
     });
   }
   sendRecoverPasswordCode() {
+    this.btnUndefined = true
     console.log("entra?")
     console.log(this.emailForm.value['email']);
     this.authService.sendRecoverPasswordCode(this.emailForm.value).pipe(
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         sessionStorage.setItem('email',this.emailForm.value['email']);
         this.router.navigate(['/recovery-code']);
 
       }, error => {
+        this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;

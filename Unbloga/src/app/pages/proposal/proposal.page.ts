@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonInput, IonTextarea, IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonItem, IonButton, IonAlert } from '@ionic/angular/standalone';
+import { IonProgressBar, IonInput, IonTextarea, IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonItem, IonButton, IonAlert } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
 import { ProposalsService } from 'src/app/core/services/proposals.service';
 import { timeout } from 'rxjs';
 import { Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-proposal',
   templateUrl: './proposal.page.html',
   styleUrls: ['./proposal.page.scss'],
   standalone: true,
-  imports: [IonInput, IonTextarea, ReactiveFormsModule,IonAlert, IonButton, IonItem, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [NgIf, IonInput, IonTextarea, ReactiveFormsModule,IonAlert, IonButton, IonItem, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonProgressBar]
 })
 export class ProposalPage implements OnInit {
 
@@ -22,6 +23,7 @@ export class ProposalPage implements OnInit {
 message: any[] = [];
 headerAlert = "";
 subHeader = "";
+btnUndefined = false
 alertButtons = [
     {
       text: 'OK',
@@ -41,6 +43,7 @@ alertButtons = [
   ngOnInit() {
   }
   sendProposal(){
+    this.btnUndefined = true
     console.log("entra?")
     console.log(this.proposalForm.value)
         
@@ -48,6 +51,7 @@ alertButtons = [
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         this.headerAlert = response.message
         this.subHeader = "Gracias por tu sugerencia"
@@ -63,6 +67,7 @@ alertButtons = [
         ];
         this.setOpen(true)
       }, error => {
+        this.btnUndefined = false
             console.log(error)
             console.log(error.error.data)
             const data = error.error.data;

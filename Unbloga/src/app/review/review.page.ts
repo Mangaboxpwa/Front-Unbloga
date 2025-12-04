@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { StarRateComponent } from '../star-rate/star-rate.component';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { IonRefresherContent, RefresherCustomEvent, IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonRow, IonRefresher } from '@ionic/angular/standalone';
+import { IonRefresherContent, RefresherCustomEvent, IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonRow, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { ReviewService } from '../core/services/review.service';
 import { SpeechService } from '../core/services/speech.service';
@@ -34,7 +34,7 @@ import {
   templateUrl: './review.page.html',
   styleUrls: ['./review.page.scss'],
   standalone: true,
-imports: [IonRefresher, 
+imports: [IonProgressBar, IonRefresher, 
     IonContent, IonHeader, IonTitle, IonToolbar,
     IonRefresherContent,
     IonTextarea,
@@ -66,6 +66,7 @@ export class ReviewPage implements OnInit {
 message: any[] = [];
 headerAlert = "";
 subHeader = "";
+btnUndefined = false
 alertButtons = [
     {
       text: 'OK',
@@ -135,6 +136,7 @@ onRatingChanged(newValue: number) {
   this.like = !this.like
 }
 guardar(){
+  this.btnUndefined = true
   this.ReviewForm.controls['manga_id'].setValue(this.id)
   this.ReviewForm.controls['rating'].setValue(this.rating)
   this.ReviewForm.controls['is_favorite'].setValue(this.like)
@@ -150,9 +152,11 @@ create(){
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         this.router.navigate(['manga/'+this.id]);
       }, error => {
+        this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;
@@ -188,9 +192,11 @@ update(){
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.btnUndefined = false
         console.log(response)
         this.router.navigate(['manga/'+this.id]);
       }, error => {
+        this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;

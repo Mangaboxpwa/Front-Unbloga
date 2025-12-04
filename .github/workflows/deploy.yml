@@ -29,8 +29,8 @@ jobs:
             git config --global --add safe.directory "${{ secrets.WORK_DIR }}"
 
             echo "== Descargando últimos cambios =="
-            sudo git fetch origin main
-            sudo git reset --hard origin/main
+            git fetch origin main
+            git reset --hard origin/main
 
             echo "== Instalando dependencias =="
             sudo rm -rf node_modules

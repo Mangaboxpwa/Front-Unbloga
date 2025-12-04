@@ -1,0 +1,62 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab2"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Propuesta
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ng-container>
+  <div class="container"style="margin: 0;
+  padding: 0;">
+    
+    <!-- Arriba: Imagen de fondo -->
+    <div class="top-section"></div>
+
+    <!-- Abajo: dividido en 3 partes -->
+    <div class="bottom-section">
+      
+      <!-- Sección 1: Imagen centrada -->
+      <div class="topp-section">
+        <h1>Sugierenos un manga</h1>
+      </div>
+
+      <!-- Sección 2: Botones -->
+      <div class="middle-section">
+        <form class="formulario" [formGroup]="proposalForm">
+          <ion-item style="width: 100%; margin-bottom:5px">
+            <ion-input label="Título" formControlName="title" labelPlacement="floating" placeholder=""></ion-input>
+          </ion-item>
+          <ion-item style="width: 100%;">
+            <ion-textarea label="Descripción"
+                formControlName="description"
+                labelPlacement="floating">
+            </ion-textarea>
+          </ion-item> 
+          <div class="button-row">
+            <ion-button shape="round" (click)="sendProposal()">Enviar</ion-button>
+          </div>
+        </form>
+        <hr />
+      </div>
+      <ion-alert
+          [isOpen]="isAlertOpen"
+          [header]="headerAlert"
+          [subHeader]="subHeader"
+          [message]="message"
+          [buttons]="alertButtons"
+          (didDismiss)="setOpen(false)"
+        ></ion-alert>
+      <!-- Sección 3: Label -->
+      <div class="bottomm-section">
+        <label>Artwork from Naruto</label>
+      </div>
+      
+    </div>
+  </div>
+</ng-container>
+</ion-content>

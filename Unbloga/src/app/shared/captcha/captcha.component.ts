@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './captcha.component.html',
   styleUrls: ['./captcha.component.scss'],
 })
-export class CaptchaComponent {
+export class CaptchaComponent {/* 
 @Output() resolved = new EventEmitter<string>();
 
   siteKey = environment.recaptchaSiteKey;
@@ -47,4 +47,4 @@ export class CaptchaComponent {
       });
     }
   }
- }
+ */}

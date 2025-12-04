@@ -11,6 +11,7 @@ import { Manga, MangaResponse } from '../core/interfaces/Manga';
 import { Reviews } from '../core/interfaces/Reviews';
 import { User } from '../core/interfaces/Users';
 import { RefresherCustomEvent } from '@ionic/core';
+import { ViewDidEnter } from '@ionic/angular';
 
 @Component({
   selector: 'app-manga',
@@ -19,7 +20,7 @@ import { RefresherCustomEvent } from '@ionic/core';
   standalone: true,
   imports: [IonRefresherContent, IonRefresher, RouterLink, IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
 })
-export class MangaPage implements OnInit {
+export class MangaPage implements OnInit, ViewDidEnter {
   @ViewChild('liveToast', { static: false }) liveToast!: ElementRef;
   like = false;
   rating: number = 0;
@@ -30,6 +31,10 @@ export class MangaPage implements OnInit {
   user_review?:Reviews
   user?:User
   constructor(private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
+  
+  ionViewDidEnter(): void {
+    this.ngOnInit()
+  }
 
   ngOnInit() {
      this.id = Number(this.route.snapshot.paramMap.get('id'));

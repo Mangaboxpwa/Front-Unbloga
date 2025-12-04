@@ -1,47 +1,53 @@
 import { Component } from '@angular/core';
 import { IonSegment,IonSegmentContent,IonSegmentView, IonRefresher,IonRefresherContent, RefresherCustomEvent, IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonSegmentButton } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { timeout } from 'rxjs';
 import { Mangas } from '../core/interfaces/Mangas';
 import { scan, book } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { BrowserMultiFormatReader } from '@zxing/browser';
+import { Auth } from '../core/services/auth';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [IonSegment,IonSegmentContent,IonSegmentView, IonSegmentButton, IonIcon, IonButton, IonRefresher,IonRefresherContent, IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonTitle, IonContent]
+  imports: [RouterLink, IonSegment,IonSegmentContent,IonSegmentView, IonSegmentButton, IonIcon, IonRefresher,IonRefresherContent, IonItem, IonLabel, IonList, IonSearchbar,IonHeader, IonToolbar, IonContent]
 })
 export class Tab2Page {
-  mangas?: Mangas[];
-  constructor(private mangaService: MangaService,private router: Router) {
-    addIcons({ scan,book });
-  }
   isScanning = false;
-  private stream: MediaStream | null = null;
   private reader = new BrowserMultiFormatReader();
   private currentDeviceId?: string;
   private scannerControls: any;
 
- public titles: string[] = [];
+  mangas?: Mangas[];
+  public titles: string[] = [];
   public results: Mangas[] = []; // vacía al inicio
+  isEmpty = false;
+
+  constructor(private auth:Auth, private mangaService: MangaService,private router: Router) {
+    addIcons({ scan,book });
+  }
+
 ngOnInit(): void {
   this.indexMangas()
   this.mangas = undefined
 }
-  handleRefresh(event: RefresherCustomEvent) {
-    setTimeout(() => {
-      this.ngOnInit()
-      event.target.complete();
-    }, 2000);
-  }
-  handleInput(event: Event) {
+
+handleRefresh(event: RefresherCustomEvent) {
+  setTimeout(() => {
+    this.ngOnInit()
+    event.target.complete();
+  }, 2000);
+}
+
+handleInput(event: Event) {
   const target = event.target as HTMLIonSearchbarElement;
   const query = target.value?.toLowerCase().trim() || '';
 
   if (query.length === 0) {
+    this.isEmpty = false
     this.results = [];
     return;
   }
@@ -50,9 +56,14 @@ ngOnInit(): void {
   this.results = this.mangas?.filter(manga =>
     manga.title.toLowerCase().includes(query)
   ) || [];
+  if (this.results.length == 0 && this.auth.isLoggedIn()){
+    this.isEmpty = true
+  }else{
+    this.isEmpty = false
+  }
 }
 
-  indexMangas(){
+indexMangas(){
     console.log('hola')
     this.mangaService.index().pipe(
       timeout(50000)
@@ -71,11 +82,13 @@ ngOnInit(): void {
         }
       }
     )
-  }
-  verDetalle(id: number) {
+}
+verDetalle(id: number) {
   console.log('ID del manga seleccionado:', id);
   this.router.navigate(['/manga', id]);
 }
+
+
 
 toggleScanner() {
     if (this.isScanning) {
@@ -83,9 +96,9 @@ toggleScanner() {
     } else {
       this.startScanner();
     }
-  }
+}
 
-  async startScanner() {
+async startScanner() {
     this.isScanning = true;
 
     const video = document.getElementById('video') as HTMLVideoElement;
@@ -138,9 +151,9 @@ toggleScanner() {
       console.error(err);
       this.isScanning = false;
     }
-  }
+}
 
- stopScanner() {
+stopScanner() {
   console.log("deteniendo scanner");
 
   this.isScanning = false;
@@ -173,16 +186,14 @@ toggleScanner() {
 
 }
 
-
-
-  // Mejor hacer una función que reciba el string directamente
-  handleQR(qr: string) {
+// Mejor hacer una función que reciba el string directamente
+handleQR(qr: string) {
     // ejemplo: llamamos a una función que haga la búsqueda por texto
     window.location.href = qr;
     console.log(qr)
-  }
+}
 
-  ngOnDestroy() {
+ngOnDestroy() {
     this.stopScanner();
-  }
+}
 }

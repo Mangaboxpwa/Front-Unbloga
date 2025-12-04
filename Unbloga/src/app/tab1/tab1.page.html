@@ -15,7 +15,7 @@
     <!-- Bienvenida -->
     <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100px;">
       <ion-col size="12" class="ion-text-center">
-        <h3>Bienvenido te quiero mucho. Aquí tienes lo que han visto tus seguidos...</h3>
+        <h3>Bienvenido te quiero muchoo. Aquí tienes lo que han visto tus seguidos...</h3>
       </ion-col>
     </ion-row>
 
@@ -31,7 +31,7 @@
     <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
     <ion-row>
-      <ion-col *ngFor="let resena of resenas.slice(0,6)" size="6" size-lg="2">
+      <ion-col *ngFor="let resena of resenas.slice(0,6)" [routerLink]="['/reviews/',resena.users.id]" size="6" size-lg="2">
         <ion-card>
           <img [src]="resena.manga.cover_url" />
           <ion-card-content style="padding: 0;">

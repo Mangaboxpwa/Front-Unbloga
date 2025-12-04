@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonRefresher, RefresherCustomEvent, IonRefresherContent, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { ActivatedRoute } from '@angular/router';
 import { UserMe } from 'src/app/core/interfaces/user_me';
@@ -13,17 +13,24 @@ import { timeout } from 'rxjs';
   templateUrl: './qr-code.page.html',
   styleUrls: ['./qr-code.page.scss'],
   standalone: true,
-  imports: [QRCodeComponent, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonRefresher, IonRefresherContent, QRCodeComponent, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class QrCodePage implements OnInit {
   id = 0
   User?:UserMe
-  public myAngularxQrCode: string = 'https://igmarapruebameporfavor.site/user-profile/'+this.id;
+  public myAngularxQrCode: string = '';
   constructor(private route: ActivatedRoute, private userService:UserService) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     this.userInfo()
+    this.myAngularxQrCode = 'https://igmarapruebameporfavor.site/user-profile/'+this.id
+  }
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
   }
 
 userInfo(){

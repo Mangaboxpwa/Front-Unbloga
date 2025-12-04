@@ -1,6 +1,6 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonActionSheet } from '@ionic/angular/standalone';
+import { RefresherCustomEvent,IonRefresher, IonRefresherContent, IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonActionSheet } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../core/services/auth';
 import { ReviewService } from '../core/services/review.service';
@@ -8,6 +8,7 @@ import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { timeout } from 'rxjs';
 import { UserMe } from '../core/interfaces/user_me';
 import { ReviewsFromUser } from '../core/interfaces/ReviewsFromUser';
+import { ViewDidEnter } from '@ionic/angular';
 
 Chart.register(...registerables);
 
@@ -16,9 +17,9 @@ Chart.register(...registerables);
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonActionSheet, IonToast, IonButtons, IonBadge, RouterLink,IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonRefresher, IonRefresherContent,IonActionSheet, IonToast, IonButtons, IonBadge, RouterLink,IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
 })
-export class Tab3Page {
+export class Tab3Page implements ViewDidEnter {
   @ViewChild('barCanvas') private barCanvas!: ElementRef;
   private barChart!: Chart;
   User?:UserMe
@@ -50,6 +51,9 @@ export class Tab3Page {
   ];
 constructor(private reviewService:ReviewService, private router: Router, private auth: Auth) {
 }
+  ionViewDidEnter(): void {
+    this.ngOnInit()
+  }
 
 ngOnInit(): void {
   //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -60,6 +64,7 @@ ngOnInit(): void {
     this.favorites()
   }
 }
+
   get isLoggedIn(): boolean {
     return this.auth.isLoggedIn();
   }
@@ -139,4 +144,10 @@ compartir(){
 qr(){
   this.router.navigate(['/qr-code/'+this.User?.id]);
 }
+handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
+  }
 }

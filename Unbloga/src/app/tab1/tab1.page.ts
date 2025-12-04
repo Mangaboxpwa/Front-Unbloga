@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
-import { RatingComponent } from '../rating/rating.component';
+import { IonRefresher, RefresherCustomEvent, IonRefresherContent, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { MangaService } from 'src/app/core/services/manga.service';
 import { ReviewService } from '../core/services/review.service';
 import { timeout } from 'rxjs';
-import { Mangas, MangasResponse } from '../core/interfaces/Mangas';
-import { NgFor } from '@angular/common';
+import { Mangas } from '../core/interfaces/Mangas';
+import { NgFor, NgIf } from '@angular/common';
+import { ReviewsFromUser } from '../core/interfaces/ReviewsFromUser';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  imports: [RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow, IonGrid, IonIcon],
+  imports: [NgIf,IonRefresher, IonRefresherContent, RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow, IonGrid, IonIcon],
 })
 export class Tab1Page {
     mangas?: Mangas[];
     favoritos?: Mangas[];
+    resenas: ReviewsFromUser[] = []
 
   constructor(private reviewService:ReviewService, private mangaService: MangaService,private router: Router) {}
 
@@ -25,6 +25,12 @@ export class Tab1Page {
     this.mangasMasReseñadosUltimoMes()
     this.mangasFavoritos()
     this.recentReviewsFromFollowing()
+  }
+  handleRefresh(event: RefresherCustomEvent) {
+    setTimeout(() => {
+      this.ngOnInit()
+      event.target.complete();
+    }, 2000);
   }
 
   mangasMasReseñadosUltimoMes(){
@@ -73,7 +79,7 @@ export class Tab1Page {
         (response) => {
           console.log(response)
           if (response.data){
-            
+            this.resenas= response.data
           }
         }, error => {
           console.log(error)
@@ -82,6 +88,21 @@ export class Tab1Page {
           }
         }
       )
+  }
+  formatoFecha(fecha:string){
+    const date = new Date(fecha);
+
+    const meses = [
+      "Enero", "Febrero", "Marzo", "Abril",
+      "Mayo", "Junio", "Julio", "Agosto",
+      "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+
+    const mes = meses[date.getUTCMonth()];
+    const dia = String(date.getUTCDate()).padStart(2, "0");
+
+    const resultado = `${mes} ${dia}`;
+    return resultado
   }
 }
 

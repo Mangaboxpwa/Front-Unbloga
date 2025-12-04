@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-segment>
+  <ion-segment value="first">
   <ion-segment-button value="first" content-id="first">
     <ion-label>Seguidos</ion-label>
   </ion-segment-button>
@@ -75,4 +75,7 @@
       </div>
     </ng-template>
   </ion-modal>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
 </ion-content>

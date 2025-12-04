@@ -34,6 +34,9 @@
           <ion-item style="width: 100%;">
             <ion-input type="password" label="Contraseña" formControlName="password" labelPlacement="floating"></ion-input>
           </ion-item> 
+          <ion-item>
+            <!-- <app-captcha  style="margin-top:10px" (resolved)="onCaptchaResolved($event)"></app-captcha> -->
+          </ion-item>
           <div class="button-row">
             <ion-button shape="round" (click)="goRegister()">Únete</ion-button>
             <ion-button shape="round" (click)="recuperarContrasena()">Resetear contraseña</ion-button>
@@ -50,13 +53,9 @@
           [buttons]="alertButtons"
           (didDismiss)="setOpen(false)"
         ></ion-alert>
-      <!-- Sección 3: Label -->
-      <div class="bottomm-section">
-        <label>Artwork from Vagabond</label>
-      </div>
+      
       
     </div>
   </div>
 </ng-container>
-
 </ion-content>

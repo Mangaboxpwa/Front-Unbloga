@@ -92,4 +92,7 @@ trigger="open-action-sheet"
   [buttons]="actionSheetButtons"
 ></ion-action-sheet>
 <ion-toast trigger="open-toast" message="Enlace copiado" [duration]="3000"></ion-toast>
+<ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+</ion-refresher>
 </ion-content>

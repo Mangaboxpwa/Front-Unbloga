@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
+import { CaptchaComponent } from 'src/app/shared/captcha/captcha.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class LoginPage implements OnInit {
 LoginForm: FormGroup;
@@ -27,11 +28,18 @@ alertButtons = [
       },
     },
   ];
+captchaToken:string = ''
 constructor(private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.LoginForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
+      captcha:['',]
     })
+}
+onCaptchaResolved(token:string){
+  this.captchaToken = token
+  this.LoginForm.get('captcha')?.setValue(token)
+  console.log(token)
 }
   ngOnInit() {
   }
@@ -44,6 +52,7 @@ scrollToTop() {
   enviarLogin() {
     console.log("entra?")
     console.log(this.LoginForm)
+    
     this.authService.login(this.LoginForm.value).pipe(
       timeout(50000)
     ).subscribe(

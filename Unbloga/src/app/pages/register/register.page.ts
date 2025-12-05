@@ -5,6 +5,7 @@ import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHead
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
+import { NavController } from '@ionic/angular';
 
 
 @Component({
@@ -29,7 +30,7 @@ alertButtons = [
       },
     },
   ];
-constructor(private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.RegistrarForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(72), Validators.pattern(/^[a-zA-Z]+(\s[a-zA-Z]+)*\s*$/)]],
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
@@ -40,6 +41,9 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
 
   ngOnInit() {
   }
+  goBack() {
+  this.navCtrl.back();
+}
   scrollToTop() {
     window.scrollTo({
       top: 0,

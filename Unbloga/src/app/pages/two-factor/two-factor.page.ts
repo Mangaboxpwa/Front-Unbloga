@@ -7,7 +7,7 @@ import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { NotificationsService } from 'src/app/core/services/notifications.service';
-import { SwUpdate } from '@angular/service-worker';
+import { NavController } from '@ionic/angular';
 
 
 @Component({
@@ -34,7 +34,7 @@ alertButtons = [
       },
     },
   ];
-constructor(private notify: NotificationsService,private cookies:CookieService, private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navCtrl: NavController,private notify: NotificationsService,private cookies:CookieService, private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.twoFactorForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
@@ -44,6 +44,9 @@ constructor(private notify: NotificationsService,private cookies:CookieService, 
     console.log(sessionStorage.getItem('email'))
     this.twoFactorForm.controls['email'].setValue(sessionStorage.getItem('email'))
   }
+  goBack() {
+  this.navCtrl.back();
+}
 scrollToTop() {
     window.scrollTo({
       top: 0,

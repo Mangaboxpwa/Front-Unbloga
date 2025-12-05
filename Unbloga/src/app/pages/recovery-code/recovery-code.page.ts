@@ -5,6 +5,7 @@ import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTi
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-recovery-code',
@@ -30,7 +31,7 @@ alertButtons = [
       },
     },
   ];
-constructor(private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.recoveryCodeForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
@@ -40,6 +41,9 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
     console.log(sessionStorage.getItem('email'))
     this.recoveryCodeForm.controls['email'].setValue(sessionStorage.getItem('email'))
   }
+  goBack() {
+  this.navCtrl.back();
+}
 scrollToTop() {
     window.scrollTo({
       top: 0,

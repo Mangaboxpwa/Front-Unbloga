@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 import { CaptchaComponent } from 'src/app/shared/captcha/captcha.component';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,7 @@ alertButtons = [
     },
   ];
 captchaToken:string = ''
-constructor(private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.LoginForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
@@ -44,6 +45,9 @@ onCaptchaResolved(token:string){
 }
   ngOnInit() {
   }
+  goBack() {
+  this.navCtrl.back();
+}
 scrollToTop() {
     window.scrollTo({
       top: 0,

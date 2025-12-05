@@ -7,6 +7,7 @@ import { ProposalsService } from 'src/app/core/services/proposals.service';
 import { timeout } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-proposal',
@@ -33,7 +34,7 @@ alertButtons = [
     },
   ];
 
-  constructor(private router:Router, private fb: FormBuilder, private proposalsService:ProposalsService) { 
+  constructor(private navCtrl: NavController,private router:Router, private fb: FormBuilder, private proposalsService:ProposalsService) { 
     this.proposalForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(254)]],
       description: ['', [Validators.maxLength(320)]],
@@ -42,6 +43,9 @@ alertButtons = [
 
   ngOnInit() {
   }
+  goBack() {
+  this.navCtrl.back();
+}
   sendProposal(){
     this.btnUndefined = true
     console.log("entra?")

@@ -11,6 +11,8 @@ import { timeout } from 'rxjs';
 import { Manga, MangaResponse } from '../core/interfaces/Manga';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
+import { NavController } from '@ionic/angular';
+
 import {
   IonCard,
   IonCardContent,
@@ -76,7 +78,7 @@ alertButtons = [
     },
   ];
 
-  constructor(private speechService: SpeechService, private cookie: CookieService,private fb: FormBuilder,private router: Router,private route: ActivatedRoute, private mangaService:MangaService,private reviewService:ReviewService) { 
+  constructor(private navCtrl: NavController,private speechService: SpeechService, private cookie: CookieService,private fb: FormBuilder,private router: Router,private route: ActivatedRoute, private mangaService:MangaService,private reviewService:ReviewService) { 
     this.ReviewForm = this.fb.group({
       manga_id: ['', [Validators.required]],
       rating: ['', [Validators.required]],
@@ -94,6 +96,9 @@ alertButtons = [
     let token = this.cookie.get('token');
     console.log(token)
   }
+  goBack() {
+  this.navCtrl.back();
+}
 handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()

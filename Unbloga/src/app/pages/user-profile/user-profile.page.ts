@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RefresherCustomEvent, IonActionSheet, IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonRefresherContent, IonRefresher } from '@ionic/angular/standalone';
+import { RefresherCustomEvent, IonActionSheet, IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonRefresherContent, IonRefresher, IonBackButton } from '@ionic/angular/standalone';
 import { Router, RouterLink,ActivatedRoute } from '@angular/router';
 import { timeout } from 'rxjs';
 import { ReviewsFromUser } from 'src/app/core/interfaces/ReviewsFromUser';
@@ -10,13 +10,14 @@ import { Auth } from 'src/app/core/services/auth';
 import { ReviewService } from 'src/app/core/services/review.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { FollowService } from 'src/app/core/services/follows.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.page.html',
   styleUrls: ['./user-profile.page.scss'],
   standalone: true,
-  imports: [IonRefresher, IonRefresherContent, IonActionSheet, IonToast, IonButtons, FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonBackButton, IonRefresher, IonRefresherContent, IonActionSheet, IonToast, IonButtons, FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class UserProfilePage implements OnInit {
 User?:UserMe
@@ -47,7 +48,7 @@ User?:UserMe
       },
     },
   ];
-  constructor(private router:Router, private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
+  constructor(private navCtrl: NavController,private router:Router, private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -58,7 +59,9 @@ User?:UserMe
       this.favorites()
     }
   }
-
+goBack() {
+  this.navCtrl.back();
+}
 handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()

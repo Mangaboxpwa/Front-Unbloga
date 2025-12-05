@@ -5,6 +5,7 @@ import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHead
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-new-pass',
@@ -28,7 +29,7 @@ alertButtons = [
       },
     },
   ];
-constructor(private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.nuevaContrasenaForm = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
       password_confirmation: ['', Validators.required],
@@ -43,6 +44,9 @@ constructor(private fb: FormBuilder, private authService: Auth,private router: R
       behavior: 'smooth'
     });
   }
+  goBack() {
+  this.navCtrl.back();
+}
   enviarContrasenasNuevas() {
     this.btnUndefined = true
     console.log("entra?")

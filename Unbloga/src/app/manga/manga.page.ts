@@ -11,7 +11,7 @@ import { Manga, MangaResponse } from '../core/interfaces/Manga';
 import { Reviews } from '../core/interfaces/Reviews';
 import { User } from '../core/interfaces/Users';
 import { RefresherCustomEvent } from '@ionic/core';
-import { ViewDidEnter } from '@ionic/angular';
+import { ViewDidEnter, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-manga',
@@ -30,7 +30,7 @@ export class MangaPage implements OnInit, ViewDidEnter {
   reviews?:Reviews[]
   user_review?:Reviews
   user?:User
-  constructor(private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
+  constructor(private navCtrl: NavController, private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
   
   ionViewDidEnter(): void {
     this.ngOnInit()
@@ -43,6 +43,9 @@ export class MangaPage implements OnInit, ViewDidEnter {
       this.showManga()
     }
   }
+  goBack() {
+  this.navCtrl.back();
+}
   handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()

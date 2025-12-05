@@ -5,6 +5,7 @@ import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTi
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-send-email',
@@ -30,13 +31,16 @@ alertButtons = [
       },
     },
   ];
-constructor(private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
     })
 }
   ngOnInit() {
   }
+  goBack() {
+  this.navCtrl.back();
+}
 scrollToTop() {
     window.scrollTo({
       top: 0,

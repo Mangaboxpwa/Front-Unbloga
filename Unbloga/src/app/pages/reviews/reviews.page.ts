@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RefresherCustomEvent,IonRefresherContent, IonRefresher, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem } from '@ionic/angular/standalone';
+import { RefresherCustomEvent,IonRefresherContent, IonRefresher, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 import { NgFor } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { RatingComponent } from 'src/app/rating/rating.component';
@@ -11,20 +11,21 @@ import { UserService } from 'src/app/core/services/user.service';
 import { timeout } from 'rxjs';
 import { UserMe } from 'src/app/core/interfaces/user_me';
 import { Auth } from 'src/app/core/services/auth';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-reviews',
   templateUrl: './reviews.page.html',
   styleUrls: ['./reviews.page.scss'],
   standalone: true,
-  imports: [IonRefresher,IonRefresherContent,CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
+  imports: [IonBackButton, IonButtons, IonRefresher,IonRefresherContent,CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
 })
 export class ReviewsPage implements OnInit {
 id:number = 0
 User?:UserMe
 Reviews?:ReviewsFromUser[]
 
-constructor(private auth:Auth, private userService:UserService, private reviewService:ReviewService, private router: Router,private route: ActivatedRoute) { }
+constructor(private navCtrl: NavController,private auth:Auth, private userService:UserService, private reviewService:ReviewService, private router: Router,private route: ActivatedRoute) { }
 
   ngOnInit() {
       this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -37,6 +38,9 @@ constructor(private auth:Auth, private userService:UserService, private reviewSe
         this.me()
       }
     }
+    goBack() {
+  this.navCtrl.back();
+}
   handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()

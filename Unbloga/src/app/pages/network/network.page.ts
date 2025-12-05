@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonRefresherContent, RefresherCustomEvent, IonButton, IonModal, IonActionSheet, IonList,IonItem, IonBadge, IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView, IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonToast, IonIcon, IonRefresher } from '@ionic/angular/standalone';
+import { IonRefresherContent, RefresherCustomEvent, IonButton, IonModal, IonActionSheet, IonList,IonItem, IonBadge, IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView, IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonToast, IonIcon, IonRefresher, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 import { Router, RouterLink,ActivatedRoute, } from '@angular/router';
 import { FollowService } from 'src/app/core/services/follows.service';
 import { timeout } from 'rxjs';
 import { User } from 'src/app/core/interfaces/Users';
+import { NavController } from '@ionic/angular';
+
 @Component({
   selector: 'app-network',
   templateUrl: './network.page.html',
   styleUrls: ['./network.page.scss'],
   standalone: true,
-  imports: [IonRefresherContent, IonRefresher, IonButton, IonModal,IonToast, IonActionSheet, IonAvatar, IonList, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonBackButton, IonButtons, IonRefresherContent, IonRefresher, IonButton, IonModal,IonToast, IonActionSheet, IonAvatar, IonList, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class NetworkPage implements OnInit {
  public actionSheetButtons = [
@@ -46,7 +48,7 @@ export class NetworkPage implements OnInit {
   isToastOpen = false;
   isModalOpen = false;
   onFollowers = false;
-  constructor(private followService:FollowService, private router: Router,private route: ActivatedRoute,) { }
+  constructor(private navCtrl: NavController,private followService:FollowService, private router: Router,private route: ActivatedRoute,) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -59,6 +61,9 @@ export class NetworkPage implements OnInit {
       this.getFolllowing()
     }
   }
+  goBack() {
+  this.navCtrl.back();
+}
   handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()

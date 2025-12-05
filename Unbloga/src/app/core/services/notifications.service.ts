@@ -21,8 +21,17 @@ export class NotificationsService {
   listenToFollowerEvents(userId: number) {
     this.echo.private(`user.${userId}`)
       .listen('.NewFollower', (data: any) => {
-        console.log('EVENTO RECIBIDO:', data);
+        console.log('EVENTO RECIBIDO FOLLOWER:', data);
         this.sendNotification(data);
+      })
+      .error((err: any) => console.error('Error al suscribirse al canal:', err));
+  }
+
+  listenToBanEvents(userId: number) {
+    this.echo.private(`user.${userId}`)
+      .listen('.BlockedUser', (data: any) => {
+        console.log('EVENTO RECIBIDO BAN:', data);
+        this.sendNotificationBan(data);
       })
       .error((err: any) => console.error('Error al suscribirse al canal:', err));
   }
@@ -35,6 +44,26 @@ export class NotificationsService {
           icon: '/assets/icon/icon.png',
         });
       });
+    }
+  }
+
+  sendNotificationBan(data: any) {
+    if ('serviceWorker' in navigator) {
+      if (data.is_baned){
+        navigator.serviceWorker.ready.then(reg => {
+        reg.showNotification('Suspendido', {
+          body: `Se bloquearon tus recomendaciones.`,
+          icon: '/assets/icon/icon.png',
+        });
+      });
+      }else{
+        navigator.serviceWorker.ready.then(reg => {
+        reg.showNotification('Reactivado', {
+          body: `Se otorgaron las recomendaciones.`,
+          icon: '/assets/icon/icon.png',
+        });
+        });
+      }
     }
   }
 

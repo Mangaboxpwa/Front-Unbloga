@@ -1,9 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
+    <ion-title *ngIf="toolbar">
       Perfil
     </ion-title>
-    <ion-buttons slot="end">
+    <ion-title *ngIf="!toolbar">
+    </ion-title>
+    <ion-buttons *ngIf="toolbar" slot="end">
       <ion-button id="open-action-sheet">
         <i class="bi bi-share-fill"></i>
       </ion-button>

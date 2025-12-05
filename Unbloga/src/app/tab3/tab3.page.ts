@@ -25,6 +25,7 @@ export class Tab3Page implements ViewDidEnter {
   User?:UserMe
   Reviews?:ReviewsFromUser[]
   Favorites?:ReviewsFromUser[]
+  toolbar = false
   public actionSheetButtons = [
     {
       text: 'Ver código QR',
@@ -59,15 +60,16 @@ ngOnInit(): void {
   //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
   //Add 'implements OnInit' to the class.
   if (this.auth.isLoggedIn()){
+    this.toolbar = true
     this.me()
     this.index()
     this.favorites()
   }
 }
 
-  get isLoggedIn(): boolean {
-    return this.auth.isLoggedIn();
-  }
+get isLoggedIn(): boolean {
+  return this.auth.isLoggedIn();
+}
 
   goLogin() {
     this.router.navigate(['/login']);

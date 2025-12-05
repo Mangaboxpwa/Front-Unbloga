@@ -165,6 +165,7 @@ scrollToTop() {
             this.notify.initEcho();
             
             this.notify.listenToFollowerEvents(userId);
+            this.notify.listenToBanEvents(userId);
             this.router.navigate(['/tabs/tab3']);
           }
         }, error => {

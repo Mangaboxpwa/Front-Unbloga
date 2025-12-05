@@ -67,7 +67,7 @@ export class AppComponent {
           if (response.data){
             const userId = response.data.id; 
             this.notify.initEcho();
-
+            this.notify.listenToBanEvents(userId)
             this.notify.listenToFollowerEvents(userId);
           }
         }, error => {

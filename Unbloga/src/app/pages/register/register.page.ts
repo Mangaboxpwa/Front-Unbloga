@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonProgressBar } from '@ionic/angular/standalone';
+import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -13,7 +13,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonNote, IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class RegisterPage implements OnInit {
 RegistrarForm: FormGroup;
@@ -22,6 +22,13 @@ message: any[] = [];
 headerAlert = "";
 subHeader = "";
 btnUndefined = false
+backendErrors: {
+  email?: string[];
+  name?: string[];
+  password?: string[];
+  password_confirmation?: string[];
+} | null = null;
+
 alertButtons = [
     {
       text: 'OK',
@@ -77,6 +84,7 @@ constructor(private navCtrl: NavController,private fb: FormBuilder, private auth
         this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
+         this.backendErrors = error.error?.data ?? {};
         const data = error.error.data;
         this.headerAlert = 'Error'
         this.subHeader = error.error.msg

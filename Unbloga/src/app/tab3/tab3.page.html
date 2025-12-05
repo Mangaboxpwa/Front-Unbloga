@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title *ngIf="toolbar">
+    <ion-title *ngIf="isLoggedIn">
       {{User?.name}}
     </ion-title>
-    <ion-title *ngIf="!toolbar">
+    <ion-title *ngIf="!isLoggedIn">
     </ion-title>
     <ion-buttons *ngIf="toolbar" slot="end">
       <ion-button id="open-action-sheet">

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -15,7 +15,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './two-factor.page.html',
   styleUrls: ['./two-factor.page.scss'],
   standalone: true,
-  imports: [IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonNote, IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class TwoFactorPage implements OnInit {
 twoFactorForm: FormGroup;
@@ -26,6 +26,10 @@ message: any[] = [];
 headerAlert = "";
 subHeader = "";
 btnUndefined = false
+codigo_mal= ''
+backendErrors: {
+  code?: string[];
+} | null = null;
 alertButtons = [
     {
       text: 'OK',
@@ -61,6 +65,7 @@ scrollToTop() {
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.codigo_mal= ''
         this.btnUndefined = false
         console.log(response)
         if (response.token){
@@ -72,8 +77,12 @@ scrollToTop() {
         }
       }, error => {
         this.btnUndefined = false
+        this.backendErrors = error.error?.data ?? {};
         console.log(error)
-        console.log(error.error.data)
+        console.log(error.error.message)
+        if(error.error.message){
+          this.codigo_mal= error.error.message
+        }
         const data = error.error.data;
         this.headerAlert = 'Error'
         this.subHeader = error.error.msg

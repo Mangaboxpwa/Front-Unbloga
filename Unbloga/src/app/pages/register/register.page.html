@@ -30,19 +30,62 @@
       <div class="middle-section" >
 
         <form class="formulario" [formGroup]="RegistrarForm">
-        <ion-item style="width: 100%; margin-bottom:5px">
-          <ion-input label="Correo" formControlName="email" labelPlacement="floating" placeholder=""></ion-input>
-        </ion-item>
-        <ion-item style="width: 100%; margin-bottom:5px">
-          <ion-input label="Nombre" formControlName="name"  labelPlacement="floating" placeholder=""></ion-input>
-        </ion-item>
-        <ion-item style="width: 100%; margin-bottom:5px">
-          <ion-input type="password" formControlName="password"  label="Contraseña" labelPlacement="floating"></ion-input>
-        </ion-item>
-        <ion-item style="width: 100%;">
-          <ion-input type="password" formControlName="password_confirmation"  label="Repetir contraseña" labelPlacement="floating"></ion-input>
-        </ion-item> 
-        
+        <!-- EMAIL -->
+<ion-item style="width: 100%; margin-bottom:5px">
+  <ion-input 
+    label="Correo"
+    formControlName="email"
+    labelPlacement="floating">
+  </ion-input>
+
+  
+</ion-item>
+<ion-note *ngIf="backendErrors?.email?.[0]" slot="error" color="danger">
+  {{ backendErrors?.email?.[0] }}
+</ion-note>
+<!-- NAME -->
+<ion-item style="width: 100%; margin-bottom:5px">
+  <ion-input 
+    label="Nombre"
+    formControlName="name"
+    labelPlacement="floating">
+  </ion-input>
+
+  
+</ion-item>
+<ion-note *ngIf="backendErrors?.name?.[0]" slot="error" color="danger">
+  {{ backendErrors?.name?.[0] }}
+</ion-note>
+<!-- PASSWORD -->
+<ion-item style="width: 100%; margin-bottom:5px">
+  <ion-input 
+    type="password"
+    formControlName="password"
+    label="Contraseña"
+    labelPlacement="floating">
+  </ion-input>
+
+  
+</ion-item>
+<ion-note *ngIf="backendErrors?.password?.[0]" slot="error" color="danger">
+  {{ backendErrors?.password?.[0] }}
+</ion-note>
+
+<!-- PASSWORD CONFIRMATION -->
+<ion-item style="width: 100%; margin-bottom:5px">
+  <ion-input
+    type="password"
+    formControlName="password_confirmation"
+    label="Repetir contraseña"
+    labelPlacement="floating">
+  </ion-input>
+
+  
+</ion-item>
+<ion-note *ngIf="backendErrors?.password_confirmation?.[0]" slot="error" color="danger">
+  {{ backendErrors?.password_confirmation?.[0] }}
+</ion-note>
+
         <div class="button-row">
           <ion-button shape="round" (click)="goLogin()">Inicia sesión</ion-button>
           <ion-button shape="round" [disabled]="btnUndefined" (click)="enviarRegistro()">Ir</ion-button>

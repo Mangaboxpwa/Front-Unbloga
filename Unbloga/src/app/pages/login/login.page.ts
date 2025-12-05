@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -13,7 +13,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonProgressBar, CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonNote, IonProgressBar, CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class LoginPage implements OnInit {
 LoginForm: FormGroup;
@@ -30,6 +30,7 @@ alertButtons = [
       },
     },
   ];
+  backendErrors = false
 captchaToken:string = ''
 constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.LoginForm = this.fb.group({
@@ -61,21 +62,24 @@ scrollToTop() {
     if (this.LoginForm.invalid) {
       this.LoginForm.markAllAsTouched(); // muestra los errores en pantalla
       this.btnUndefined = false
-      return; // detiene el submit
+      return;
     }
     
     this.authService.login(this.LoginForm.value).pipe(
       timeout(50000)
     ).subscribe(
       (response) => {
+        this.backendErrors = true
         this.btnUndefined = false
         console.log(response)
         sessionStorage.setItem('email',''+response.email)
         this.router.navigate(['two-factor']);
       }, error => {
+        this.backendErrors = true
         this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)
+         this.backendErrors = error.error?.data ?? {};
         const data = error.error.data;
         this.headerAlert = 'Error'
         this.subHeader = error.error.msg

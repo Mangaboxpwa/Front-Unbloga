@@ -41,6 +41,9 @@
           <div *ngIf="LoginForm.get('captcha')?.touched && LoginForm.get('captcha')?.invalid">
               <small style="color:red">Por favor completa el captcha.</small>
             </div>
+            <div *ngIf="backendErrors">
+              <small style="color:red">Credenciales incorrectas.</small>
+            </div>
           <div class="button-row">
             <ion-button shape="round" (click)="goRegister()">Únete</ion-button>
             <ion-button shape="round" (click)="recuperarContrasena()">Resetear contraseña</ion-button>

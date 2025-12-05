@@ -19,8 +19,8 @@
       <ion-avatar>
         <img alt="Silhouette of a person's head" [src]="User?.avatar_url" />
       </ion-avatar>
-      <ion-button (click)="follow()" *ngIf="!User?.is_following" fill="outline" color="medium">Seguir</ion-button>
-      <ion-button (click)="unfollow()" *ngIf="User?.is_following" fill="outline" color="success">Dejar de seguir</ion-button>
+      <ion-button (click)="follow()" *ngIf="!User?.is_following  && isLoggedIn" fill="outline" color="medium">Seguir</ion-button>
+      <ion-button (click)="unfollow()" *ngIf="User?.is_following && isLoggedIn" fill="outline" color="success">Dejar de seguir</ion-button>
     </div>
   </ion-item>
   <!-- Favoritos -->
@@ -70,14 +70,14 @@
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
-  <ion-item button [routerLink]="['/network', this.id]">
+  <ion-item button (click)="irNetwork()">
     <ion-label>Siguiendo</ion-label>
 
     <ion-badge slot="end" color="none">{{this.User?.following?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
-  <ion-item button [routerLink]="['/network', this.id]">
+  <ion-item button (click)="irNetwork()">
     <ion-label>Seguidores</ion-label>
 
     <ion-badge slot="end" color="none">{{this.User?.followers?.length}}</ion-badge>
@@ -98,4 +98,12 @@ trigger="open-action-sheet"
 <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
   <ion-refresher-content></ion-refresher-content>
 </ion-refresher>
+<ion-alert
+          [isOpen]="isAlertOpen"
+          [header]="headerAlert"
+          [subHeader]="subHeader"
+          [message]="message"
+          [buttons]="alertButtons"
+          (didDismiss)="setOpen(false)"
+        ></ion-alert>
 </ion-content>

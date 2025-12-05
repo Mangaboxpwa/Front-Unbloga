@@ -1,6 +1,6 @@
 import { Component, OnInit,ViewChild,ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {IonRefresherContent, IonButton,IonToast,IonItemDivider, IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonRefresher } from '@ionic/angular/standalone';
+import {IonRefresherContent, IonButton,IonToast,IonItemDivider, IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonRefresher, IonAlert } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { RatingComponent } from "../rating/rating.component";
 import { StarRateComponent } from "../star-rate/star-rate.component";
@@ -12,13 +12,14 @@ import { Reviews } from '../core/interfaces/Reviews';
 import { User } from '../core/interfaces/Users';
 import { RefresherCustomEvent } from '@ionic/core';
 import { ViewDidEnter, NavController } from '@ionic/angular';
+import { Auth } from '../core/services/auth';
 
 @Component({
   selector: 'app-manga',
   templateUrl: './manga.page.html',
   styleUrls: ['./manga.page.scss'],
   standalone: true,
-  imports: [IonRefresherContent, IonRefresher, RouterLink, IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
+  imports: [IonAlert, IonRefresherContent, IonRefresher, RouterLink, IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
 })
 export class MangaPage implements OnInit, ViewDidEnter {
   @ViewChild('liveToast', { static: false }) liveToast!: ElementRef;
@@ -30,7 +31,21 @@ export class MangaPage implements OnInit, ViewDidEnter {
   reviews?:Reviews[]
   user_review?:Reviews
   user?:User
-  constructor(private navCtrl: NavController, private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
+
+    isAlertOpen = false;
+message: any[] = [];
+headerAlert = "";
+subHeader = "";
+btnUndefined = false
+alertButtons = [
+    {
+      text: 'OK',
+      role: 'confirm',
+      handler: () => {
+      },
+    },
+  ];
+  constructor(private auth:Auth, private navCtrl: NavController, private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
   
   ionViewDidEnter(): void {
     this.ngOnInit()
@@ -77,8 +92,27 @@ onRatingChanged(newValue: number) {
     // this.http.post('/api/rating', { value: newValue }).subscribe(...)
   }
 irReview(){
-  this.router.navigate(['/review', this.id]);
+  if (this.auth.isLoggedIn()){
+    this.router.navigate(['/review', this.id]);
+  }else{
+    this.headerAlert = 'Denegado'
+        this.subHeader = "Inicia sesión"
+        this.message = ['Se necesita iniciar sesión para hacer una reseña.']
+        this.alertButtons = [
+          {
+            text: 'OK',
+            role: 'Cerrar',
+            handler:()=>{}
+          },
+        ];
+        this.setOpen(true)
+  }
+  
+  
 }
+setOpen(isOpen: boolean) {
+    this.isAlertOpen = isOpen;
+  } 
 
 showManga(){
   console.log('entra')

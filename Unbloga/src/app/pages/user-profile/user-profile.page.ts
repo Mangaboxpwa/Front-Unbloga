@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RefresherCustomEvent, IonActionSheet, IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonRefresherContent, IonRefresher, IonBackButton } from '@ionic/angular/standalone';
+import { RefresherCustomEvent, IonActionSheet, IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonRefresherContent, IonRefresher, IonBackButton, IonAlert } from '@ionic/angular/standalone';
 import { Router, RouterLink,ActivatedRoute } from '@angular/router';
 import { timeout } from 'rxjs';
 import { ReviewsFromUser } from 'src/app/core/interfaces/ReviewsFromUser';
@@ -17,7 +17,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './user-profile.page.html',
   styleUrls: ['./user-profile.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonRefresher, IonRefresherContent, IonActionSheet, IonToast, IonButtons, FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonAlert, IonBackButton, IonRefresher, IonRefresherContent, IonActionSheet, IonToast, IonButtons, FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class UserProfilePage implements OnInit {
 User?:UserMe
@@ -48,7 +48,20 @@ User?:UserMe
       },
     },
   ];
-  constructor(private navCtrl: NavController,private router:Router, private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
+  isAlertOpen = false;
+message: any[] = [];
+headerAlert = "";
+subHeader = "";
+btnUndefined = false
+alertButtons = [
+    {
+      text: 'OK',
+      role: 'confirm',
+      handler: () => {
+      },
+    },
+  ];
+  constructor(private auth:Auth, private navCtrl: NavController,private router:Router, private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -68,7 +81,31 @@ handleRefresh(event: RefresherCustomEvent) {
       event.target.complete();
     }, 2000);
   }
-
+  irNetwork(){
+  if (this.auth.isLoggedIn()){
+    this.router.navigate(['/network', this.id]);
+  }else{
+    this.headerAlert = 'Denegado'
+        this.subHeader = "Inicia sesión"
+        this.message = ['Se necesita iniciar sesión para poder verlos.']
+        this.alertButtons = [
+          {
+            text: 'OK',
+            role: 'Cerrar',
+            handler:()=>{}
+          },
+        ];
+        this.setOpen(true)
+  }
+  
+  
+}
+setOpen(isOpen: boolean) {
+    this.isAlertOpen = isOpen;
+}
+get isLoggedIn(): boolean {
+  return this.auth.isLoggedIn();
+}
   userInfo(){
   console.log('entra')
   this.userService.userInfo(this.id).pipe(

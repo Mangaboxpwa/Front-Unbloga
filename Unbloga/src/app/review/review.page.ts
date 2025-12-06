@@ -159,7 +159,7 @@ create(){
       (response) => {
         this.btnUndefined = false
         console.log(response)
-        this.router.navigate(['manga/'+this.id]);
+        this.goBack()
       }, error => {
         this.btnUndefined = false
         console.log(error)
@@ -199,7 +199,7 @@ update(){
       (response) => {
         this.btnUndefined = false
         console.log(response)
-        this.router.navigate(['manga/'+this.id]);
+        this.goBack()
       }, error => {
         this.btnUndefined = false
         console.log(error)

@@ -7,6 +7,7 @@ import { timeout } from 'rxjs';
 import { Mangas } from '../core/interfaces/Mangas';
 import { NgFor, NgIf } from '@angular/common';
 import { ReviewsFromUser } from '../core/interfaces/ReviewsFromUser';
+import { OfflineCacheService } from '../core/services/offline-cache.service';
 
 @Component({
   selector: 'app-tab1',
@@ -19,7 +20,7 @@ export class Tab1Page {
     favoritos?: Mangas[];
     resenas: ReviewsFromUser[] = []
 
-  constructor(private reviewService:ReviewService, private mangaService: MangaService,private router: Router) {}
+  constructor(private offlineCacheService:OfflineCacheService, private reviewService:ReviewService, private mangaService: MangaService,private router: Router) {}
 
   ngOnInit(): void {
     this.mangasMasReseñadosUltimoMes()
@@ -41,11 +42,16 @@ export class Tab1Page {
         (response) => {
           console.log(response.data)
           if (response.data){
+            this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/mangas/mas-recenados-mes', response.data)
             this.mangas = response.data
             console.log(this.mangas)
           }
-        }, error => {
+        },  async error => {
           console.log(error)
+          console.log(error.url)
+          const dataOffline = await this.offlineCacheService.load(error.url);
+          console.log(dataOffline)
+          this.mangas = dataOffline
           if (error.name == "TimeOutError") {
             this.mangasMasReseñadosUltimoMes()
           }

@@ -67,17 +67,21 @@ export class Tab1Page {
         (response) => {
           console.log(response.data)
           if (response.data){
+            this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/mangas/mas-favoritos', response.data)
             this.favoritos = response.data
             console.log(this.favoritos)
           }
-        }, error => {
+        }, async error => {
           console.log(error)
+          const dataOffline = await this.offlineCacheService.load(error.url);
+          this.favoritos = dataOffline
           if (error.name == "TimeOutError") {
             this.mangasFavoritos()
           }
         }
       )
   }
+
   recentReviewsFromFollowing(){
       this.reviewService.recentReviewsFromFollowing().pipe(
         timeout(50000)
@@ -86,9 +90,12 @@ export class Tab1Page {
           console.log(response)
           if (response.data){
             this.resenas= response.data
+            this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/following', response.data)
           }
-        }, error => {
+        }, async error => {
           console.log(error)
+          const dataOffline = await this.offlineCacheService.load(error.url);
+          this.resenas = dataOffline
           if (error.name == "TimeOutError") {
             this.recentReviewsFromFollowing()
           }

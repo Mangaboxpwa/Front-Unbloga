@@ -9,6 +9,7 @@ import { addIcons } from 'ionicons';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import { Auth } from '../core/services/auth';
 import { NgIf } from '@angular/common';
+import { OfflineCacheService } from '../core/services/offline-cache.service';
 
 @Component({
   selector: 'app-tab2',
@@ -27,7 +28,7 @@ export class Tab2Page {
   public results: Mangas[] = []; // vacía al inicio
   isEmpty = false;
 
-  constructor(private auth:Auth, private mangaService: MangaService,private router: Router) {
+  constructor(private offlineCacheService:OfflineCacheService, private auth:Auth, private mangaService: MangaService,private router: Router) {
     addIcons({ scan,book });
   }
 
@@ -77,10 +78,12 @@ indexMangas(){
         if (response.data){
           this.mangas = response.data
           console.log(this.mangas)
-
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/mangas', response.data)
         }
         
-      }, error => {
+      }, async error => {
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.mangas = dataOffline
         if (error.name == "TimeOutError") {
           this.indexMangas()
         }

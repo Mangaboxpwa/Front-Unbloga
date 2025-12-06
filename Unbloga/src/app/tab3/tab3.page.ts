@@ -9,6 +9,7 @@ import { timeout } from 'rxjs';
 import { UserMe } from '../core/interfaces/user_me';
 import { ReviewsFromUser } from '../core/interfaces/ReviewsFromUser';
 import { ViewDidEnter } from '@ionic/angular';
+import { OfflineCacheService } from '../core/services/offline-cache.service';
 
 Chart.register(...registerables);
 
@@ -50,7 +51,7 @@ export class Tab3Page implements ViewDidEnter {
       },
     },
   ];
-constructor(private reviewService:ReviewService, private router: Router, private auth: Auth) {
+constructor(private offlineCacheService:OfflineCacheService, private reviewService:ReviewService, private router: Router, private auth: Auth) {
 }
   ionViewDidEnter(): void {
     this.ngOnInit()
@@ -92,9 +93,12 @@ get isLoggedIn(): boolean {
         console.log(response)
         if (response.data){
           this.User = response.data
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/auth/me', response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.User = dataOffline
         if (error.name == "TimeOutError") {
           this.me()
         }
@@ -109,9 +113,12 @@ get isLoggedIn(): boolean {
         console.log(response)
         if (response.data){
           this.Reviews = response.data
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/user', response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.Reviews = dataOffline
         if (error.name == "TimeOutError") {
           this.index()
         }
@@ -126,8 +133,11 @@ get isLoggedIn(): boolean {
         console.log(response)
         if (response.data){
           this.Favorites = response.data
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/favorite', response.data)
         }
-      }, error => {
+      }, async error => {
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.Favorites = dataOffline
         console.log(error)
         if (error.name == "TimeOutError") {
           this.favorites()

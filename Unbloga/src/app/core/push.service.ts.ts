@@ -16,7 +16,7 @@ export class PushServiceTs {
         "BP4H2FByaup-wOJWBvqXUWLiSlmb3YfucoVcTc_3BRutFKqcjIjLZzeXOreHx8I4bJ6Q0E42bWb0zEKtU-txohk" // aquí tu VAPID_PUBLIC_KEY
       )
     });
-
+    console.log(sub);
     return sub;
   }
 

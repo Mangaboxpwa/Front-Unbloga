@@ -15,7 +15,7 @@
     <!-- Bienvenida -->
     <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100px;">
       <ion-col size="12" class="ion-text-center">
-        <h3>Bienvenido te quiero muchito. Aquí tienes lo que han visto tus seguidos...</h3>
+        <h3>Bienvenido te quiero muchitooooo. Aquí tienes lo que han visto tus seguidos...</h3>
       </ion-col>
     </ion-row>
 
@@ -31,12 +31,12 @@
     <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
     <ion-row>
-      <ion-col *ngFor="let resena of resenas.slice(0,6)" [routerLink]="['/reviews/',resena.users.id]" size="6" size-lg="2">
+      <ion-col *ngFor="let resena of resenas.slice(0,6)" [routerLink]="['/reviews/',resena?.users?.id]" size="6" size-lg="2">
         <ion-card>
-          <img [src]="resena.manga.cover_url" />
+          <img [src]="resena?.manga?.cover_url" />
           <ion-card-content style="padding: 0;">
             <div style="background-color: #735ba6; color: white; width: 100%; padding: 8px ; padding-left: 2px;">
-               {{resena.users.name}}
+               {{resena?.users?.name}}
             </div>
           
             <ion-row style="margin: 0; padding: 0;">
@@ -69,9 +69,9 @@
 
     <ion-row>
       <ion-col *ngFor="let manga of mangas?.slice(0,6)" size="6" size-lg="2">
-        <a [routerLink]="['/manga', manga.id]">
+        <a [routerLink]="['/manga', manga?.id]">
           <ion-card>
-            <img [src]="manga.cover_url" />
+            <img [src]="manga?.cover_url" />
           </ion-card>
         </a>
       </ion-col>
@@ -90,9 +90,9 @@
 
     <ion-row>
       <ion-col *ngFor="let manga of favoritos?.slice(0,6)" size="6" size-lg="2">
-        <a [routerLink]="['/manga', manga.id]">
+        <a [routerLink]="['/manga', manga?.id]">
           <ion-card>
-            <img [src]="manga.cover_url" />
+            <img [src]="manga?.cover_url" />
           </ion-card>
         </a>
       </ion-col>

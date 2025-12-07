@@ -13,6 +13,7 @@ import { User } from '../core/interfaces/Users';
 import { RefresherCustomEvent } from '@ionic/core';
 import { ViewDidEnter, NavController } from '@ionic/angular';
 import { Auth } from '../core/services/auth';
+import { OfflineCacheService } from '../core/services/offline-cache.service';
 
 @Component({
   selector: 'app-manga',
@@ -45,7 +46,7 @@ alertButtons = [
       },
     },
   ];
-  constructor(private auth:Auth, private navCtrl: NavController, private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
+  constructor(private offlineCacheService:OfflineCacheService, private auth:Auth, private navCtrl: NavController, private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
   
   ionViewDidEnter(): void {
     this.ngOnInit()
@@ -123,6 +124,9 @@ showManga(){
           console.log(response)
           if (response.data){
             this.manga = response.data
+
+            this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/mangas/'+this.id, response.data)
+
             this.manga.publication_date = this.manga.publication_date.split("-")[0];
             this.authors = this.manga.authors.map((a: any) => a.name).join(', ');
             
@@ -138,7 +142,9 @@ showManga(){
             console.log(this.reviews)
           }
           
-        }, error => {
+        }, async error => {
+          const dataOffline = await this.offlineCacheService.load(error.url);
+          this.manga = dataOffline
           if (error.name == "TimeOutError") {
             //this.indexMangas()
           }

@@ -5,7 +5,7 @@ import { MangaService } from 'src/app/core/services/manga.service';
 import { ReviewService } from '../core/services/review.service';
 import { timeout } from 'rxjs';
 import { Mangas } from '../core/interfaces/Mangas';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, CommonModule } from '@angular/common';
 import { ReviewsFromUser } from '../core/interfaces/ReviewsFromUser';
 import { OfflineCacheService } from '../core/services/offline-cache.service';
 
@@ -13,7 +13,7 @@ import { OfflineCacheService } from '../core/services/offline-cache.service';
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  imports: [NgIf,IonRefresher, IonRefresherContent, RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow, IonGrid, IonIcon],
+  imports: [CommonModule,NgIf,IonRefresher, IonRefresherContent, RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow, IonGrid, IonIcon],
 })
 export class Tab1Page {
     mangas?: Mangas[];
@@ -92,13 +92,18 @@ export class Tab1Page {
             this.resenas= response.data
             this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/following', response.data)
           }
+          console.log(this.resenas)
         }, async error => {
           console.log(error)
-          const dataOffline = await this.offlineCacheService.load(error.url);
-          this.resenas = dataOffline
+          if (error.error.message != 'Unauthenticated.'){
+            console.log('?')
+            const dataOffline = await this.offlineCacheService.load(error.url);
+            this.resenas = dataOffline
+          }
           if (error.name == "TimeOutError") {
             this.recentReviewsFromFollowing()
           }
+          console.log(this.resenas)
         }
       )
   }

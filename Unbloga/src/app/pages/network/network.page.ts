@@ -7,6 +7,7 @@ import { FollowService } from 'src/app/core/services/follows.service';
 import { timeout } from 'rxjs';
 import { User } from 'src/app/core/interfaces/Users';
 import { NavController } from '@ionic/angular';
+import { OfflineCacheService } from 'src/app/core/services/offline-cache.service';
 
 @Component({
   selector: 'app-network',
@@ -48,7 +49,7 @@ export class NetworkPage implements OnInit {
   isToastOpen = false;
   isModalOpen = false;
   onFollowers = false;
-  constructor(private navCtrl: NavController,private followService:FollowService, private router: Router,private route: ActivatedRoute,) { }
+  constructor(private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private followService:FollowService, private router: Router,private route: ActivatedRoute,) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -80,9 +81,12 @@ export class NetworkPage implements OnInit {
         if (response.data){
           this.followers = response.data
           console.log(this.followers)
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/follows/followers', response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.followers = dataOffline
         if (error.name == "TimeOutError") {
           this.getFolllowers()
         }
@@ -97,9 +101,12 @@ export class NetworkPage implements OnInit {
         console.log(response)
         if (response.data){
           this.following = response.data
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/follows/following', response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.following = dataOffline
         if (error.name == "TimeOutError") {
           this.getFolllowing()
         }
@@ -114,9 +121,12 @@ export class NetworkPage implements OnInit {
         console.log(response)
         if (response.data){
           this.followers = response.data 
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/follows/followers/'+this.id, response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.followers = dataOffline
         if (error.name == "TimeOutError") {
           this.getFolllowers()
         }
@@ -131,9 +141,12 @@ export class NetworkPage implements OnInit {
         console.log(response)
         if (response.data){
           this.following = response.data
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/follows/following/'+this.id, response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.following = dataOffline
         if (error.name == "TimeOutError") {
           this.getFolllowing()
         }

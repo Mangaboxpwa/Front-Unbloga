@@ -30,6 +30,7 @@ import {
    IonButton,
    IonTextarea
 } from '@ionic/angular/standalone';
+import { OfflineCacheService } from '../core/services/offline-cache.service';
 
 @Component({
   selector: 'app-review',
@@ -78,7 +79,7 @@ alertButtons = [
     },
   ];
 
-  constructor(private navCtrl: NavController,private speechService: SpeechService, private cookie: CookieService,private fb: FormBuilder,private router: Router,private route: ActivatedRoute, private mangaService:MangaService,private reviewService:ReviewService) { 
+  constructor(private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private speechService: SpeechService, private cookie: CookieService,private fb: FormBuilder,private router: Router,private route: ActivatedRoute, private mangaService:MangaService,private reviewService:ReviewService) { 
     this.ReviewForm = this.fb.group({
       manga_id: ['', [Validators.required]],
       rating: ['', [Validators.required]],
@@ -114,6 +115,7 @@ handleRefresh(event: RefresherCustomEvent) {
             console.log(response)
             if (response.data){
               this.manga = response.data
+              this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/mangas/'+this.id, response.data)
               if (this.manga.user_review){
                 this.rating = this.manga.user_review.rating
                 this.like = this.manga.user_review.is_favorite
@@ -125,7 +127,9 @@ handleRefresh(event: RefresherCustomEvent) {
               }
             }
             
-          }, error => {
+          }, async error => {
+            const dataOffline = await this.offlineCacheService.load(error.url);
+            this.manga = dataOffline
             if (error.name == "TimeOutError") {
               //this.indexMangas()
             }

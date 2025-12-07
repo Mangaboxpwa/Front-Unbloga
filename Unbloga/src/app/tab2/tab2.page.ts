@@ -34,7 +34,6 @@ export class Tab2Page {
 
 ngOnInit(): void {
   this.indexMangas()
-  this.mangas = undefined
 }
 
 handleRefresh(event: RefresherCustomEvent) {

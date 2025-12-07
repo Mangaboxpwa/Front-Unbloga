@@ -12,6 +12,7 @@ import { timeout } from 'rxjs';
 import { UserMe } from 'src/app/core/interfaces/user_me';
 import { Auth } from 'src/app/core/services/auth';
 import { NavController } from '@ionic/angular';
+import { OfflineCacheService } from 'src/app/core/services/offline-cache.service';
 
 @Component({
   selector: 'app-favorites',
@@ -25,7 +26,7 @@ Favorites?:ReviewsFromUser[]
 id:number = 0
 User?:UserMe
 
-  constructor(private navCtrl: NavController,private auth:Auth, private userService:UserService, private reviewService:ReviewService, private router: Router,private route: ActivatedRoute) { }
+  constructor(private offlineCacheService: OfflineCacheService, private navCtrl: NavController,private auth:Auth, private userService:UserService, private reviewService:ReviewService, private router: Router,private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -56,9 +57,12 @@ User?:UserMe
         console.log(response)
         if (response.data){
           this.User = response.data
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/auth/me', response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.User = dataOffline
         if (error.name == "TimeOutError") {
           this.me()
         }
@@ -74,10 +78,13 @@ User?:UserMe
             console.log(response)
             if (response.data){
               this.User = response.data
+              this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/user/'+this.id, response.data)
             }
             
-          }, error => {
-            console.log(error)
+          }, async error => {
+              console.log(error)
+              const dataOffline = await this.offlineCacheService.load(error.url);
+              this.User = dataOffline
             if (error.name == "TimeOutError") {
               //this.indexMangas()
             }
@@ -92,9 +99,12 @@ User?:UserMe
           console.log(response)
           if (response.data){
             this.Favorites = response.data
+            this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/favorite/'+this.id, response.data)
           }
-        }, error => {
-          console.log(error)
+        }, async error => {
+        console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.Favorites = dataOffline
           if (error.name == "TimeOutError") {
             this.favorites()
           }
@@ -109,8 +119,11 @@ User?:UserMe
           console.log(response)
           if (response.data){
             this.Favorites = response.data
+            this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/favorite', response.data)
           }
-        }, error => {
+        }, async error => {
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.Favorites = dataOffline
           console.log(error)
           if (error.name == "TimeOutError") {
             this.favorites()

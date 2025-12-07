@@ -12,6 +12,7 @@ import { timeout } from 'rxjs';
 import { UserMe } from 'src/app/core/interfaces/user_me';
 import { Auth } from 'src/app/core/services/auth';
 import { NavController } from '@ionic/angular';
+import { OfflineCacheService } from 'src/app/core/services/offline-cache.service';
 
 @Component({
   selector: 'app-reviews',
@@ -25,7 +26,7 @@ id:number = 0
 User?:UserMe
 Reviews?:ReviewsFromUser[]
 
-constructor(private navCtrl: NavController,private auth:Auth, private userService:UserService, private reviewService:ReviewService, private router: Router,private route: ActivatedRoute) { }
+constructor(private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private auth:Auth, private userService:UserService, private reviewService:ReviewService, private router: Router,private route: ActivatedRoute) { }
 
   ngOnInit() {
       this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -41,12 +42,13 @@ constructor(private navCtrl: NavController,private auth:Auth, private userServic
     goBack() {
   this.navCtrl.back();
 }
-  handleRefresh(event: RefresherCustomEvent) {
+handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()
       event.target.complete();
     }, 2000);
-  }
+}
+
 me(){
       this.auth.me().pipe(
         timeout(50000)
@@ -55,16 +57,20 @@ me(){
           console.log(response)
           if (response.data){
             this.User = response.data
+            this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/auth/me', response.data)
           }
-        }, error => {
+        }, async error => {
           console.log(error)
+          const dataOffline = await this.offlineCacheService.load(error.url);
+          this.User = dataOffline
           if (error.name == "TimeOutError") {
             this.me()
           }
         }
       )
-    }
-    userInfo(){
+}
+
+userInfo(){
       console.log('entra')
       this.userService.userInfo(this.id).pipe(
             timeout(50000)
@@ -73,16 +79,20 @@ me(){
               console.log(response)
               if (response.data){
                 this.User = response.data
+                this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/user/'+this.id, response.data)
               }
               
-            }, error => {
+            }, async error => {
               console.log(error)
+              const dataOffline = await this.offlineCacheService.load(error.url);
+              this.User = dataOffline
               if (error.name == "TimeOutError") {
                 //this.indexMangas()
               }
             }
           )
-    }
+}
+
 reviews(){
     this.reviewService.index().pipe(
       timeout(50000)
@@ -91,16 +101,20 @@ reviews(){
         console.log(response)
         if (response.data){
           this.Reviews = response.data
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/user', response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.Reviews = dataOffline
         if (error.name == "TimeOutError") {
           this.reviews()
         }
       }
     )
-  }
-  reviewsWithId(){
+}
+
+reviewsWithId(){
     this.reviewService.index(this.id).pipe(
       timeout(50000)
     ).subscribe(
@@ -108,9 +122,12 @@ reviews(){
         console.log(response)
         if (response.data){
           this.Reviews = response.data
+          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/user/'+this.id, response.data)
         }
-      }, error => {
+      }, async error => {
         console.log(error)
+        const dataOffline = await this.offlineCacheService.load(error.url);
+        this.Reviews = dataOffline
         if (error.name == "TimeOutError") {
           this.reviewsWithId()
         }

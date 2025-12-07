@@ -198,6 +198,7 @@ export class Tab3Page implements ViewDidEnter {
           content_encoding: 'aes128gcm'
         };
 
+        console.log("ahhhhh", payload)
         this.http.post(environment.apiUrlBase + 'subscriptions', payload).subscribe({
           next: () => console.log('Suscripción guardada en backend'),
           error: (err) => console.error('Error al guardar suscripción', err)

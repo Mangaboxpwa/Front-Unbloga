@@ -81,7 +81,9 @@ indexMangas(){
         }
         
       }, async error => {
-        const dataOffline = await this.offlineCacheService.load(error.url);
+        console.log(error.url)
+        console.log(error.error.url)
+        const dataOffline = await this.offlineCacheService.load(error.error.url);
         this.mangas = dataOffline
         if (error.name == "TimeOutError") {
           this.indexMangas()

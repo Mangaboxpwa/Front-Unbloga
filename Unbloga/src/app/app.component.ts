@@ -7,6 +7,8 @@ import { NotificationsService } from './core/services/notifications.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Auth } from './core/services/auth';
 import { timeout } from 'rxjs';
+import { PushServiceTs } from './core/push.service.ts';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +21,9 @@ export class AppComponent {
     private alertController: AlertController,
     private notify: NotificationsService,
     private cookies:CookieService,
-    private authService:Auth
+    private authService:Auth,
+    private pushService: PushServiceTs,
+    private http: HttpClient
   ) {
     this.listenForUpdates();
   }

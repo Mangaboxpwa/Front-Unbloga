@@ -1,6 +1,6 @@
-import { Component,ViewChild,ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RefresherCustomEvent,IonRefresher, IonRefresherContent, IonButtons, IonBadge, IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,IonImg,IonButton,IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonActionSheet } from '@ionic/angular/standalone';
+import { RefresherCustomEvent, IonRefresher, IonRefresherContent, IonButtons, IonBadge, IonCol, IonRow, IonCard, IonItem, IonList, IonLabel, IonAvatar, IonImg, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonToast, IonActionSheet } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../core/services/auth';
 import { ReviewService } from '../core/services/review.service';
@@ -10,6 +10,10 @@ import { UserMe } from '../core/interfaces/user_me';
 import { ReviewsFromUser } from '../core/interfaces/ReviewsFromUser';
 import { ViewDidEnter } from '@ionic/angular';
 import { OfflineCacheService } from '../core/services/offline-cache.service';
+import { environment } from '../../environments/environment';
+import { PushServiceTs } from '../core/push.service.ts';
+import { HttpClient } from '@angular/common/http';
+
 
 Chart.register(...registerables);
 
@@ -18,27 +22,29 @@ Chart.register(...registerables);
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonRefresher, IonRefresherContent,IonActionSheet, IonToast, IonButtons, IonBadge, RouterLink,IonCol,IonRow,IonCard,IonItem,IonList,IonLabel,IonAvatar,CommonModule,IonButton,IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonRefresher, IonRefresherContent, IonActionSheet, IonToast, IonButtons, IonBadge, RouterLink, IonCol, IonRow, IonCard, IonItem, IonList, IonLabel, IonAvatar, CommonModule, IonButton, IonHeader, IonToolbar, IonTitle, IonContent],
 })
 export class Tab3Page implements ViewDidEnter {
   @ViewChild('barCanvas') private barCanvas!: ElementRef;
   private barChart!: Chart;
-  User?:UserMe
-  Reviews?:ReviewsFromUser[]
-  Favorites?:ReviewsFromUser[]
+  User?: UserMe
+  Reviews?: ReviewsFromUser[]
+  Favorites?: ReviewsFromUser[]
   toolbar = false
+
+
   public actionSheetButtons = [
     {
       text: 'Ver código QR',
-      handler:()=>this.qr(),
+      handler: () => this.qr(),
       data: {
         action: 'QR',
       },
     },
     {
       text: 'Compartir',
-      handler:()=>this.compartir(),
-      id:"open-toast",
+      handler: () => this.compartir(),
+      id: "open-toast",
       data: {
         action: 'share',
       },
@@ -51,26 +57,34 @@ export class Tab3Page implements ViewDidEnter {
       },
     },
   ];
-constructor(private offlineCacheService:OfflineCacheService, private reviewService:ReviewService, private router: Router, private auth: Auth) {
-}
+  constructor(
+    private offlineCacheService: OfflineCacheService,
+    private reviewService: ReviewService,
+    private router: Router,
+    private auth: Auth,
+    private pushService: PushServiceTs,
+    private http: HttpClient
+  ) {
+  }
   ionViewDidEnter(): void {
     this.ngOnInit()
   }
 
-ngOnInit(): void {
-  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-  //Add 'implements OnInit' to the class.
-  if (this.auth.isLoggedIn()){
-    this.toolbar = true
-    this.me()
-    this.index()
-    this.favorites()
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    if (this.auth.isLoggedIn()) {
+      this.toolbar = true
+      this.me()
+      this.index()
+      this.favorites()
+    }
+    this.initPushNotifications();
   }
-}
 
-get isLoggedIn(): boolean {
-  return this.auth.isLoggedIn();
-}
+  get isLoggedIn(): boolean {
+    return this.auth.isLoggedIn();
+  }
 
   goLogin() {
     this.router.navigate(['/login']);
@@ -85,13 +99,13 @@ get isLoggedIn(): boolean {
     this.router.navigate(['/tabs/tab3']);
   }
 
-  me(){
+  me() {
     this.auth.me().pipe(
       timeout(50000)
     ).subscribe(
       (response) => {
         console.log(response)
-        if (response.data){
+        if (response.data) {
           this.User = response.data
           this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/auth/me', response.data)
         }
@@ -105,13 +119,13 @@ get isLoggedIn(): boolean {
       }
     )
   }
-  index(){
+  index() {
     this.reviewService.index().pipe(
       timeout(50000)
     ).subscribe(
       (response) => {
         console.log(response)
-        if (response.data){
+        if (response.data) {
           this.Reviews = response.data
           this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/user', response.data)
         }
@@ -125,13 +139,13 @@ get isLoggedIn(): boolean {
       }
     )
   }
-  favorites(){
+  favorites() {
     this.reviewService.favorite().pipe(
       timeout(50000)
     ).subscribe(
       (response) => {
         console.log(response)
-        if (response.data){
+        if (response.data) {
           this.Favorites = response.data
           this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/review/favorite', response.data)
         }
@@ -145,21 +159,41 @@ get isLoggedIn(): boolean {
       }
     )
   }
-compartir(){
-    const url ="https://igmarapruebameporfavor.site/user-profile/"+this.User?.id;
-    navigator.clipboard.writeText(url).then(() => {  
+  compartir() {
+    const url = "https://igmarapruebameporfavor.site/user-profile/" + this.User?.id;
+    navigator.clipboard.writeText(url).then(() => {
     }).catch(err => {
       console.error('Error al copiar:', err);
     });
-  
-}
-qr(){
-  this.router.navigate(['/qr-code/'+this.User?.id]);
-}
-handleRefresh(event: RefresherCustomEvent) {
+
+  }
+  qr() {
+    this.router.navigate(['/qr-code/' + this.User?.id]);
+  }
+  handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()
       event.target.complete();
     }, 2000);
+  }
+  
+  private async initPushNotifications() {
+    try {
+      // Solicitar permiso
+      if (Notification.permission !== 'granted') {
+        await Notification.requestPermission();
+      }
+
+      // Suscribirse
+      const sub = await this.pushService.subscribeUserToPush();
+      if (sub) {
+        // Guardar suscripción en backend
+        this.http.post(environment.apiUrlBase + 'subscriptions', sub).subscribe(() => {
+          console.log('Suscripción guardada en backend');
+        });
+      }
+    } catch (error) {
+      console.error('Error al inicializar notificaciones', error);
+    }
   }
 }

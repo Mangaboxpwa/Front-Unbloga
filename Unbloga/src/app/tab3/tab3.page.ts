@@ -176,20 +176,31 @@ export class Tab3Page implements ViewDidEnter {
       event.target.complete();
     }, 2000);
   }
-  
+
   private async initPushNotifications() {
     try {
-      // Solicitar permiso
       if (Notification.permission !== 'granted') {
         await Notification.requestPermission();
       }
 
-      // Suscribirse
       const sub = await this.pushService.subscribeUserToPush();
       if (sub) {
-        // Guardar suscripción en backend
-        this.http.post(environment.apiUrlBase + 'subscriptions', sub).subscribe(() => {
-          console.log('Suscripción guardada en backend');
+        const payload = {
+          endpoint: sub.endpoint,
+          keys: {
+            p256dh: sub.getKey('p256dh')
+              ? btoa(String.fromCharCode(...new Uint8Array(sub.getKey('p256dh')!)))
+              : '',
+            auth: sub.getKey('auth')
+              ? btoa(String.fromCharCode(...new Uint8Array(sub.getKey('auth')!)))
+              : ''
+          },
+          content_encoding: 'aes128gcm'
+        };
+
+        this.http.post(environment.apiUrlBase + 'subscriptions', payload).subscribe({
+          next: () => console.log('Suscripción guardada en backend'),
+          error: (err) => console.error('Error al guardar suscripción', err)
         });
       }
     } catch (error) {

@@ -14,13 +14,17 @@ import { RefresherCustomEvent } from '@ionic/core';
 import { ViewDidEnter, NavController } from '@ionic/angular';
 import { Auth } from '../core/services/auth';
 import { OfflineCacheService } from '../core/services/offline-cache.service';
+import { Location } from '@angular/common';
+import { NavigationService } from '../core/services/navigation.service';
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-manga',
   templateUrl: './manga.page.html',
   styleUrls: ['./manga.page.scss'],
   standalone: true,
-  imports: [IonAlert, IonRefresherContent, IonRefresher, RouterLink, IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonBackButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
+  imports: [IonIcon, IonAlert, IonRefresherContent, IonRefresher, RouterLink, IonToast,IonItemDivider,StarRateComponent,CommonModule,IonAvatar,IonLabel,IonButtons,IonButton, IonList, IonItem,RatingComponent,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonRow, IonGrid],
 })
 export class MangaPage implements OnInit, ViewDidEnter {
   @ViewChild('liveToast', { static: false }) liveToast!: ElementRef;
@@ -46,7 +50,9 @@ alertButtons = [
       },
     },
   ];
-  constructor(private offlineCacheService:OfflineCacheService, private auth:Auth, private navCtrl: NavController, private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { }
+  constructor(private navigation: NavigationService,private location:Location, private offlineCacheService:OfflineCacheService, private auth:Auth, private navCtrl: NavController, private mangaService: MangaService,private router: Router,private route: ActivatedRoute,) { 
+    addIcons({ arrowBackOutline });
+  }
   
   ionViewDidEnter(): void {
     this.ngOnInit()
@@ -60,8 +66,18 @@ alertButtons = [
     }
   }
   goBack() {
-  this.navCtrl.back();
+  if (this.navigation.canGoBack()) {
+    console.log('yes')
+    this.navigation.back();
+  } else {
+    console.log('else')
+    this.router.navigate(['/tab1']);
+  }
 }
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
+
   handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()
@@ -94,6 +110,7 @@ onRatingChanged(newValue: number) {
   }
 irReview(){
   if (this.auth.isLoggedIn()){
+    this.pushUrl('/review/'+this.id)
     this.router.navigate(['/review', this.id]);
   }else{
     this.headerAlert = 'Denegado'
@@ -145,6 +162,19 @@ showManga(){
         }, async error => {
           const dataOffline = await this.offlineCacheService.load(error.url);
           this.manga = dataOffline
+          if (this.manga)
+          {this.manga.publication_date = this.manga.publication_date.split("-")[0];
+            this.authors = this.manga.authors.map((a: any) => a.name).join(', ');
+            
+            console.log(this.manga.publication_date)
+            this.reviews = this.manga.reviews
+
+            if (this.manga.user_review){
+              this.user_review = this.manga.user_review
+              this.like = this.user_review.is_favorite
+              this.rating = this.user_review.rating
+            }}
+
           if (error.name == "TimeOutError") {
             //this.indexMangas()
           }

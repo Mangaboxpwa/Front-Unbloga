@@ -10,6 +10,7 @@ import { BrowserMultiFormatReader } from '@zxing/browser';
 import { Auth } from '../core/services/auth';
 import { NgIf } from '@angular/common';
 import { OfflineCacheService } from '../core/services/offline-cache.service';
+import { NavigationService } from 'src/app/core/services/navigation.service';
 
 @Component({
   selector: 'app-tab2',
@@ -28,14 +29,19 @@ export class Tab2Page {
   public results: Mangas[] = []; // vacía al inicio
   isEmpty = false;
 
-  constructor(private offlineCacheService:OfflineCacheService, private auth:Auth, private mangaService: MangaService,private router: Router) {
+  constructor(private navigation:NavigationService,private offlineCacheService:OfflineCacheService, private auth:Auth, private mangaService: MangaService,private router: Router) {
     addIcons({ scan,book });
   }
 
+  ionViewDidEnter(): void {
+    this.navigation.fallback = '/tab2'
+  }
 ngOnInit(): void {
   this.indexMangas()
 }
-
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
 handleRefresh(event: RefresherCustomEvent) {
   setTimeout(() => {
     this.ngOnInit()
@@ -77,13 +83,12 @@ indexMangas(){
         if (response.data){
           this.mangas = response.data
           console.log(this.mangas)
-          this.offlineCacheService.save('https://api.igmarapruebameporfavor.site/api/mangas', response.data)
+          this.offlineCacheService.save('mangas-index', response.data)
         }
         
       }, async error => {
         console.log(error.url)
-        console.log(error.error.url)
-        const dataOffline = await this.offlineCacheService.load(error.error.url);
+        const dataOffline = await this.offlineCacheService.load('mangas-index');
         this.mangas = dataOffline
         if (error.name == "TimeOutError") {
           this.indexMangas()
@@ -93,6 +98,7 @@ indexMangas(){
 }
 verDetalle(id: number) {
   console.log('ID del manga seleccionado:', id);
+  this.pushUrl('/manga/'+ id)
   this.router.navigate(['/manga', id]);
 }
 
@@ -105,61 +111,81 @@ toggleScanner() {
       this.startScanner();
     }
 }
+private async pedirPermisoCamara(): Promise<boolean> {
+  try {
+    // si permite acceso, regresará stream
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    stream.getTracks().forEach(t => t.stop());
+    return true;
+  } catch (e) {
+    console.warn("Permiso de cámara bloqueado o denegado:", e);
+
+    // Intento extra para que vuelva a lanzar el prompt (a veces funciona)
+    try {
+      await navigator.mediaDevices.getUserMedia({ video: true });
+      return true;
+    } catch {
+      return false; // realmente bloqueado
+    }
+  }
+}
 
 async startScanner() {
-    this.isScanning = true;
+  this.isScanning = true;
 
-    const video = document.getElementById('video') as HTMLVideoElement;
-    if (!video) {
-      console.error('No existe el elemento video');
-      this.isScanning = false;
-      return;
+  // 1. Checar permiso ANTES de listar dispositivos
+  const permisoOk = await this.pedirPermisoCamara();
+  if (!permisoOk) {
+    this.isScanning = false;
+    alert("No has dado permisos de cámara. Actívalos en configuración.");
+    return;
+  }
+
+  const video = document.getElementById('video') as HTMLVideoElement;
+  if (!video) {
+    console.error('No existe el elemento video');
+    this.isScanning = false;
+    return;
+  }
+
+  try {
+    const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+
+    if (devices.length > 0) {
+      const backCamera = devices.find(d => d.label?.toLowerCase().includes('back'));
+      this.currentDeviceId = backCamera?.deviceId ?? devices[0].deviceId;
+    } else {
+      this.currentDeviceId = undefined;
     }
 
     try {
-      // listVideoInputDevices es estático
-      const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+      this.scannerControls = this.reader.decodeFromVideoDevice(
+        this.currentDeviceId ?? undefined,
+        video,
+        (result, err) => {
+          if (!this.isScanning) return;
+          if (result) {
+            const qrText = result.getText();
+            console.log('QR detectado:', qrText);
 
-      if (devices.length > 0) {
-        const backCamera = devices.find(d => d.label?.toLowerCase().includes('back'));
-        // <-- asignamos undefined si no hay device
-        this.currentDeviceId = backCamera?.deviceId ?? devices[0].deviceId;
-      } else {
-        this.currentDeviceId = undefined;
-      }
-
-      try {
-        this.scannerControls = this.reader.decodeFromVideoDevice(
-          this.currentDeviceId ?? undefined,
-          video,
-          (result, err) => {
-            if (!this.isScanning) return;
-            if (result) {
-              const qrText = result.getText();
-              console.log('QR detectado:', qrText);
-
-              // detener scanner (ver stopScanner abajo)
-              this.stopScanner();
-              setTimeout(() => {
-              console.log("Tracks:", navigator.mediaDevices);
-              }, 1000);
-              // mejor llamar a función que acepte string directamente
-              this.handleQR(qrText);
-            }
-            if (err && !(err as any).name?.includes('NotFoundException')) {
-              // errores menores de decodificación son normales mientras busca
-              console.warn(err);
-            }
+            this.stopScanner();
+            this.handleQR(qrText);
           }
-        );
-      } catch (e) {
-        console.warn('decodeFromVideoDevice lanzó:', e);
-      }
-    } catch (err) {
-      console.error(err);
-      this.isScanning = false;
+
+          if (err && !(err as any).name?.includes('NotFoundException')) {
+            console.warn(err);
+          }
+        }
+      );
+    } catch (e) {
+      console.warn('decodeFromVideoDevice lanzó:', e);
     }
+  } catch (err) {
+    console.error(err);
+    this.isScanning = false;
+  }
 }
+
 
 stopScanner() {
   console.log("deteniendo scanner");
@@ -197,7 +223,12 @@ stopScanner() {
 // Mejor hacer una función que reciba el string directamente
 handleQR(qr: string) {
     // ejemplo: llamamos a una función que haga la búsqueda por texto
-    window.location.href = qr;
+    const parts = qr.split("/");
+  const id = parts.pop()!;
+  const path = "/" + parts.pop()! + "/";
+
+    this.pushUrl(path+id)
+    this.router.navigate([path, id]);
     console.log(qr)
 }
 

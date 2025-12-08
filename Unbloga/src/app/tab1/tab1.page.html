@@ -31,7 +31,7 @@
     <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
     <ion-row>
-      <ion-col *ngFor="let resena of resenas.slice(0,6)" [routerLink]="['/reviews/',resena?.users?.id]" size="6" size-lg="2">
+      <ion-col *ngFor="let resena of resenas.slice(0,6)" (click)="saveNav('/reviews/' + resena?.users?.id)" [routerLink]="['/reviews/',resena?.users?.id]" size="6" size-lg="2">
         <ion-card>
           <img [src]="resena?.manga?.cover_url" />
           <ion-card-content style="padding: 0;">
@@ -69,7 +69,7 @@
 
     <ion-row>
       <ion-col *ngFor="let manga of mangas?.slice(0,6)" size="6" size-lg="2">
-        <a [routerLink]="['/manga', manga?.id]">
+        <a (click)="saveNav('/manga/' + manga?.id)" [routerLink]="['/manga/', manga?.id]">
           <ion-card>
             <img [src]="manga?.cover_url" />
           </ion-card>
@@ -90,142 +90,14 @@
 
     <ion-row>
       <ion-col *ngFor="let manga of favoritos?.slice(0,6)" size="6" size-lg="2">
-        <a [routerLink]="['/manga', manga?.id]">
+        <a (click)="saveNav('/manga/' + manga?.id)" [routerLink]="['/manga/', manga?.id]">
           <ion-card>
             <img [src]="manga?.cover_url" />
           </ion-card>
         </a>
       </ion-col>
     </ion-row>
-    <!-- REVIEWS POPULARES EN UNBLOGA -->
-    <!-- <ion-row class="ion-align-items-center ion-margin-bottom ion-margin-top">
-      <ion-col size="6">
-        <p>Reviews populares en Unbloga</p>
-      </ion-col>
-      <ion-col size="6" class="ion-text-end">
-        <a href=""><b>Más</b></a>
-      </ion-col>
-    </ion-row>
-<div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
-
-    <ion-row>
-       Tarjeta 1
-      <ion-col size="12" size-lg="6">
-        <ion-card>
-          <ion-card-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col size="2">
-                  <ion-img src="assets/vagabong.webp" style="border-radius: 50%;"></ion-img>
-                </ion-col>
-                <ion-col size="10">
-                  <ion-row class="ion-align-items-center ion-margin-bottom" style="gap: 5px;">
-                     Bloque superior con foto de perfil 
-                    <ion-col size="auto" style="padding: 0;">
-                      <div style="
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 50%;
-                        overflow: hidden;
-                      ">
-                        <img src="assets/vagabong.webp" 
-                             style="width: 100%; height: 100%; object-fit: cover;" />
-                      </div>
-                    </ion-col>
-                  
-                    <ion-col size="auto" style="padding: 0; display: flex; align-items: center;">
-                      <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        <b>Isra</b>
-                      </span>
-                    </ion-col>
-                  </ion-row>
-                
-                  <ion-row>
-                    <ion-col size="12">
-                      <b>vagabond</b> 1992
-                    </ion-col>
-                  </ion-row>
-                
-                  <ion-row>
-                    <ion-col size="12">
-                      <app-rating [rating]="1.5"></app-rating>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
-
-
-
-              </ion-row>
-              <ion-row>
-                <ion-col size="12">Hay un personaje nuevo cool</ion-col>
-                <ion-col size="12"><b>34k likes</b></ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-        <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
-
-      </ion-col>
-      
-      
-      Tarjeta 2 
-      <ion-col size="12" size-lg="6">
-        <ion-card>
-          <ion-card-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col size="2">
-                  <ion-img src="assets/vagabong.webp" style="border-radius: 50%;"></ion-img>
-                </ion-col>
-                <ion-col size="10">
-                  <ion-row class="ion-align-items-center ion-margin-bottom" style="gap: 5px;">
-                    Bloque superior con foto de perfil 
-                    <ion-col size="auto" style="padding: 0;">
-                      <div style="
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 50%;
-                        overflow: hidden;
-                      ">
-                        <img src="assets/vagabong.webp" 
-                             style="width: 100%; height: 100%; object-fit: cover;" />
-                      </div>
-                    </ion-col>
-                  
-                    <ion-col size="auto" style="padding: 0; display: flex; align-items: center;">
-                      <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        <b>Isra</b>
-                      </span>
-                    </ion-col>
-                  </ion-row>
-                
-                  <ion-row>
-                    <ion-col size="12">
-                      <b>vagabond</b> 1992
-                    </ion-col>
-                  </ion-row>
-                
-                  <ion-row>
-                    <ion-col size="12">
-                      <app-rating [rating]="1.5"></app-rating>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
-
-
-
-              </ion-row>
-              <ion-row>
-                <ion-col size="12">Hay un personaje nuevo cool</ion-col>
-                <ion-col size="12"><b>34k likes</b></ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-        <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
-
-      </ion-col>
-    </ion-row> -->
+    
   </ion-grid>
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
   <ion-refresher-content></ion-refresher-content>

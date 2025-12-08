@@ -12,13 +12,16 @@ import { UserService } from 'src/app/core/services/user.service';
 import { FollowService } from 'src/app/core/services/follows.service';
 import { NavController } from '@ionic/angular';
 import { OfflineCacheService } from 'src/app/core/services/offline-cache.service';
+import { NavigationService } from 'src/app/core/services/navigation.service';
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.page.html',
   styleUrls: ['./user-profile.page.scss'],
   standalone: true,
-  imports: [IonAlert, IonBackButton, IonRefresher, IonRefresherContent, IonActionSheet, IonToast, IonButtons, FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonIcon, IonAlert, IonRefresher, IonRefresherContent, IonActionSheet, IonToast, IonButtons, FormsModule, CommonModule, IonButton, RouterLink,IonBadge, IonCol,IonRow,IonCard,IonItem,IonLabel,IonAvatar,IonList, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class UserProfilePage implements OnInit {
 User?:UserMe
@@ -62,7 +65,9 @@ alertButtons = [
       },
     },
   ];
-  constructor(private offlineCacheService:OfflineCacheService, private auth:Auth, private navCtrl: NavController,private router:Router, private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { }
+  constructor(private navigation:NavigationService,private offlineCacheService:OfflineCacheService, private auth:Auth, private navCtrl: NavController,private router:Router, private followService:FollowService, private userService:UserService, private reviewService:ReviewService, private route: ActivatedRoute, private AuthService:Auth) { 
+    addIcons({ arrowBackOutline });
+  }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -74,8 +79,15 @@ alertButtons = [
     }
   }
 goBack() {
-  this.navCtrl.back();
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab1']);
+  }
 }
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
 handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()
@@ -84,6 +96,7 @@ handleRefresh(event: RefresherCustomEvent) {
   }
   irNetwork(){
   if (this.auth.isLoggedIn()){
+    this.navigation.push('/network/'+ this.id)
     this.router.navigate(['/network', this.id]);
   }else{
     this.headerAlert = 'Denegado'
@@ -222,6 +235,7 @@ compartir(){
   
 }
 qr(){
+  this.navigation.push('/qr-code/'+ this.id)
   this.router.navigate(['/qr-code/'+this.id]);
 }
 }

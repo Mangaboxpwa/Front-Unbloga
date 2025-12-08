@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RefresherCustomEvent,IonRefresherContent, IonRefresher, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem, IonButtons, IonBackButton } from '@ionic/angular/standalone';
+import { RefresherCustomEvent,IonRefresherContent, IonRefresher, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonImg, IonRow, IonGrid, IonIcon, IonList, IonItem, IonButtons, IonBackButton, IonButton } from '@ionic/angular/standalone';
 import { NgFor } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { RatingComponent } from 'src/app/rating/rating.component';
@@ -13,20 +13,25 @@ import { UserMe } from 'src/app/core/interfaces/user_me';
 import { Auth } from 'src/app/core/services/auth';
 import { NavController } from '@ionic/angular';
 import { OfflineCacheService } from 'src/app/core/services/offline-cache.service';
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { NavigationService } from 'src/app/core/services/navigation.service';
 
 @Component({
   selector: 'app-reviews',
   templateUrl: './reviews.page.html',
   styleUrls: ['./reviews.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonButtons, IonRefresher,IonRefresherContent,CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
+  imports: [IonIcon, IonButton, IonButtons, IonRefresher,IonRefresherContent,CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
 })
 export class ReviewsPage implements OnInit {
 id:number = 0
 User?:UserMe
 Reviews?:ReviewsFromUser[]
 
-constructor(private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private auth:Auth, private userService:UserService, private reviewService:ReviewService, private router: Router,private route: ActivatedRoute) { }
+constructor(private navigation:NavigationService,private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private auth:Auth, private userService:UserService, private reviewService:ReviewService, private router: Router,private route: ActivatedRoute) { 
+  addIcons({ arrowBackOutline });
+}
 
   ngOnInit() {
       this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -39,9 +44,16 @@ constructor(private offlineCacheService:OfflineCacheService, private navCtrl: Na
         this.me()
       }
     }
-    goBack() {
-  this.navCtrl.back();
+goBack() {
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab1']);
+  }
 }
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
 handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()

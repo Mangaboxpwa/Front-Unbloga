@@ -1,18 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
+import { IonIcon,IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 import { NavController } from '@ionic/angular';
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { NavigationService } from 'src/app/core/services/navigation.service';
 
 @Component({
   selector: 'app-new-pass',
   templateUrl: './new-pass.page.html',
   styleUrls: ['./new-pass.page.scss'],
   standalone: true,
-  imports: [IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonIcon,IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class NewPassPage implements OnInit {
 nuevaContrasenaForm: FormGroup;
@@ -29,11 +32,12 @@ alertButtons = [
       },
     },
   ];
-constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navigation:NavigationService,private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.nuevaContrasenaForm = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
       password_confirmation: ['', Validators.required],
     })
+    addIcons({ arrowBackOutline });
 }
 
   ngOnInit() {
@@ -45,8 +49,15 @@ constructor(private navCtrl: NavController,private fb: FormBuilder, private auth
     });
   }
   goBack() {
-  this.navCtrl.back();
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab3']);
+  }
 }
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
   enviarContrasenasNuevas() {
     this.btnUndefined = true
     console.log("entra?")
@@ -106,6 +117,8 @@ constructor(private navCtrl: NavController,private fb: FormBuilder, private auth
     this.isAlertOpen = isOpen;
   }
   goLogin() {
+    this.navigation.emptyStack()
+    this.pushUrl('/login')
     this.router.navigate(['/login']);
   }
 }

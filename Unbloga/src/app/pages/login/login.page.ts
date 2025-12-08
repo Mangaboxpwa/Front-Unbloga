@@ -1,19 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher, IonProgressBar, IonNote } from '@ionic/angular/standalone';
+import { IonIcon,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 import { CaptchaComponent } from 'src/app/shared/captcha/captcha.component';
 import { NavController } from '@ionic/angular';
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { NavigationService } from 'src/app/core/services/navigation.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonNote, IonProgressBar, CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonIcon,IonNote, IonProgressBar, CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class LoginPage implements OnInit {
 LoginForm: FormGroup;
@@ -32,12 +35,13 @@ alertButtons = [
   ];
   backendErrors = false
 captchaToken:string = ''
-constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navigation:NavigationService,private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.LoginForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
       captcha:['',[Validators.required]]
     })
+  addIcons({ arrowBackOutline });
 }
 onCaptchaResolved(token:string){
   this.captchaToken = token
@@ -47,8 +51,15 @@ onCaptchaResolved(token:string){
   ngOnInit() {
   }
   goBack() {
-  this.navCtrl.back();
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab3']);
+  }
 }
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
 scrollToTop() {
     window.scrollTo({
       top: 0,
@@ -73,6 +84,7 @@ scrollToTop() {
         this.btnUndefined = false
         console.log(response)
         sessionStorage.setItem('email',''+response.email)
+        this.pushUrl('/two-factor')
         this.router.navigate(['two-factor']);
       }, error => {
         this.backendErrors = true
@@ -114,9 +126,11 @@ scrollToTop() {
     this.isAlertOpen = isOpen;
   }  
   goRegister() {
+    this.pushUrl('/register')
     this.router.navigate(['/register']);
   }
   recuperarContrasena(){
+    this.pushUrl('/send-email')
    this.router.navigate(['/send-email']);
   }
 

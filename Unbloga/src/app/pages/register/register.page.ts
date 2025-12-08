@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonProgressBar, IonNote } from '@ionic/angular/standalone';
+import { IonIcon, IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 import { NavController } from '@ionic/angular';
-
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { NavigationService } from 'src/app/core/services/navigation.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonNote, IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [ IonIcon,IonNote, IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class RegisterPage implements OnInit {
 RegistrarForm: FormGroup;
@@ -37,20 +39,28 @@ alertButtons = [
       },
     },
   ];
-constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navigation:NavigationService,private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.RegistrarForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(72), Validators.pattern(/^[a-zA-Z]+(\s[a-zA-Z]+)*\s*$/)]],
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
       password_confirmation: ['', Validators.required],
     })
+    addIcons({ arrowBackOutline });
 }
 
   ngOnInit() {
   }
-  goBack() {
-  this.navCtrl.back();
+goBack() {
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab3']);
+  }
 }
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
   scrollToTop() {
     window.scrollTo({
       top: 0,
@@ -119,6 +129,7 @@ constructor(private navCtrl: NavController,private fb: FormBuilder, private auth
     this.isAlertOpen = isOpen;
   }
   goLogin() {
+    this.pushUrl('/login')
     this.router.navigate(['/login']);
   }
 }

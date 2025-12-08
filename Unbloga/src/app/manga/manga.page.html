@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button (click)="goBack()"></ion-back-button>
+      <ion-button fill="clear" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>{{this.manga?.title}}</ion-title>
   </ion-toolbar>
@@ -67,7 +69,7 @@
         <h3>Reviews populares</h3>
         <ion-item-divider class="custom-divider"></ion-item-divider>
 
-        <ion-item [routerLink]="['/user-profile/', review.user_id]" lines="none" *ngFor="let review of reviews?.slice(0,3)" size="12" size-lg="12">
+        <ion-item (click)="pushUrl('/user-profile/'+review.user_id)" [routerLink]="['/user-profile/', review.user_id]" lines="none" *ngFor="let review of reviews?.slice(0,3)" size="12" size-lg="12">
           
           <ion-avatar slot="start">
             <img [src]="review.users.avatar_url" />

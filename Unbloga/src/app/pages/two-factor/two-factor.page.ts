@@ -1,21 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar, IonNote } from '@ionic/angular/standalone';
+import { IonIcon,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { NotificationsService } from 'src/app/core/services/notifications.service';
 import { NavController } from '@ionic/angular';
-
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { NavigationService } from 'src/app/core/services/navigation.service';
 
 @Component({
   selector: 'app-two-factor',
   templateUrl: './two-factor.page.html',
   styleUrls: ['./two-factor.page.scss'],
   standalone: true,
-  imports: [IonNote, IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonIcon,IonNote, IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class TwoFactorPage implements OnInit {
 twoFactorForm: FormGroup;
@@ -38,19 +40,27 @@ alertButtons = [
       },
     },
   ];
-constructor(private navCtrl: NavController,private notify: NotificationsService,private cookies:CookieService, private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navigation:NavigationService,private navCtrl: NavController,private notify: NotificationsService,private cookies:CookieService, private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.twoFactorForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
       code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
     })
+    addIcons({ arrowBackOutline });
 }
   ngOnInit() {
     console.log(sessionStorage.getItem('email'))
     this.twoFactorForm.controls['email'].setValue(sessionStorage.getItem('email'))
   }
   goBack() {
-  this.navCtrl.back();
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab3']);
+  }
 }
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
 scrollToTop() {
     window.scrollTo({
       top: 0,
@@ -183,7 +193,8 @@ scrollToTop() {
             
             this.notify.listenToFollowerEvents(userId);
             this.notify.listenToBanEvents(userId);
-            this.router.navigate(['/tabs/tab3']);
+            this.navigation.emptyStack()
+            this.router.navigate(['/tab3']);
           }
         }, error => {
           console.log(error)

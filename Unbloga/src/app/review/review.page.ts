@@ -31,18 +31,20 @@ import {
    IonTextarea
 } from '@ionic/angular/standalone';
 import { OfflineCacheService } from '../core/services/offline-cache.service';
+import { NavigationService } from '../core/services/navigation.service';
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-review',
   templateUrl: './review.page.html',
   styleUrls: ['./review.page.scss'],
   standalone: true,
-imports: [IonProgressBar, IonRefresher, 
+imports: [IonIcon, IonProgressBar, IonRefresher, 
     IonContent, IonHeader, IonTitle, IonToolbar,
     IonRefresherContent,
     IonTextarea,
     IonCard,
-    IonBackButton,
    IonButtons,
    IonButton,
    CommonModule,
@@ -79,13 +81,14 @@ alertButtons = [
     },
   ];
 
-  constructor(private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private speechService: SpeechService, private cookie: CookieService,private fb: FormBuilder,private router: Router,private route: ActivatedRoute, private mangaService:MangaService,private reviewService:ReviewService) { 
+  constructor(private navigation:NavigationService, private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private speechService: SpeechService, private cookie: CookieService,private fb: FormBuilder,private router: Router,private route: ActivatedRoute, private mangaService:MangaService,private reviewService:ReviewService) { 
     this.ReviewForm = this.fb.group({
       manga_id: ['', [Validators.required]],
       rating: ['', [Validators.required]],
       review: ['', [Validators.required, Validators.maxLength(320)]],
       is_favorite: ['', [Validators.required]],
     })
+    addIcons({ arrowBackOutline });
   }
 
   ngOnInit() {
@@ -98,8 +101,13 @@ alertButtons = [
     console.log(token)
   }
   goBack() {
-  this.navCtrl.back();
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab1']);
+  }
 }
+  
 handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       this.ngOnInit()

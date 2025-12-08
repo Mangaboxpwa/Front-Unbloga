@@ -1,18 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar, IonNote } from '@ionic/angular/standalone';
+import { IonIcon,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
 import { NavController } from '@ionic/angular';
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { NavigationService } from 'src/app/core/services/navigation.service';
 
 @Component({
   selector: 'app-send-email',
   templateUrl: './send-email.page.html',
   styleUrls: ['./send-email.page.scss'],
   standalone: true,
-    imports: [IonNote, IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+    imports: [IonIcon,IonNote, IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class SendEmailPage implements OnInit {
 emailForm: FormGroup;
@@ -33,16 +36,24 @@ alertButtons = [
       },
     },
   ];
-constructor(private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
+constructor(private navigation:NavigationService,private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
     })
+    addIcons({ arrowBackOutline });
 }
   ngOnInit() {
   }
   goBack() {
-  this.navCtrl.back();
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab3']);
+  }
 }
+pushUrl(url: string) {
+    this.navigation.push(url);
+  }
 scrollToTop() {
     window.scrollTo({
       top: 0,
@@ -66,6 +77,7 @@ scrollToTop() {
         this.btnUndefined = false
         console.log(response)
         sessionStorage.setItem('email',this.emailForm.value['email']);
+        this.pushUrl('/recovery-code')
         this.router.navigate(['/recovery-code']);
 
       }, error => {

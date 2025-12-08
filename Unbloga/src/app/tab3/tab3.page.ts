@@ -13,9 +13,8 @@ import { OfflineCacheService } from '../core/services/offline-cache.service';
 import { environment } from '../../environments/environment';
 import { PushServiceTs } from '../core/push.service.ts';
 import { HttpClient } from '@angular/common/http';
+import { NavigationService } from 'src/app/core/services/navigation.service';
 
-
-Chart.register(...registerables);
 
 
 @Component({
@@ -26,7 +25,6 @@ Chart.register(...registerables);
 })
 export class Tab3Page implements ViewDidEnter {
   @ViewChild('barCanvas') private barCanvas!: ElementRef;
-  private barChart!: Chart;
   User?: UserMe
   Reviews?: ReviewsFromUser[]
   Favorites?: ReviewsFromUser[]
@@ -58,6 +56,7 @@ export class Tab3Page implements ViewDidEnter {
     },
   ];
   constructor(
+    private navigation:NavigationService,
     private offlineCacheService: OfflineCacheService,
     private reviewService: ReviewService,
     private router: Router,
@@ -67,6 +66,7 @@ export class Tab3Page implements ViewDidEnter {
   ) {
   }
   ionViewDidEnter(): void {
+    this.navigation.fallback = '/tab3'
     this.ngOnInit()
   }
 
@@ -81,22 +81,27 @@ export class Tab3Page implements ViewDidEnter {
     }
     this.initPushNotifications();
   }
+  pushUrl(url: string) {
+    this.navigation.push(url);
+  }
 
   get isLoggedIn(): boolean {
     return this.auth.isLoggedIn();
   }
 
   goLogin() {
+    this.pushUrl('/login')
     this.router.navigate(['/login']);
   }
 
   goRegister() {
+    this.pushUrl('/register')
     this.router.navigate(['/register']);
   }
 
   logout() {
     this.auth.logout();
-    this.router.navigate(['/tabs/tab3']);
+    this.router.navigate(['/tab3']);
   }
 
   me() {
@@ -168,6 +173,7 @@ export class Tab3Page implements ViewDidEnter {
 
   }
   qr() {
+    this.pushUrl('/qr-code/'+this.User?.id)
     this.router.navigate(['/qr-code/' + this.User?.id]);
   }
   handleRefresh(event: RefresherCustomEvent) {

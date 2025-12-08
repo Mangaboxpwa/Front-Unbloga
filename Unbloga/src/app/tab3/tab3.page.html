@@ -63,7 +63,7 @@
   </ion-label>
     <ion-row class="tight-row" style="width: 100%;">
       <ion-col *ngFor="let favorite of Favorites?.slice(0,4)"  size="3" size-lg="3">
-        <a [routerLink]="['/manga', favorite.manga.id]">
+        <a (click)="pushUrl('/manga/'+favorite.manga.id)" [routerLink]="['/manga', favorite.manga.id]">
         <ion-card>
           <img [src]="favorite.manga.cover_url" />
         </ion-card>
@@ -78,7 +78,7 @@
   </ion-label>
     <ion-row class="tight-row" style="width: 100%;">
       <ion-col *ngFor="let review of Reviews?.slice(0,4)"  size="3" size-lg="3">
-        <a [routerLink]="['/manga', review.manga.id]">
+        <a (click)="pushUrl('/manga/'+review.manga.id)" [routerLink]="['/manga', review.manga.id]">
         <ion-card>
           <img [src]="review.manga.cover_url" />
         </ion-card>
@@ -90,28 +90,28 @@
 <!-- Tercera sección -->
 <ion-list lines="none">
 
-  <ion-item button [routerLink]="['/reviews']">
+  <ion-item button (click)="pushUrl('/reviews')" [routerLink]="['/reviews']">
     <ion-label>Reviews</ion-label>
 
     <ion-badge slot="end" color="none">{{Reviews?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
-  <ion-item button [routerLink]="['/favorites']">
+  <ion-item button (click)="pushUrl('/favorites')" [routerLink]="['/favorites']">
     <ion-label>Favoritos</ion-label>
 
     <ion-badge slot="end" color="none">{{this.Favorites?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
-  <ion-item button [routerLink]="['/network']">
+  <ion-item button (click)="pushUrl('/network')" [routerLink]="['/network']">
     <ion-label>Siguiendo</ion-label>
 
     <ion-badge slot="end" color="none">{{this.User?.following?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
-  <ion-item button [routerLink]="['/network']">
+  <ion-item button (click)="pushUrl('/network')" [routerLink]="['/network']">
     <ion-label>Seguidores</ion-label>
 
     <ion-badge slot="end" color="none">{{this.User?.followers?.length}}</ion-badge>

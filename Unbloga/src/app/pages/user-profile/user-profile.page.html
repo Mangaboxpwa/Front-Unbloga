@@ -2,7 +2,9 @@
   <ion-toolbar>
     <ion-title>{{User?.name}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button (click)="goBack()"></ion-back-button>
+      <ion-button fill="clear" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button id="open-action-sheet">
@@ -30,7 +32,7 @@
   </ion-label>
     <ion-row class="tight-row" style="width: 100%;">
       <ion-col *ngFor="let favorite of Favorites?.slice(0,4)"  size="3" size-lg="3">
-        <a [routerLink]="['/manga', favorite.manga.id]">
+        <a (click)="pushUrl('/manga/'+favorite.manga.id)" [routerLink]="['/manga', favorite.manga.id]">
         <ion-card>
           <img [src]="favorite.manga.cover_url" />
         </ion-card>
@@ -45,7 +47,7 @@
   </ion-label>
     <ion-row class="tight-row" style="width: 100%;">
       <ion-col *ngFor="let review of Reviews?.slice(0,4)"  size="3" size-lg="3">
-        <a [routerLink]="['/manga', review.manga.id]">
+        <a (click)="pushUrl('/manga/'+review.manga.id)" [routerLink]="['/manga', review.manga.id]">
         <ion-card>
           <img [src]="review.manga.cover_url" />
         </ion-card>
@@ -56,14 +58,14 @@
 <!-- Tercera sección -->
 <ion-list lines="none">
 
-  <ion-item button [routerLink]="['/reviews/',this.id]">
+  <ion-item button (click)="pushUrl('/reviews/'+this.id)" [routerLink]="['/reviews/',this.id]">
     <ion-label>Reviews</ion-label>
 
     <ion-badge slot="end" color="none">{{Reviews?.length}}</ion-badge>
     <i class="bi bi-chevron-right" slot="end"></i>
   </ion-item>
 
-  <ion-item button [routerLink]="['/favorites/',this.id]">
+  <ion-item button (click)="pushUrl('/favorites/'+this.id)" [routerLink]="['/favorites/',this.id]">
     <ion-label>Favoritos</ion-label>
 
     <ion-badge slot="end" color="none">{{this.Favorites?.length}}</ion-badge>

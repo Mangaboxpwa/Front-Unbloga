@@ -8,6 +8,7 @@ import { Mangas } from '../core/interfaces/Mangas';
 import { NgFor, NgIf, CommonModule } from '@angular/common';
 import { ReviewsFromUser } from '../core/interfaces/ReviewsFromUser';
 import { OfflineCacheService } from '../core/services/offline-cache.service';
+import { NavigationService } from '../core/services/navigation.service';
 
 @Component({
   selector: 'app-tab1',
@@ -20,12 +21,18 @@ export class Tab1Page {
     favoritos?: Mangas[];
     resenas: ReviewsFromUser[] = []
 
-  constructor(private offlineCacheService:OfflineCacheService, private reviewService:ReviewService, private mangaService: MangaService,private router: Router) {}
+  constructor(private navigationService:NavigationService, private offlineCacheService:OfflineCacheService, private reviewService:ReviewService, private mangaService: MangaService,private router: Router) {}
 
+  ionViewDidEnter(): void {
+    this.navigationService.fallback = '/tab1'
+  }
   ngOnInit(): void {
     this.mangasMasReseñadosUltimoMes()
     this.mangasFavoritos()
     this.recentReviewsFromFollowing()
+  }
+  saveNav(url: string) {
+    this.navigationService.push(url);
   }
   handleRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {

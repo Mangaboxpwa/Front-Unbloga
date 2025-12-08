@@ -185,8 +185,9 @@ export class Tab3Page implements ViewDidEnter {
 
       const sub = await this.pushService.subscribeUserToPush();
       if (sub) {
+        const subJson = (sub as any).toJSON(); // <-- aquí hacemos el cast
         const payload = {
-          endpoint: sub.endpoint,
+          endpoint: subJson.endpoint,
           keys: {
             p256dh: sub.getKey('p256dh')
               ? btoa(String.fromCharCode(...new Uint8Array(sub.getKey('p256dh')!)))
@@ -195,10 +196,10 @@ export class Tab3Page implements ViewDidEnter {
               ? btoa(String.fromCharCode(...new Uint8Array(sub.getKey('auth')!)))
               : ''
           },
-          content_encoding: 'aes128gcm'
+          content_encoding: subJson.contentEncoding // valor por defecto
         };
 
-        console.log("ahhhhh", payload)
+        console.log("Payload de suscripción:", payload);
         this.http.post(environment.apiUrlBase + 'subscriptions', payload).subscribe({
           next: () => console.log('Suscripción guardada en backend'),
           error: (err) => console.error('Error al guardar suscripción', err)
@@ -208,4 +209,5 @@ export class Tab3Page implements ViewDidEnter {
       console.error('Error al inicializar notificaciones', error);
     }
   }
+
 }

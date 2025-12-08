@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonProgressBar, IonInput, IonTextarea, IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonItem, IonButton, IonAlert } from '@ionic/angular/standalone';
+import { IonNote, IonProgressBar, IonInput, IonTextarea, IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonItem, IonButton, IonAlert } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
 import { ProposalsService } from 'src/app/core/services/proposals.service';
 import { timeout } from 'rxjs';
@@ -14,7 +14,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './proposal.page.html',
   styleUrls: ['./proposal.page.scss'],
   standalone: true,
-  imports: [NgIf, IonInput, IonTextarea, ReactiveFormsModule,IonAlert, IonButton, IonItem, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonProgressBar]
+  imports: [IonNote, NgIf, IonInput, IonTextarea, ReactiveFormsModule,IonAlert, IonButton, IonItem, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonProgressBar]
 })
 export class ProposalPage implements OnInit {
 
@@ -25,6 +25,7 @@ message: any[] = [];
 headerAlert = "";
 subHeader = "";
 btnUndefined = false
+messageError = false
 alertButtons = [
     {
       text: 'OK',
@@ -48,9 +49,15 @@ alertButtons = [
 }
   sendProposal(){
     this.btnUndefined = true
+    this.messageError = false
     console.log("entra?")
     console.log(this.proposalForm.value)
-        
+    if (this.proposalForm.invalid) {
+      this.messageError = true
+      this.proposalForm.markAllAsTouched(); // muestra los errores en pantalla
+      this.btnUndefined = false
+      return;
+    }
     this.proposalsService.store(this.proposalForm.value).pipe(
       timeout(50000)
     ).subscribe(
@@ -72,6 +79,7 @@ alertButtons = [
         this.setOpen(true)
       }, error => {
         this.btnUndefined = false
+        this.messageError = true
             console.log(error)
             console.log(error.error.data)
             const data = error.error.data;

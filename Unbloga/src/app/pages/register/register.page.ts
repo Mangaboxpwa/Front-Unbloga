@@ -59,6 +59,11 @@ constructor(private navCtrl: NavController,private fb: FormBuilder, private auth
   }
   enviarRegistro() {
     this.btnUndefined = true
+    if (this.RegistrarForm.invalid) {
+      this.RegistrarForm.markAllAsTouched(); // muestra los errores en pantalla
+      this.btnUndefined = false
+      return;
+    }
     console.log("entra?")
     console.log(this.RegistrarForm.value)
     this.authService.register(this.RegistrarForm.value).subscribe(
@@ -81,10 +86,9 @@ constructor(private navCtrl: NavController,private fb: FormBuilder, private auth
         this.setOpen(true)
 
       }, error => {
-        this.btnUndefined = false
         console.log(error)
-        console.log(error.error.data)
-         this.backendErrors = error.error?.data ?? {};
+        this.btnUndefined = false
+        this.backendErrors = error.error?.data ?? {};
         const data = error.error.data;
         this.headerAlert = 'Error'
         this.subHeader = error.error.msg

@@ -32,6 +32,12 @@
           <ion-item style="width: 100%; margin-bottom:5px">
             <ion-input label="Código" helperText="Revisa el código en tu correo" type="number" formControlName="code" labelPlacement="floating" placeholder=""></ion-input>
           </ion-item>
+          <ion-note *ngIf="backendErrors?.code?.[0]" slot="error" color="danger">
+            {{ backendErrors?.code?.[0] }}
+          </ion-note>
+          <ion-note *ngIf="messageError" slot="error" color="danger">
+            {{ messageError }}
+          </ion-note>
           <div class="button-row">
             <ion-button shape="round" [disabled]="contador > 0" (click)="iniciarContador()">
               {{ contador > 0 ? 'Reenviar código (' + contador + 's)' : 'Reenviar código' }}

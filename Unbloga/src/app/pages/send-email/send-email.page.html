@@ -32,6 +32,10 @@
           <ion-item style="width: 100%; margin-bottom:5px">
             <ion-input label="Correo" helperText="Ingresa el correo de tu cuenta" type="email" formControlName="email" labelPlacement="floating" placeholder=""></ion-input>
           </ion-item>
+          <ion-note *ngIf="backendErrors" slot="error" color="danger">
+            {{ backendErrors}}
+          </ion-note>
+          
           <div class="button-row">
             <ion-button shape="round" [disabled]="btnUndefined" (click)="sendRecoverPasswordCode()">Ir</ion-button>
           </div>

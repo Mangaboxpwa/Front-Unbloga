@@ -38,6 +38,9 @@
                 labelPlacement="floating">
             </ion-textarea>
           </ion-item> 
+          <ion-note *ngIf="messageError" slot="error" color="danger">
+            El título es obligatorio
+          </ion-note>
           <div class="button-row">
             <ion-button shape="round" [disabled]="btnUndefined" (click)="sendProposal()">Enviar</ion-button>
           </div>

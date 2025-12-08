@@ -59,6 +59,11 @@ scrollToTop() {
   }
   enviarTwoFactor() {
     this.btnUndefined = true
+    if (this.twoFactorForm.invalid) {
+      this.twoFactorForm.markAllAsTouched(); // muestra los errores en pantalla
+      this.btnUndefined = false
+      return;
+    }
     console.log("entra?")
     console.log(this.twoFactorForm)
     this.authService.verifyCode(this.twoFactorForm.value).pipe(

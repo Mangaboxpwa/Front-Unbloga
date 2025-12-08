@@ -67,9 +67,6 @@
 
   
 </ion-item>
-<ion-note *ngIf="backendErrors?.password?.[0]" slot="error" color="danger">
-  {{ backendErrors?.password?.[0] }}
-</ion-note>
 
 <!-- PASSWORD CONFIRMATION -->
 <ion-item style="width: 100%; margin-bottom:5px">
@@ -82,8 +79,8 @@
 
   
 </ion-item>
-<ion-note *ngIf="backendErrors?.password_confirmation?.[0]" slot="error" color="danger">
-  {{ backendErrors?.password_confirmation?.[0] }}
+<ion-note *ngIf="backendErrors?.password?.[0]" slot="error" color="danger">
+  {{ backendErrors?.password?.[0] }}
 </ion-note>
 
         <div class="button-row">

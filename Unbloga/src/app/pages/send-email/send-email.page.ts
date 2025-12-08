@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -12,7 +12,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './send-email.page.html',
   styleUrls: ['./send-email.page.scss'],
   standalone: true,
-    imports: [IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+    imports: [IonNote, IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class SendEmailPage implements OnInit {
 emailForm: FormGroup;
@@ -23,6 +23,8 @@ message: any[] = [];
 headerAlert = "";
 subHeader = "";
 btnUndefined = false
+backendErrors  = ''
+
 alertButtons = [
     {
       text: 'OK',
@@ -49,6 +51,12 @@ scrollToTop() {
   }
   sendRecoverPasswordCode() {
     this.btnUndefined = true
+    this.backendErrors = ''
+    if (this.emailForm.invalid) {
+      this.emailForm.markAllAsTouched(); // muestra los errores en pantalla
+      this.btnUndefined = false
+      return;
+    }
     console.log("entra?")
     console.log(this.emailForm.value['email']);
     this.authService.sendRecoverPasswordCode(this.emailForm.value).pipe(
@@ -61,6 +69,7 @@ scrollToTop() {
         this.router.navigate(['/recovery-code']);
 
       }, error => {
+        this.backendErrors = error.error?.message
         this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)

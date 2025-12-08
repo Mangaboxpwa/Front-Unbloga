@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
+import { IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonAlert, IonRefresher, IonProgressBar, IonNote } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -12,7 +12,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './recovery-code.page.html',
   styleUrls: ['./recovery-code.page.scss'],
   standalone: true,
-  imports: [IonProgressBar, IonRefresher, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonNote, IonProgressBar, IonRefresher, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class RecoveryCodePage implements OnInit {
 recoveryCodeForm: FormGroup;
@@ -23,6 +23,10 @@ message: any[] = [];
 headerAlert = "";
 subHeader = "";
 btnUndefined = false
+backendErrors: {
+  code?: string[];
+} | null = null;
+messageError = ''
 alertButtons = [
     {
       text: 'OK',
@@ -51,7 +55,13 @@ scrollToTop() {
     });
   }
   enviarRecoveryCode() {
+    this.messageError = ''
     this.btnUndefined = true
+    if (this.recoveryCodeForm.invalid) {
+      this.recoveryCodeForm.markAllAsTouched(); // muestra los errores en pantalla
+      this.btnUndefined = false
+      return;
+    }
     console.log("entra?")
     this.authService.verifyCode(this.recoveryCodeForm.value).pipe(
       timeout(50000)
@@ -63,6 +73,8 @@ scrollToTop() {
           this.router.navigate(['/new-pass']);
         }
       }, error => {
+        this.backendErrors = error.error?.data ?? {};
+        this.messageError = error.error.message
         this.btnUndefined = false
         console.log(error)
         console.log(error.error.data)

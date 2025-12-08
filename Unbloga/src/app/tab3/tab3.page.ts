@@ -179,12 +179,10 @@ export class Tab3Page implements ViewDidEnter {
 
   private async initPushNotifications() {
     try {
-      // Pedir permiso
       if (Notification.permission !== 'granted') {
         await Notification.requestPermission();
       }
 
-      // Suscribirse
       const sub = await this.pushService.subscribeUserToPush();
       if (sub) {
         const payload = {
@@ -196,12 +194,11 @@ export class Tab3Page implements ViewDidEnter {
             auth: sub.getKey('auth')
               ? btoa(String.fromCharCode(...new Uint8Array(sub.getKey('auth')!)))
               : ''
-          }
+          },
+          content_encoding: 'aes128gcm'
         };
 
-        console.log("Payload de suscripción:", payload);
-
-        // Enviar al backend
+        console.log("ahhhhh", payload)
         this.http.post(environment.apiUrlBase + 'subscriptions', payload).subscribe({
           next: () => console.log('Suscripción guardada en backend'),
           error: (err) => console.error('Error al guardar suscripción', err)

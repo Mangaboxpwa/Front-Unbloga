@@ -3,7 +3,7 @@ import { TabsPage } from './tabs.page';
 
 export const routes: Routes = [
   {
-    path: 'tabs',
+    path: '',
     component: TabsPage,
     children: [
       {
@@ -21,16 +21,62 @@ export const routes: Routes = [
         loadComponent: () =>
           import('../tab3/tab3.page').then((m) => m.Tab3Page),
       },
+  {
+    path: 'manga/:id',
+    loadComponent: () =>
+      import('../manga/manga.page').then((m) => m.MangaPage),
+  },
+  {
+    path: 'review/:id',
+    loadComponent: () =>
+      import('../review/review.page').then((m) => m.ReviewPage),
+  },
+  {
+    path: 'network/:id',
+    loadComponent: () => import('../pages/network/network.page').then( m => m.NetworkPage)
+  },
+  {
+    path: 'network',
+    loadComponent: () => import('../pages/network/network.page').then( m => m.NetworkPage)
+  },
+  {
+    path: 'user-profile/:id',
+    loadComponent: () => import('../pages/user-profile/user-profile.page').then( m => m.UserProfilePage)
+  },
+  {
+    path: 'favorites/:id',
+    loadComponent: () => import('../pages/favorites/favorites.page').then( m => m.FavoritesPage)
+  },
+  {
+    path: 'favorites',
+    loadComponent: () => import('../pages/favorites/favorites.page').then( m => m.FavoritesPage)
+  },
+  {
+    path: 'reviews/:id',
+    loadComponent: () => import('../pages/reviews/reviews.page').then( m => m.ReviewsPage)
+  },
+  {
+    path: 'reviews',
+    loadComponent: () => import('../pages/reviews/reviews.page').then( m => m.ReviewsPage)
+  },
+  {
+    path: 'qr-code/:id',
+    loadComponent: () => import('../pages/qr-code/qr-code.page').then( m => m.QrCodePage)
+  },
+  {
+    path: 'proposal',
+    loadComponent: () => import('../pages/proposal/proposal.page').then( m => m.ProposalPage)
+  },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tab1',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/tab1',
     pathMatch: 'full',
   },
 ];

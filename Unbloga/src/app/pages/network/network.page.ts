@@ -6,7 +6,7 @@ import { Router, RouterLink,ActivatedRoute, } from '@angular/router';
 import { FollowService } from 'src/app/core/services/follows.service';
 import { timeout } from 'rxjs';
 import { User } from 'src/app/core/interfaces/Users';
-import { NavController } from '@ionic/angular';
+import { ViewDidEnter, NavController } from '@ionic/angular';
 import { OfflineCacheService } from 'src/app/core/services/offline-cache.service';
 import { arrowBackOutline, push } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
@@ -19,7 +19,7 @@ import { NavigationService } from 'src/app/core/services/navigation.service';
   standalone: true,
   imports: [IonIcon, IonButtons, IonRefresherContent, IonRefresher, IonButton, IonModal,IonToast, IonActionSheet, IonAvatar, IonList, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
-export class NetworkPage implements OnInit {
+export class NetworkPage implements OnInit,ViewDidEnter {
  public actionSheetButtons = [
     {
       text: 'Ver código QR',
@@ -54,6 +54,9 @@ export class NetworkPage implements OnInit {
   onFollowers = false;
   constructor(private navigation:NavigationService,private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private followService:FollowService, private router: Router,private route: ActivatedRoute,) { 
     addIcons({ arrowBackOutline });
+  }
+  ionViewDidEnter(): void {
+    this.ngOnInit()
   }
 
   ngOnInit() {

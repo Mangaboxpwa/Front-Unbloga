@@ -11,7 +11,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { timeout } from 'rxjs';
 import { UserMe } from 'src/app/core/interfaces/user_me';
 import { Auth } from 'src/app/core/services/auth';
-import { NavController } from '@ionic/angular';
+import { ViewDidEnter, NavController } from '@ionic/angular';
 import { OfflineCacheService } from 'src/app/core/services/offline-cache.service';
 import { arrowBackOutline, push } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
@@ -24,7 +24,7 @@ import { NavigationService } from 'src/app/core/services/navigation.service';
   standalone: true,
   imports: [IonIcon, IonButton, IonButtons, IonRefresher,IonRefresherContent,CommonModule, RatingComponent,RouterLink,NgFor,IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonCard, IonCardContent, IonRow],
 })
-export class ReviewsPage implements OnInit {
+export class ReviewsPage implements OnInit,ViewDidEnter {
 id:number = 0
 User?:UserMe
 Reviews?:ReviewsFromUser[]
@@ -33,6 +33,9 @@ constructor(private navigation:NavigationService,private offlineCacheService:Off
   addIcons({ arrowBackOutline });
 }
 
+ionViewDidEnter(): void {
+    this.ngOnInit()
+  }
   ngOnInit() {
       this.id = Number(this.route.snapshot.paramMap.get('id'));
       console.log(this.id)

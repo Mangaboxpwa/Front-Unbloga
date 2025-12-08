@@ -1,7 +1,5 @@
 self.addEventListener('push', function (event) {
     const data = event.data ? event.data.json() : {};
-    console.log("dataaaaaaaaa",data)
-
     const title = data.title || "Notificación";
     const options = {
         body: data.body || "",

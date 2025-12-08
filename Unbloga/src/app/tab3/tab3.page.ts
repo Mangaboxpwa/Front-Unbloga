@@ -184,21 +184,21 @@ export class Tab3Page implements ViewDidEnter {
       }
 
       const sub = await this.pushService.subscribeUserToPush();
+
       if (sub) {
+        // **¡AQUÍ ESTÁ EL CAMBIO CRÍTICO!**
         const payload = {
           endpoint: sub.endpoint,
           keys: {
-            p256dh: sub.getKey('p256dh')
-              ? btoa(String.fromCharCode(...new Uint8Array(sub.getKey('p256dh')!)))
-              : '',
-            auth: sub.getKey('auth')
-              ? btoa(String.fromCharCode(...new Uint8Array(sub.getKey('auth')!)))
-              : ''
+            // Usamos la nueva función para asegurar Base64 URL-safe
+            p256dh: this.urlBase64ToPushKey(sub.getKey('p256dh')),
+            auth: this.urlBase64ToPushKey(sub.getKey('auth'))
           },
           content_encoding: 'aes128gcm'
         };
 
-        console.log("ahhhhh", payload)
+        console.log("Payload FINAL de suscripción:", payload);
+
         this.http.post(environment.apiUrlBase + 'subscriptions', payload).subscribe({
           next: () => console.log('Suscripción guardada en backend'),
           error: (err) => console.error('Error al guardar suscripción', err)
@@ -207,5 +207,14 @@ export class Tab3Page implements ViewDidEnter {
     } catch (error) {
       console.error('Error al inicializar notificaciones', error);
     }
+  }
+  private urlBase64ToPushKey(buffer: ArrayBuffer | null | undefined): string {
+    if (!buffer) return '';
+
+    // 1. Convierte ArrayBuffer a una cadena Base64 estándar
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+
+    // 2. Hace la cadena Base64 "URL-safe" (reemplaza + y /) y quita el padding (=)
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 }

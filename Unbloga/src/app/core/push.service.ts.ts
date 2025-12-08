@@ -24,6 +24,7 @@ export class PushServiceTs {
     const rawData = window.atob(base64);
     return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
   }
+  
 }
 
 

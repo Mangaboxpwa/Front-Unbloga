@@ -31,12 +31,17 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/service-worker.js",
               {
                 "glob": "manifest.webmanifest",
                 "input": "src",
                 "output": "."
+              },
+              {
+                "glob": "service-worker.js",
+                "input": "src",
+                "output": "."
               }
+
             ],
             "styles": ["node_modules/bootstrap/dist/css/bootstrap.min.css",
             "node_modules/bootstrap-icons/font/bootstrap-icons.css",

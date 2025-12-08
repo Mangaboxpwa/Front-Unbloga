@@ -53,7 +53,7 @@ jobs:
 
             # Permisos generales de lectura/escritura/ejecución
             sudo chmod -R 775 ${{ secrets.WORK_DIR }}
-            cp src/service-worker.js www/service-worker.js
+            
 
             # Permisos ACL para nginx (lectura + escritura permanente)
             sudo setfacl -R -m u:nginx:rwx ${{ secrets.WORK_DIR }}

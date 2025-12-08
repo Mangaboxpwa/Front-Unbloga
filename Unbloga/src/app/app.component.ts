@@ -29,7 +29,11 @@ export class AppComponent {
   }
 
   listenForUpdates() {
-    if (!this.swUpdate.isEnabled) return;
+    if (!this.swUpdate.isEnabled){
+      console.log('returnListenForUpdates') 
+      return;
+      }
+      console.log('si ListenForUpdates')
 
     this.swUpdate.versionUpdates
       .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))

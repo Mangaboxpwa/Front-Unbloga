@@ -3,13 +3,19 @@ import { SwPush } from '@angular/service-worker';
 import { Observable } from 'rxjs'; // Necesario para el casting de tipo
 
 // Interfaz para definir la estructura del payload que esperas del backend
-interface PushPayload {
+interface PushNotificationContent {
   title: string;
   body: string;
   icon?: string;
   tag?: string;
-  // Puedes agregar aquí más propiedades si tu backend las envía en la clave 'data'
-  // Por ejemplo: url?: string; 
+  data?: { url: string }; // Estructura de navegación que envías desde Laravel
+}
+
+// Interfaz del Payload que realmente recibes de SwPush
+interface PushPayload {
+  notification: PushNotificationContent;
+  // Si envías datos silenciosos fuera de 'notification', irían aquí:
+  // data?: any; 
 }
 
 @Injectable({
@@ -22,17 +28,19 @@ export class PushServiceTs {
   constructor(private swPush: SwPush) {
 
     // 2. Solución para el error de tipado: Casting el Observable a PushPayload
-    (this.swPush.messages as Observable<PushPayload>).subscribe(payload => {
+    (this.swPush.messages as Observable<PushPayload>).subscribe(receivedPayload => {
 
-      console.log('Push recibido con la app abierta:', payload);
+      const notification = receivedPayload.notification;
+      console.log('Push recibido con la app abierta:', receivedPayload);
 
       // Lógica para mostrar la notificación nativa si la app está enfocada/abierta
       if (Notification.permission === 'granted') {
-        new Notification(payload.title, {
-          body: payload.body,
-          // Usa payload.icon si viene del backend, si no, usa un default.
-          icon: payload.icon || '/assets/icon/default.png',
-          tag: payload.tag
+        new Notification(notification.title, {
+          body: notification.body,
+          icon: notification.icon || '/assets/icon/default.png',
+          tag: notification.tag,
+          // Pasar la URL de navegación a la notificación nativa
+          data: notification.data
         });
       }
     });

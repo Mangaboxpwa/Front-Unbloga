@@ -31,5 +31,5 @@ if('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/ngsw-worker.js');
 
   // SW de push
-  navigator.serviceWorker.register('/custom-sw.js');
+  navigator.serviceWorker.register('/sw-custom.js');
 }

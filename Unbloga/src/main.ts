@@ -27,9 +27,5 @@ bootstrapApplication(AppComponent, {
 });
 
 if('serviceWorker' in navigator) {
-  // Angular SW
-  navigator.serviceWorker.register('/ngsw-worker.js');
-
-  // SW de push
   navigator.serviceWorker.register('/sw-custom.js');
 }

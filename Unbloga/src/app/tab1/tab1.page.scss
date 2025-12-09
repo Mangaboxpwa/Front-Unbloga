@@ -8,3 +8,30 @@ ion-card img {
   object-fit: cover; /* recorta pero no deforma */
   display: block;
 }
+.img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}   
+
+.no-pad-card {
+  padding: 0 !important;       /* Quita el padding del ion-card */
+  margin: 0;                   /* Opcional: por si quieres cards más pegados */
+}
+
+.no-pad-card img.cover-img {
+  display: block;              /* Evita espacios extra */
+  margin: 0 auto;              /* Asegura centrado horizontal */
+  object-fit: cover;           /* Hace que se vea bien la portada */
+}
+.center-card-img {
+  display: flex;
+  justify-content: center;   /* centra horizontal */
+  align-items: center;       /* solo si quieres centrar vertical */
+  padding: 0;                /* quita espacio interno del card */
+}
+
+.center-card-img img {
+  display: block;
+  margin: 0 auto;
+}

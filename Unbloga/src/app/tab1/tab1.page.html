@@ -29,25 +29,26 @@
 
     <ion-row>
       <ion-col *ngFor="let resena of resenas.slice(0,6)" (click)="saveNav('/reviews/' + resena?.users?.id)" [routerLink]="['/reviews/',resena?.users?.id]" size="6" size-lg="2">
-        <ion-card>
-          <img [src]="resena?.manga?.cover_url" />
-          <ion-card-content style="padding: 0;">
-            <div style="background-color: #735ba6; color: white; width: 100%; padding: 8px ; padding-left: 2px;">
-               {{resena?.users?.name}}
-            </div>
-          
-            <ion-row style="margin: 0; padding: 0;">
-              <ion-col size="6" style="padding-left: 0; display: flex; gap: 5px; align-items: center;">
-                <i *ngIf="resena.is_favorite" class="bi bi-heart-fill"></i>
-                <i *ngIf="resena.review" class="bi bi-file-text"></i>
-              
-              </ion-col>
-              <ion-col size="6" style=" text-align: end;">
-                <b>{{formatoFecha(resena.created_at)}}</b>
-              </ion-col>
-            </ion-row>
-          </ion-card-content>
-        </ion-card>
+        <ion-card class="no-pad-card">
+  <img [src]="resena?.manga?.cover_url" class="card-img" />
+
+  <ion-card-content style="padding: 0;">
+    <div style="background-color: #735ba6; color: white; width: 100%; padding: 8px ; padding-left: 2px;">
+      {{resena?.users?.name}}
+    </div>
+
+    <ion-row style="margin: 0; padding: 0;">
+      <ion-col size="6" style="padding-left: 0; display: flex; gap: 5px; align-items: center;">
+        <i *ngIf="resena.is_favorite" class="bi bi-heart-fill"></i>
+        <i *ngIf="resena.review" class="bi bi-file-text"></i>
+      </ion-col>
+      <ion-col size="6" style="text-align: end;">
+        <b>{{formatoFecha(resena.created_at)}}</b>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card>
+
 
       </ion-col>
       <!-- Copia más ion-col para más cards -->
@@ -62,14 +63,15 @@
     <div style="height:1px; background-color:#ccc; width:100%; margin:10px 0;"></div>
 
     <ion-row>
-      <ion-col *ngFor="let manga of mangas?.slice(0,6)" size="6" size-lg="2">
-        <a (click)="saveNav('/manga/' + manga?.id)" [routerLink]="['/manga/', manga?.id]">
-          <ion-card>
-            <img [src]="manga?.cover_url" />
-          </ion-card>
-        </a>
-      </ion-col>
-    </ion-row>
+  <ion-col *ngFor="let manga of mangas?.slice(0,6)" size="6" size-lg="2">
+    <a (click)="saveNav('/manga/' + manga?.id)" [routerLink]="['/manga/', manga?.id]">
+      <ion-card class="no-pad-card">
+        <img [src]="manga?.cover_url" class="cover-img" />
+      </ion-card>
+    </a>
+  </ion-col>
+</ion-row>
+
 
     <!-- REVIEWS POPULARES EN UNBLOGA -->
     <ion-row class="ion-align-items-center ion-margin-bottom ion-margin-top">
@@ -82,8 +84,8 @@
     <ion-row>
       <ion-col *ngFor="let manga of favoritos?.slice(0,6)" size="6" size-lg="2">
         <a (click)="saveNav('/manga/' + manga?.id)" [routerLink]="['/manga/', manga?.id]">
-          <ion-card>
-            <img [src]="manga?.cover_url" />
+          <ion-card class="no-pad-card">
+            <img [src]="manga?.cover_url" class="cover-img" />
           </ion-card>
         </a>
       </ion-col>

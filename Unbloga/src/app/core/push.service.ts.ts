@@ -1,30 +1,40 @@
 import { Injectable } from '@angular/core';
+import { SwPush } from '@angular/service-worker';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PushServiceTs {
-  async subscribeUserToPush(): Promise<PushSubscription | null> {
-    if (!('serviceWorker' in navigator)) return null;
-    const reg = await navigator.serviceWorker.ready;
+  readonly VAPID_PUBLIC_KEY = 'BP4H2FByaup-wOJWBvqXUWLiSlmb3YfucoVcTc_3BRutFKqcjIjLZzeXOreHx8I4bJ6Q0E42bWb0zEKtU-txohk';
 
-    const sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: this.urlBase64ToUint8Array(
-        'BP4H2FByaup-wOJWBvqXUWLiSlmb3YfucoVcTc_3BRutFKqcjIjLZzeXOreHx8I4bJ6Q0E42bWb0zEKtU-txohk'
-      )
+  constructor(private swPush: SwPush) {
+    this.swPush.messages.subscribe(payload => {
+      console.log('Push recibido con la app abierta:', payload);
     });
 
-    return sub;
+    this.swPush.notificationClicks.subscribe(event => {
+      console.log('Notificación clicada:', event);
+    });
   }
 
-  private urlBase64ToUint8Array(base64String: string) {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+  // 3. Método de suscripción usando SwPush
+  async subscribeUserToPush(): Promise<PushSubscription | null> {
+    if (!this.swPush.isEnabled) {
+      console.warn('El Service Worker o Push no están habilitados.');
+      return null;
+    }
+
+    try {
+      const sub = await this.swPush.requestSubscription({
+        serverPublicKey: this.VAPID_PUBLIC_KEY
+      });
+
+      console.log('Suscripción generada con SwPush:', sub);
+
+      return sub;
+    } catch (err) {
+      console.error('No se pudo suscribir al usuario:', err);
+      return null;
+    }
   }
-  
 }
-
-

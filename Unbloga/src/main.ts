@@ -25,8 +25,8 @@ bootstrapApplication(AppComponent, {
     })
   ]
 });
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw-custom.js').then(reg => {
-    console.log('Service Worker registrado', reg);
-  });
-}
+// if ('serviceWorker' in navigator) {
+//   navigator.serviceWorker.register('/sw-custom.js').then(reg => {
+//     console.log('Service Worker registrado', reg);
+//   });
+// }

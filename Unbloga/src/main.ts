@@ -26,10 +26,10 @@ bootstrapApplication(AppComponent, {
   ]
 });
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw-custom.js')
-      .then(reg => console.log('[SW-Custom] Registrado:', reg))
-      .catch(err => console.error('[SW-Custom] Error al registrar:', err));
-  });
+if('serviceWorker' in navigator) {
+  // Angular SW
+  navigator.serviceWorker.register('/ngsw-worker.js');
+
+  // SW de push
+  navigator.serviceWorker.register('/custom-sw.js');
 }

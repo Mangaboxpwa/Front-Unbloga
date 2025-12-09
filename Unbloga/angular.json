@@ -37,7 +37,7 @@
                 "output": "."
               },
               {
-                "glob": "service-worker.js",
+                "glob": "sw-custom.js",
                 "input": "src",
                 "output": "."
               }

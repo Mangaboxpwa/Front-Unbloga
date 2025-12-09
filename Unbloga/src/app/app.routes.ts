@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-
+import { authGuard } from './core/guards/auth-guard';
 export const routes: Routes = [
   {
     path: '',
@@ -9,12 +9,12 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./pages/login/login.page').then((m) => m.LoginPage),
+      import('./pages/login/login.page').then((m) => m.LoginPage),canActivate: [authGuard],
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./pages/register/register.page').then((m) => m.RegisterPage),
+      import('./pages/register/register.page').then((m) => m.RegisterPage),canActivate: [authGuard],
   },
   {
     path: 'manga/:id',
@@ -28,19 +28,19 @@ export const routes: Routes = [
   },
   {
     path: 'two-factor',
-    loadComponent: () => import('./pages/two-factor/two-factor.page').then( m => m.TwoFactorPage)
+    loadComponent: () => import('./pages/two-factor/two-factor.page').then( m => m.TwoFactorPage),canActivate: [authGuard]
   },
   {
     path: 'send-email',
-    loadComponent: () => import('./pages/send-email/send-email.page').then( m => m.SendEmailPage)
+    loadComponent: () => import('./pages/send-email/send-email.page').then( m => m.SendEmailPage),canActivate: [authGuard]
   },
   {
     path: 'recovery-code',
-    loadComponent: () => import('./pages/recovery-code/recovery-code.page').then( m => m.RecoveryCodePage)
+    loadComponent: () => import('./pages/recovery-code/recovery-code.page').then( m => m.RecoveryCodePage),canActivate: [authGuard]
   },
   {
     path: 'new-pass',
-    loadComponent: () => import('./pages/new-pass/new-pass.page').then( m => m.NewPassPage)
+    loadComponent: () => import('./pages/new-pass/new-pass.page').then( m => m.NewPassPage),canActivate: [authGuard]
   },
   {
     path: 'network/:id',

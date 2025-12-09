@@ -9,6 +9,9 @@ import { Auth } from './core/services/auth';
 import { timeout } from 'rxjs';
 import { PushServiceTs } from './core/push.service.ts';
 import { HttpClient } from '@angular/common/http';
+import { App } from '@capacitor/app';
+import { NavigationService } from 'src/app/core/services/navigation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,13 +20,15 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent {
   constructor(
+    private router:Router,
     private swUpdate: SwUpdate,
     private alertController: AlertController,
     private notify: NotificationsService,
     private cookies:CookieService,
     private authService:Auth,
     private pushService: PushServiceTs,
-    private http: HttpClient
+    private http: HttpClient,
+    private navigation:NavigationService
   ) {
     this.listenForUpdates();
   }
@@ -65,6 +70,11 @@ export class AppComponent {
     if (this.cookies.get('token')){
       this.me()
     }
+    App.addListener('backButton',({canGoBack})=>{
+      if (canGoBack){
+        this.goBack()
+      }
+    })
   }
   me(){
       this.authService.me().pipe(
@@ -86,4 +96,11 @@ export class AppComponent {
         }
       )
     }
+    goBack() {
+  if (this.navigation.canGoBack()) {
+    this.navigation.pop()
+  } else {
+    this.router.navigate(['/tab3']);
+  }
+}
 }

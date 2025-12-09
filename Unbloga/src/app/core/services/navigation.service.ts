@@ -30,6 +30,10 @@ export class NavigationService {
       this.router.navigateByUrl(this.fallback);
     }
   }
+  pop(){
+    this.stack.pop()
+  }
+
   emptyStack(){
     this.stack = []
   }

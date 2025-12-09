@@ -54,6 +54,9 @@ jobs:
             # Permisos generales de lectura/escritura/ejecución
             sudo chmod -R 775 ${{ secrets.WORK_DIR }}
             
+            sudo cp src/sw-custom.js www/sw-custom.js
+            sudo chown israel:israel www/sw-custom.js
+            sudo chmod 644 www/sw-custom.js
 
             # Permisos ACL para nginx (lectura + escritura permanente)
             sudo setfacl -R -m u:nginx:rwx ${{ secrets.WORK_DIR }}

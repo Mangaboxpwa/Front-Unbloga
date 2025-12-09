@@ -197,6 +197,29 @@ follow(){
             
           }
         }, error => {
+          const data = error.error.data;
+        this.headerAlert = 'Error'
+        this.subHeader = error.error.msg
+        this.message = [];
+        if (error.error.data){
+          for (const campo in data) {
+            this.message = this.message.concat(data[campo]);
+          }
+        }
+        else if(error.error.error){
+          this.message = [error.error.error]
+        }
+        console.log(this.message)
+        this.alertButtons = [
+          {
+            text: 'OK',
+            role: 'confirm',
+            handler: () => {
+            },
+          },
+        ];
+        
+        this.setOpen(true)
           console.log(error)
           if (error.name == "TimeOutError") {
             this.follow()

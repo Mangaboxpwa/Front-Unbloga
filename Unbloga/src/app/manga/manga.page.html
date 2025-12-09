@@ -22,6 +22,9 @@
       <!-- Columna info -->
       <ion-col size="12" size-lg="6">
         <h1>{{this.manga?.title}}</h1>
+          <app-rating [rating]="manga?.avg_rating ?? 0"></app-rating>
+        
+        
         <p>{{this.manga?.publication_date}} - Hecho por {{this.authors}}</p>
         <p>
           {{this.manga?.description}}
@@ -69,7 +72,20 @@
         <h3>Reviews populares</h3>
         <ion-item-divider class="custom-divider"></ion-item-divider>
 
-        <ion-item (click)="pushUrl('/user-profile/'+review.user_id)" [routerLink]="['/user-profile/', review.user_id]" lines="none" *ngFor="let review of reviews?.slice(0,3)" size="12" size-lg="12">
+        <div *ngIf="user_review">
+          <ion-item  (click)="pushUrl('/user-profile/'+user_review.user_id)" [routerLink]="['/user-profile/', user_review.user_id]" lines="none" size="12" size-lg="12">
+          
+          <ion-avatar slot="start">
+            <img [src]="user_review.users.avatar_url" />
+          </ion-avatar>
+          <ion-label>
+            <h2>Reseña por {{user_review.users.name}}</h2><app-rating [rating]="user_review.rating"></app-rating><i *ngIf="user_review.is_favorite" class="bi bi-heart-fill"></i>
+            <p><b>{{user_review.review}}</b></p>
+            <!-- <p><i class="bi bi-heart-fill"></i> 1999 likes</p> -->
+          </ion-label>
+          
+        </ion-item>
+          <ion-item  (click)="pushUrl('/user-profile/'+review.user_id)" [routerLink]="['/user-profile/', review.user_id]" lines="none" *ngFor="let review of reviews?.slice(0,4)" size="12" size-lg="12">
           
           <ion-avatar slot="start">
             <img [src]="review.users.avatar_url" />
@@ -81,8 +97,22 @@
           </ion-label>
           
         </ion-item>
-        <ion-item-divider class="custom-divider"></ion-item-divider>
-        <h4 style="text-align: center;">Todas las reviews</h4>
+        </div>
+        <div *ngIf="!user_review"><ion-item  (click)="pushUrl('/user-profile/'+review.user_id)" [routerLink]="['/user-profile/', review.user_id]" lines="none" *ngFor="let review of reviews?.slice(0,5)" size="12" size-lg="12">
+          
+          <ion-avatar slot="start">
+            <img [src]="review.users.avatar_url" />
+          </ion-avatar>
+          <ion-label>
+            <h2>Reseña por {{review.users.name}}</h2><app-rating [rating]="review.rating"></app-rating><i *ngIf="review.is_favorite" class="bi bi-heart-fill"></i>
+            <p><b>{{review.review}}</b></p>
+            <!-- <p><i class="bi bi-heart-fill"></i> 1999 likes</p> -->
+          </ion-label>
+          
+        </ion-item>
+        </div>
+        <!-- <ion-item-divider class="custom-divider"></ion-item-divider>
+        <h4 style="text-align: center;">Todas las reviews</h4> -->
       </ion-col>
       <ion-item-divider class="custom-divider"></ion-item-divider>
     </ion-row>

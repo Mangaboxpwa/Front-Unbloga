@@ -133,3 +133,13 @@ canvas {
   min-height: 10px;
   text-align: center;
 }
+ion-card {
+  border-radius: 8px;
+  overflow: hidden; /* muy importante */
+}
+
+ion-card img {
+  height: 100px; /* o 180px, el que quedé bien */
+  object-fit: cover; /* recorta pero no deforma */
+  display: block;
+}

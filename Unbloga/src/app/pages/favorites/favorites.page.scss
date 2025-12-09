@@ -1,0 +1,11 @@
+ion-card {
+  border-radius: 8px;
+  overflow: hidden; /* muy importante */
+  height: 180px;
+}
+
+ion-card img {
+  height: 130px; /* o 180px, el que quedé bien */
+  object-fit: cover; /* recorta pero no deforma */
+  display: block;
+}

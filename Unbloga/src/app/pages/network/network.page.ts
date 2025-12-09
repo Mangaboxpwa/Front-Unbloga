@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonRefresherContent, RefresherCustomEvent, IonButton, IonModal, IonActionSheet, IonList,IonItem, IonBadge, IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView, IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonToast, IonIcon, IonRefresher, IonButtons, IonBackButton } from '@ionic/angular/standalone';
+import { IonRefresherContent, RefresherCustomEvent, IonButton, IonModal, IonActionSheet, IonList,IonItem, IonBadge, IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView, IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonToast, IonIcon, IonRefresher, IonButtons, IonBackButton, IonAlert } from '@ionic/angular/standalone';
 import { Router, RouterLink,ActivatedRoute, } from '@angular/router';
 import { FollowService } from 'src/app/core/services/follows.service';
 import { timeout } from 'rxjs';
@@ -17,7 +17,7 @@ import { NavigationService } from 'src/app/core/services/navigation.service';
   templateUrl: './network.page.html',
   styleUrls: ['./network.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonButtons, IonRefresherContent, IonRefresher, IonButton, IonModal,IonToast, IonActionSheet, IonAvatar, IonList, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonAlert, IonIcon, IonButtons, IonRefresherContent, IonRefresher, IonButton, IonModal,IonToast, IonActionSheet, IonAvatar, IonList, IonItem, IonBadge,IonSegmentContent, IonLabel, IonSegment,IonSegmentButton,IonSegmentView,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class NetworkPage implements OnInit,ViewDidEnter {
  public actionSheetButtons = [
@@ -52,6 +52,18 @@ export class NetworkPage implements OnInit,ViewDidEnter {
   isToastOpen = false;
   isModalOpen = false;
   onFollowers = false;
+  isAlertOpen = false;
+message: any[] = [];
+headerAlert = "";
+subHeader = "";
+alertButtons = [
+    {
+      text: 'OK',
+      role: 'confirm',
+      handler: () => {
+      },
+    },
+  ];
   constructor(private navigation:NavigationService,private offlineCacheService:OfflineCacheService, private navCtrl: NavController,private followService:FollowService, private router: Router,private route: ActivatedRoute,) { 
     addIcons({ arrowBackOutline });
   }
@@ -199,6 +211,29 @@ pushUrl(url: string) {
           this.setModalOpen(false)
         }
       }, error => {
+        const data = error.error.data;
+        this.headerAlert = 'Error'
+        this.subHeader = error.error.msg
+        this.message = [];
+        if (error.error.data){
+          for (const campo in data) {
+            this.message = this.message.concat(data[campo]);
+          }
+        }
+        else if(error.error.error){
+          this.message = [error.error.error]
+        }
+        console.log(this.message)
+        this.alertButtons = [
+          {
+            text: 'OK',
+            role: 'confirm',
+            handler: () => {
+            },
+          },
+        ];
+        this.setModalOpen(false)
+        this.setOpenAlert(true)
         console.log(error)
         if (error.name == "TimeOutError") {
           this.follow()
@@ -207,6 +242,9 @@ pushUrl(url: string) {
       )
     }
   }
+  setOpenAlert(isOpen: boolean) {
+    this.isAlertOpen = isOpen;
+  }  
   unfollow(){
     if(this.UserActionSheet?.id)
       {this.followService.unfollow(this.UserActionSheet?.id).pipe(

@@ -4,7 +4,7 @@ import { Reviews } from "./Reviews";
 export interface MangaResponse {
     result: boolean,
     message: string,
-    data?: Manga;
+    data: Manga;
 }
 
 export interface Manga {
@@ -14,6 +14,7 @@ export interface Manga {
     description: string,
     cover_url: string,
     rating_count: number,
+    avg_rating:number,
     authors: Authors[],
     reviews:Reviews[],
     user_review:Reviews

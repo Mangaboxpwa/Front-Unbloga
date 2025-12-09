@@ -9,14 +9,13 @@ import { NavigationService } from '../services/navigation.service';
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const authService = inject(Auth);
-  const navigation = inject(NavigationService);
-  const loggedIn = authService.isLoggedIn()
-      if (loggedIn) {
-        navigation.emptyStack()
-        router.navigate(['/tab3']);
-        return true; // Usuario autenticado
-      } else {
-        return false;
-      }
 
+  const loggedIn = authService.isLoggedIn(); // boolean
+
+  if (loggedIn) {
+    router.navigate(['/tab3']);
+    return false; // bloquea login y register
+  }
+
+  return true; // permite entrar si NO está logueado
 };

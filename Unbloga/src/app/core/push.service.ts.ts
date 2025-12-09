@@ -3,19 +3,23 @@ import { SwPush } from '@angular/service-worker';
 import { Observable } from 'rxjs'; // Necesario para el casting de tipo
 
 // Interfaz para definir la estructura del payload que esperas del backend
-interface PushNotificationContent {
+interface NotificationContent {
   title: string;
   body: string;
   icon?: string;
   tag?: string;
-  data?: { url: string }; // Estructura de navegación que envías desde Laravel
+  vibrate?: number[];
+  data?: { url: string };
 }
 
-// Interfaz del Payload que realmente recibes de SwPush
+// Define la estructura anidada que viene dentro de 'data'
+interface PushDataWrapper {
+  notification: NotificationContent;
+}
+
+// Define el Payload que realmente sale del Observable
 interface PushPayload {
-  notification: PushNotificationContent;
-  // Si envías datos silenciosos fuera de 'notification', irían aquí:
-  // data?: any; 
+  data: PushDataWrapper; // 👈 La clave 'data' es obligatoria
 }
 
 @Injectable({
@@ -30,17 +34,25 @@ export class PushServiceTs {
     // 2. Solución para el error de tipado: Casting el Observable a PushPayload
     (this.swPush.messages as Observable<PushPayload>).subscribe(receivedPayload => {
 
-      const notification = receivedPayload.notification;
-      console.log('Push recibido con la app abierta:', receivedPayload);
+      // 1. Acceder al objeto 'notification' a través de 'data'
+      const notification = receivedPayload.data?.notification;
 
-      // Lógica para mostrar la notificación nativa si la app está enfocada/abierta
+      // 2. Verificar que el objeto existe antes de intentar leer propiedades
+      if (!notification) {
+        console.error("Payload anidado no encontrado en receivedPayload.data.notification");
+        return;
+      }
+
+      console.log('Push recibido con la app abierta (desanidado):', notification.title);
+
+      // 3. Lógica para mostrar la notificación nativa
       if (Notification.permission === 'granted') {
+        // Usar las propiedades del objeto 'notification'
         new Notification(notification.title, {
           body: notification.body,
           icon: notification.icon || '/assets/icon/default.png',
           tag: notification.tag,
-          // Pasar la URL de navegación a la notificación nativa
-          data: notification.data
+          data: notification.data // Pasa los datos de navegación
         });
       }
     });

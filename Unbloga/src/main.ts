@@ -28,8 +28,8 @@ bootstrapApplication(AppComponent, {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(reg => console.log("SW registrado:", reg))
-      .catch(err => console.error("Error al registrar SW:", err));
+    navigator.serviceWorker.register('/sw-custom.js')
+      .then(reg => console.log('[SW-Custom] Registrado:', reg))
+      .catch(err => console.error('[SW-Custom] Error al registrar:', err));
   });
 }

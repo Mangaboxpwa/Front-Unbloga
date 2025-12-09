@@ -19,14 +19,15 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
 
-    provideServiceWorker('ngsw-worker.js', {
+    provideServiceWorker('sw-custom.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     })
   ]
 });
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw-custom.js').then(reg => {
-    console.log('Service Worker registrado', reg);
-  });
-}
+
+// if ('serviceWorker' in navigator) {
+//   navigator.serviceWorker.register('/sw-custom.js').then(reg => {
+//     console.log('Service Worker registrado', reg);
+//   });
+// }

@@ -35,9 +35,21 @@
         <ion-item style="width: 100%; margin-bottom:5px">
           <ion-input type="password" formControlName="password"  label="Contraseña nueva" labelPlacement="floating"></ion-input>
         </ion-item>
+        <div *ngIf="nuevaContrasenaForm.get('password')?.touched && nuevaContrasenaForm.get('password')?.errors?.['required']">
+          <small style="color:red">La contraseña es obligatoria.</small>
+        </div>
+        <div *ngIf="nuevaContrasenaForm.get('password')?.touched && nuevaContrasenaForm.get('password')?.errors?.['minlength']">
+          <small style="color:red">Minimo ingresa 8 carácteres, una minúscula, mayúscula y numero.</small>
+        </div>
         <ion-item style="width: 100%;">
           <ion-input type="password" formControlName="password_confirmation"  label="Repetir contraseña" labelPlacement="floating"></ion-input>
         </ion-item> 
+        <div *ngIf="nuevaContrasenaForm.get('password_confirmation')?.touched && nuevaContrasenaForm.get('password_confirmation')?.errors?.['required']">
+          <small style="color:red">Campo obligatorio.</small>
+        </div>
+        <ion-note *ngIf="backendErrors?.password?.[0]" slot="error" color="danger">
+          {{ backendErrors?.password?.[0] }}
+        </ion-note>
         
         <div class="button-row">
           <ion-button [disabled]="btnUndefined" shape="round"(click)="enviarContrasenasNuevas()">Ir</ion-button>

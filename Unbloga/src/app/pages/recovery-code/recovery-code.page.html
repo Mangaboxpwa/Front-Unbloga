@@ -40,6 +40,9 @@
           <ion-note *ngIf="messageError" slot="error" color="danger">
             {{ messageError }}
           </ion-note>
+          <div *ngIf="!backendErrors?.code?.[0] && !messageError && recoveryCodeForm.get('code')?.touched && recoveryCodeForm.get('code')?.errors?.['required']">
+            <small style="color:red">El código es obligatorio.</small>
+          </div>
           <div class="button-row">
             <ion-button shape="round" [disabled]="contador > 0" (click)="iniciarContador()">
               {{ contador > 0 ? 'Reenviar código (' + contador + 's)' : 'Reenviar código' }}

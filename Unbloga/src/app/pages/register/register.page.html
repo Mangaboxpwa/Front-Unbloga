@@ -45,6 +45,12 @@
 <ion-note *ngIf="backendErrors?.email?.[0]" slot="error" color="danger">
   {{ backendErrors?.email?.[0] }}
 </ion-note>
+<div *ngIf="!backendErrors?.email?.[0] && RegistrarForm.get('email')?.touched && RegistrarForm.get('email')?.errors?.['required']">
+              <small style="color:red">El correo es obligatorio.</small>
+            </div>
+            <div  *ngIf="!backendErrors?.email?.[0] && RegistrarForm.get('email')?.touched && RegistrarForm.get('email')?.errors?.['email']">
+              <small style="color:red">Ingrese un correo valido.</small>
+            </div>
 <!-- NAME -->
 <ion-item style="width: 100%; margin-bottom:5px">
   <ion-input 
@@ -55,6 +61,9 @@
 
   
 </ion-item>
+<div *ngIf="!backendErrors?.name?.[0] && RegistrarForm.get('name')?.touched && RegistrarForm.get('name')?.errors?.['required']">
+  <small style="color:red">El nombre es obligatorio.</small>
+</div>
 <ion-note *ngIf="backendErrors?.name?.[0]" slot="error" color="danger">
   {{ backendErrors?.name?.[0] }}
 </ion-note>
@@ -69,7 +78,9 @@
 
   
 </ion-item>
-
+<div *ngIf="RegistrarForm.get('password')?.touched && RegistrarForm.get('password')?.errors?.['required']">
+  <small style="color:red">La contraseña es obligatoria.</small>
+</div>
 <!-- PASSWORD CONFIRMATION -->
 <ion-item style="width: 100%; margin-bottom:5px">
   <ion-input
@@ -77,10 +88,11 @@
     formControlName="password_confirmation"
     label="Repetir contraseña"
     labelPlacement="floating">
-  </ion-input>
-
-  
+  </ion-input>  
 </ion-item>
+<div *ngIf="RegistrarForm.get('password_confirmation')?.touched && RegistrarForm.get('password_confirmation')?.errors?.['required']">
+  <small style="color:red">Campo obligatorio.</small>
+</div>
 <ion-note *ngIf="backendErrors?.password?.[0]" slot="error" color="danger">
   {{ backendErrors?.password?.[0] }}
 </ion-note>

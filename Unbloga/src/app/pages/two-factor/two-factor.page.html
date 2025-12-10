@@ -40,6 +40,12 @@
           <ion-note *ngIf="codigo_mal" slot="error" color="danger">
             {{codigo_mal}}
           </ion-note>
+          <div *ngIf="!codigo_mal && !backendErrors?.code?.[0] && twoFactorForm.get('code')?.touched && twoFactorForm.get('code')?.errors?.['required']">
+            <small style="color:red">El código es obligatorio.</small>
+          </div>
+          <div *ngIf="!codigo_mal && !backendErrors?.code?.[0] && twoFactorForm.get('code')?.touched && twoFactorForm.get('code')?.errors?.['minlength']">
+            <small style="color:red">Minimo 6 digitos.</small>
+          </div>
           <div class="button-row">
             <ion-button shape="round" [disabled]="contador > 0" (click)="iniciarContador()">
               {{ contador > 0 ? 'Reenviar código (' + contador + 's)' : 'Reenviar código' }}

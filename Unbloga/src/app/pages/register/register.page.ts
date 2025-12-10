@@ -15,7 +15,7 @@ import { NavigationService } from 'src/app/core/services/navigation.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [ IonIcon,IonNote, IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [ IonIcon,IonNote, IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class RegisterPage implements OnInit {
 RegistrarForm: FormGroup;

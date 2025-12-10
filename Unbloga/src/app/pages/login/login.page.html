@@ -34,9 +34,18 @@
           <ion-item style="width: 100%; margin-bottom:5px">
             <ion-input label="Email" formControlName="email" labelPlacement="floating" placeholder=""></ion-input>
           </ion-item>
+          <div *ngIf="LoginForm.get('email')?.touched && LoginForm.get('email')?.errors?.['required']">
+              <small style="color:red">El email es obligatorio.</small>
+            </div>
+            <div *ngIf="LoginForm.get('email')?.touched && LoginForm.get('email')?.errors?.['email']">
+              <small style="color:red">Ingrese un email valido.</small>
+            </div>
           <ion-item style="width: 100%;">
             <ion-input type="password" label="Contraseña" formControlName="password" labelPlacement="floating"></ion-input>
           </ion-item> 
+          <div *ngIf="LoginForm.get('password')?.touched && LoginForm.get('password')?.errors?.['required']">
+              <small style="color:red">La contraseña es obligatoria.</small>
+            </div>
           <ion-item>
             <app-captcha  style="margin-top:10px" (resolved)="onCaptchaResolved($event)"></app-captcha>
           </ion-item>

@@ -1,20 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonNote, IonProgressBar, IonInput, IonTextarea, IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonItem, IonButton, IonAlert } from '@ionic/angular/standalone';
+import { IonIcon, IonNote, IonProgressBar, IonInput, IonTextarea, IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonItem, IonButton, IonAlert } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
 import { ProposalsService } from 'src/app/core/services/proposals.service';
 import { timeout } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { NavController } from '@ionic/angular';
+import { NavigationService } from 'src/app/core/services/navigation.service';
+import { arrowBackOutline, push } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-proposal',
   templateUrl: './proposal.page.html',
   styleUrls: ['./proposal.page.scss'],
   standalone: true,
-  imports: [IonNote, NgIf, IonInput, IonTextarea, ReactiveFormsModule,IonAlert, IonButton, IonItem, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonProgressBar]
+  imports: [IonIcon,IonNote, NgIf, IonInput, IonTextarea, ReactiveFormsModule,IonAlert, IonButton, IonItem, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonProgressBar]
 })
 export class ProposalPage implements OnInit {
 
@@ -35,17 +38,22 @@ alertButtons = [
     },
   ];
 
-  constructor(private navCtrl: NavController,private router:Router, private fb: FormBuilder, private proposalsService:ProposalsService) { 
+  constructor(private navigation:NavigationService, private navCtrl: NavController,private router:Router, private fb: FormBuilder, private proposalsService:ProposalsService) { 
     this.proposalForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(254)]],
       description: ['', [Validators.maxLength(320)]],
     })
+    addIcons({ arrowBackOutline });
   }
 
   ngOnInit() {
   }
   goBack() {
-  this.navCtrl.back();
+  if (this.navigation.canGoBack()) {
+    this.navigation.back();
+  } else {
+    this.router.navigate(['/tab3']);
+  }
 }
   sendProposal(){
     this.btnUndefined = true
@@ -72,7 +80,7 @@ alertButtons = [
             text: 'OK',
             role: 'Cerrar',
             handler: () => {
-              this.router.navigate(['/tabs/tab1']);
+              this.goBack()
             },
           },
         ];

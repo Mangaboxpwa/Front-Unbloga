@@ -68,7 +68,9 @@
   </form>
 
 </ion-item>
-
+<ion-note *ngIf="messageError" slot="error" color="danger">
+            La calificaición es obligatoria
+          </ion-note>
     </ion-list>
   </ion-card-content>
 </ion-card>

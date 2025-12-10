@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, FormBuilder,FormsModule,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { IonIcon,IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
+import { IonNote, IonIcon,IonAlert,IonButtons,IonBackButton,IonItem,IonInput, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonRefresher, IonProgressBar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/services/auth';
 import { timeout } from 'rxjs';
@@ -15,7 +15,7 @@ import { NavigationService } from 'src/app/core/services/navigation.service';
   templateUrl: './new-pass.page.html',
   styleUrls: ['./new-pass.page.scss'],
   standalone: true,
-  imports: [IonIcon,IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonNote, IonIcon,IonProgressBar, IonAlert,ReactiveFormsModule,IonButtons,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class NewPassPage implements OnInit {
 nuevaContrasenaForm: FormGroup;
@@ -32,6 +32,10 @@ alertButtons = [
       },
     },
   ];
+  backendErrors: {
+  password?: string[];
+  password_confirmation?: string[];
+} | null = null;
 constructor(private navigation:NavigationService,private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.nuevaContrasenaForm = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
@@ -59,7 +63,13 @@ pushUrl(url: string) {
     this.navigation.push(url);
   }
   enviarContrasenasNuevas() {
+
     this.btnUndefined = true
+    if (this.nuevaContrasenaForm.invalid) {
+      this.nuevaContrasenaForm.markAllAsTouched(); // muestra los errores en pantalla
+      this.btnUndefined = false
+      return;
+    }
     console.log("entra?")
     console.log(this.nuevaContrasenaForm.value)
     this.authService.register(this.nuevaContrasenaForm.value).pipe(
@@ -88,6 +98,7 @@ pushUrl(url: string) {
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;
+        this.backendErrors = error.error?.data ?? {};
         this.headerAlert = 'Error'
         this.subHeader = error.error.msg
         this.message = [];

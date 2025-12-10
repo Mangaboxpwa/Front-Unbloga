@@ -17,7 +17,7 @@ import { NavigationService } from 'src/app/core/services/navigation.service';
   templateUrl: './two-factor.page.html',
   styleUrls: ['./two-factor.page.scss'],
   standalone: true,
-  imports: [IonIcon,IonNote, IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonIcon,IonNote, IonProgressBar, IonAlert, ReactiveFormsModule, IonButtons,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class TwoFactorPage implements OnInit {
 twoFactorForm: FormGroup;

@@ -34,6 +34,12 @@
           <ion-item style="width: 100%; margin-bottom:5px">
             <ion-input label="Correo" helperText="Ingresa el correo de tu cuenta" type="email" formControlName="email" labelPlacement="floating" placeholder=""></ion-input>
           </ion-item>
+          <div *ngIf="!backendErrors && emailForm.get('email')?.touched && emailForm.get('email')?.errors?.['required']">
+              <small style="color:red">El correo es obligatorio.</small>
+            </div>
+            <div  *ngIf="!backendErrors && emailForm.get('email')?.touched && emailForm.get('email')?.errors?.['email']">
+              <small style="color:red">Ingrese un correo valido.</small>
+            </div>
           <ion-note *ngIf="backendErrors" slot="error" color="danger">
             {{ backendErrors}}
           </ion-note>

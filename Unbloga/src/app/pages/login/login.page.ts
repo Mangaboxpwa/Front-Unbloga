@@ -16,7 +16,7 @@ import { NavigationService } from 'src/app/core/services/navigation.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonIcon,IonNote, IonProgressBar, CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonBackButton,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonIcon, IonProgressBar, CaptchaComponent, IonAlert, ReactiveFormsModule, IonButtons,IonButton, IonItem,IonInput,IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class LoginPage implements OnInit {
 LoginForm: FormGroup;
@@ -38,7 +38,7 @@ captchaToken:string = ''
 constructor(private navigation:NavigationService,private navCtrl: NavController,private fb: FormBuilder, private authService: Auth,private router: Router) {
   this.LoginForm = this.fb.group({
       email: ['', [Validators.required, Validators.maxLength(320), Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
+      password: ['', [Validators.required, Validators.maxLength(72)]],
       captcha:['',[Validators.required]]
     })
   addIcons({ arrowBackOutline });

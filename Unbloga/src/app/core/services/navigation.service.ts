@@ -32,6 +32,7 @@ export class NavigationService {
   }
   pop(){
     this.stack.pop()
+    console.log(this.stack)
   }
 
   emptyStack(){

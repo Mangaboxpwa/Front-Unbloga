@@ -16,11 +16,7 @@ import { NavController } from '@ionic/angular';
 import {
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonGrid,
-  IonCol,
+  IonNote,
   IonItem,
   IonLabel,
   IonList,
@@ -40,7 +36,7 @@ import { addIcons } from 'ionicons';
   templateUrl: './review.page.html',
   styleUrls: ['./review.page.scss'],
   standalone: true,
-imports: [IonIcon, IonProgressBar, IonRefresher, 
+imports: [IonNote, IonIcon, IonProgressBar, IonRefresher, 
     IonContent, IonHeader, IonTitle, IonToolbar,
     IonRefresherContent,
     IonTextarea,
@@ -66,6 +62,7 @@ export class ReviewPage implements OnInit {
   id:number = -1
   reviewId:number = -1
   manga?:Manga
+  messageError = false
   ReviewForm:FormGroup
   isAlertOpen = false;
 message: any[] = [];
@@ -85,8 +82,8 @@ alertButtons = [
     this.ReviewForm = this.fb.group({
       manga_id: ['', [Validators.required]],
       rating: ['', [Validators.required]],
-      review: ['', [Validators.required, Validators.maxLength(320)]],
-      is_favorite: ['', [Validators.required]],
+      review: ['', [Validators.maxLength(320)]],
+      is_favorite: [''],
     })
     addIcons({ arrowBackOutline });
   }
@@ -165,6 +162,13 @@ guardar(){
   }
 }
 create(){
+  this.messageError = false
+  if (this.ReviewForm.invalid) {
+    this.messageError = true
+    this.ReviewForm.markAllAsTouched(); // muestra los errores en pantalla
+    this.btnUndefined = false
+    return;
+  }
   this.reviewService.store(this.ReviewForm.value).pipe(
       timeout(50000)
     ).subscribe(
@@ -174,6 +178,7 @@ create(){
         this.goBack()
       }, error => {
         this.btnUndefined = false
+        this.messageError = true
         console.log(error)
         console.log(error.error.data)
         const data = error.error.data;

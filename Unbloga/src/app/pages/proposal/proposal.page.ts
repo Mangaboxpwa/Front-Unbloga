@@ -41,7 +41,7 @@ alertButtons = [
   constructor(private navigation:NavigationService, private navCtrl: NavController,private router:Router, private fb: FormBuilder, private proposalsService:ProposalsService) { 
     this.proposalForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(254)]],
-      description: ['', [Validators.maxLength(320)]],
+      descripcion: ['', [Validators.maxLength(320)]],
     })
     addIcons({ arrowBackOutline });
   }

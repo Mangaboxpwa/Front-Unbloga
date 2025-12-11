@@ -47,9 +47,9 @@
             <small style="color:red">Minimo 6 digitos.</small>
           </div>
           <div class="button-row">
-            <ion-button shape="round" [disabled]="contador > 0" (click)="iniciarContador()">
+            <!-- <ion-button shape="round" [disabled]="contador > 0" (click)="iniciarContador()">
               {{ contador > 0 ? 'Reenviar código (' + contador + 's)' : 'Reenviar código' }}
-            </ion-button>
+            </ion-button> -->
             <ion-button shape="round" [disabled]="btnUndefined" (click)="enviarTwoFactor()">Ir</ion-button>
           </div>
         </form>

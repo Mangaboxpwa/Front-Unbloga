@@ -7,7 +7,7 @@ import { ProposalsService } from 'src/app/core/services/proposals.service';
 import { timeout } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { NavController } from '@ionic/angular';
+import { ViewDidEnter, NavController } from '@ionic/angular';
 import { NavigationService } from 'src/app/core/services/navigation.service';
 import { arrowBackOutline, push } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
@@ -17,9 +17,9 @@ import { addIcons } from 'ionicons';
   templateUrl: './proposal.page.html',
   styleUrls: ['./proposal.page.scss'],
   standalone: true,
-  imports: [IonIcon,IonNote, NgIf, IonInput, IonTextarea, ReactiveFormsModule,IonAlert, IonButton, IonItem, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonProgressBar]
+  imports: [IonIcon,IonNote, NgIf, IonInput, IonTextarea, ReactiveFormsModule,IonAlert, IonButton, IonItem, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonProgressBar]
 })
-export class ProposalPage implements OnInit {
+export class ProposalPage implements OnInit,ViewDidEnter {
 
   proposalForm: FormGroup;
 
@@ -46,7 +46,14 @@ alertButtons = [
     addIcons({ arrowBackOutline });
   }
 
+  ionViewDidEnter(): void {
+    this.proposalForm = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(254)]],
+      description: ['', [Validators.maxLength(320)]],
+    })
+  }
   ngOnInit() {
+    
   }
   goBack() {
   if (this.navigation.canGoBack()) {

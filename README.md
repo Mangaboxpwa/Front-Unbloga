@@ -8,6 +8,15 @@ Unbloga is a Progressive Web App (PWA) designed for manga enthusiasts, inspired 
 
 Built with Angular and Ionic, Unbloga combines a social reading experience with a responsive, installable, and optimized web application.
 
+<p align="center">
+  <img src="screenshots/unbloga-1.jpeg" width="48%" />
+  <img src="screenshots/unbloga-2.jpeg" width="48%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/profile.png" width="48%" />
+  <img src="screenshots/reviews.png" width="48%" />
+</p>
 
 ## ✨ Features
 

@@ -8,16 +8,26 @@ Unbloga is a Progressive Web App (PWA) designed for manga enthusiasts, inspired 
 
 Built with Angular and Ionic, Unbloga combines a social reading experience with a responsive, installable, and optimized web application.
 
+
 ## ✨ Features
 
-- **Reading Activity:** Keep track of your manga activity and share your reading journey.
-- **Reviews & Ratings:** Write reviews and rate manga to share your opinions with the community.
-- **Favorites:** Save your favorite manga and easily access them from your profile.
-- **Social Feed:** Explore a personalized home feed showing the latest activity from users you follow.
-- **Follow System:** Follow other readers and gain followers to build your manga community.
-- **User Profiles:** Personalized profiles featuring reading activity, reviews, ratings, favorites, and an overview of each user's activity.
-- **Manga Discovery:** Browse and explore manga through the platform.
-- **Progressive Web App:** Installable on mobile devices and optimized for a seamless web experience.
+### 📚 Manga Tracking
+- **Reading Activity:** Keep track of your manga reading activity.
+- **Reviews & Ratings:** Write reviews and rate manga to share your opinions.
+- **Favorites:** Save and manage your favorite manga.
+- **Manga Discovery:** Browse and explore manga within the platform.
+
+### 👥 Social Features
+- **Social Feed:** Personalized home feed displaying the latest activity from followed users.
+- **Follow System:** Follow other readers and gain followers.
+- **User Profiles:** Personalized profiles featuring reading activity, reviews, ratings, favorites, and activity summaries.
+- **QR Code Profiles:** Scan QR codes using the device camera to quickly access other users' profiles.
+- **Push Notifications:** Receive notifications about social interactions, such as new followers.
+
+### 📱 Device Integration
+- **QR Code Scanner:** Camera integration for scanning user profile QR codes.
+- **Speech-to-Text:** Audio recognition to dictate reviews instead of typing them manually.
+- **Progressive Web App:** Installable on mobile devices and optimized for a responsive experience.
 - **Offline Support:** Service worker integration for improved availability and performance.
 
 ## 🛠 Tech Stack
@@ -29,19 +39,20 @@ Built with Angular and Ionic, Unbloga combines a social reading experience with 
 | TypeScript | Application logic |
 | SCSS | Styling and theming |
 | Bootstrap | Responsive layout and UI utilities |
-| REST API | Backend communication |
-| Laravel | Backend API |
-| WebSockets | Real-time communication |
+| Laravel | Backend REST API |
+| WebSockets / Pusher | Real-time communication and notifications |
 | Progressive Web App | Installability and offline capabilities |
+| Browser APIs | Camera access and audio recognition |
 
 ## 🏗 Architecture
 
 Unbloga follows a client-server architecture:
 
-- **Frontend:** Angular standalone components with Ionic, responsible for the user interface, navigation, and application logic.
-- **Backend:** Laravel REST API, responsible for business logic, authentication, and data management.
-- **Real-time Communication:** WebSockets for event-driven communication and social interactions.
-- **PWA:** Service workers and caching strategies to improve performance and provide offline capabilities.
+- **Frontend:** Angular standalone components combined with Ionic for the user interface, navigation, and application logic.
+- **Backend:** Laravel REST API for authentication, business logic, and data management.
+- **Real-time Communication:** WebSockets and Pusher for real-time events and social notifications.
+- **Device Integration:** Browser APIs for camera access, QR code scanning, and speech recognition.
+- **PWA:** Service workers and caching strategies for improved performance and offline capabilities.
 
 ## 📱 Platform
 
